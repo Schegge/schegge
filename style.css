@@ -1,0 +1,133 @@
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:300);
+
+* {
+	margin: 0;
+	padding: 0;
+}
+
+html, body {
+	font-family: 'Open Sans', sans-serif;
+	font-size: 16px;
+	color: #554686;
+	background: #fff;
+}
+
+a, a:link, a:visited {
+	text-decoration: none;
+	color: #000;
+    transition-duration: 0.5s;	
+}
+
+a:hover, a:active {
+	color: #aa7ba1;
+}
+
+#container {
+	width: 50%;
+	margin: auto;
+}
+
+header, main, footer {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+header {
+	position: fixed;
+	margin-left: 50%;
+}
+
+header > h1 {
+	width: 0;
+	height: 0;
+	overflow: hidden;
+}
+
+main, footer {
+	padding-top: 10%;
+	padding-right: 10%;
+	text-align: justify;
+}
+
+h2 {
+	text-align: right;
+	padding-right: 5%;
+	font-style: italic;
+	font-size: 18px;
+}
+
+section {
+	padding-bottom: 5%;
+}
+
+p {
+	padding: 1% .5%;
+	text-indent: 1.5%;
+}
+
+footer {
+	font-family: 'Consolas', monospace;
+	font-size: 8px;
+	text-align: center;
+	font-style: italic;
+	color: #c1b3d4;
+}
+
+footer p {
+	text-indent: 0;
+}
+
+#pjs {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+
+#pjs .pj {
+	width: 33%;
+	padding: 2%;
+	box-sizing: border-box;
+	font-size: 55%;
+	text-align: center;
+}
+
+#pjs .pj img {
+	width: 100%;
+}
+
+#pjs .pj p {
+	padding: 0;
+	background-color: #e6eefe;
+}
+
+@media only screen and (max-device-width: 500px), (max-width: 500px) {
+	html, body {
+		font-size: 18px;
+	}
+
+	#container {
+		width: 90%;
+	}
+
+	header {
+		max-width: 100px;
+		position: relative;
+		display: inline;
+		float: right;
+		margin-left: 10%;
+	}
+
+	#pjs .pj {
+		font-size: 14px;
+	}
+
+	footer {
+		font-size: 12px;
+	}
+
+	h2 {		
+		font-size: 20px;
+	}
+
+
+}
