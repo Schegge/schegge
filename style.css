@@ -23,7 +23,7 @@ a:hover, a:active {
 }
 
 #container {
-	width: 50%;
+	width: 40%;
 	margin: auto;
 }
 
@@ -34,7 +34,7 @@ header, main, footer {
 
 header {
 	position: fixed;
-	margin-left: 50%;
+	margin-left: 40%;
 }
 
 header > h1 {
@@ -84,9 +84,8 @@ footer p {
 }
 
 #pjs .pj {
-	width: 33%;
+	width: 100px;
 	padding: 2%;
-	box-sizing: border-box;
 	font-size: 55%;
 	text-align: center;
 }
@@ -118,7 +117,9 @@ footer p {
 	}
 
 	#pjs .pj {
+		width: 33%;
 		font-size: 14px;
+		box-sizing: border-box;
 	}
 
 	footer {
