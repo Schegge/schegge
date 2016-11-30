@@ -24,7 +24,13 @@ a:hover, a:active {
 
 #container {
     width: 40%;
+    min-width: 500px;
     margin: auto;
+    padding-top: 85px;
+    text-align: justify;
+    background-image: url(resources/logo.png);
+    background-repeat: no-repeat;
+    background-position: top left;
 }
 
 header, main, footer {
@@ -33,35 +39,28 @@ header, main, footer {
 }
 
 header {
-    position: fixed;
-    margin-left: 40%;
+    display: none;
 }
-    header > h1 {
-        width: 0;
-        height: 0;
-        overflow: hidden;
-    }
 
-main, footer {
-    padding-top: 10%;
+main {
     text-align: justify;
 }
 
 h2 {
     text-align: right;
-    padding-right: 5%;
-    padding-bottom: 5%;
+    padding-right: 1em;
+    padding-bottom: 1em;
     font-style: italic;
     font-size: 18px;
 }
 
 section {
-    padding-bottom: 5%;
+    padding-bottom: 1em;
 }
 
 p {
-    padding: 1% .5%;
-    text-indent: 1.5%;
+    padding: .4em .6em;
+    text-indent: .5em;
 }
 
 footer {
@@ -70,6 +69,8 @@ footer {
     text-align: center;
     font-style: italic;
     color: #c1b3d4;
+    padding-top: 2em;
+    text-align: center;
 }
     footer p {
         text-indent: 0;
@@ -90,8 +91,8 @@ footer {
     #pjs .pj {
         width: 25%;
         max-width: 100px;
-        padding: 2%;
-        font-size: 55%;
+        margin: 1em;
+        font-size: .55em;
         text-align: center;
         transition: all .5s ease-in-out;
     }
@@ -110,25 +111,14 @@ footer {
     }
 
 
-@media only screen and (max-device-width: 500px), (max-width: 500px) {
+@media only screen and (max-device-width: 600px), (max-width: 600px) {
     html, body {
         font-size: 18px;
     }
 
     #container {
         width: 90%;
-    }
-
-    header {
-        max-width: 50%;
-        position: relative;
-        display: inline;
-        float: right;
-        margin-left: 10%;
-        box-sizing: border-box;
-    }
-    header img {
-        width: 100%;
+        min-width: initial;
     }
 
     #pjs .pj {
