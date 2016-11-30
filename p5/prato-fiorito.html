@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Prato Fiorito</title>
+
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+			}
+
+			::-moz-selection {
+				background: #BA4A6E;
+				color: #fff;
+			}
+			::selection {
+				background: #BA4A6E;
+				color: #fff;
+			}
+			:focus {
+				color: #BA4A6E;
+				outline: none;
+			}
+
+			body, html {
+				font-family: 'Verdana', 'Arial', sans-serif;
+				font-size: 14px;
+				line-height: 100%;
+				color: #703B69;
+				text-align: center;
+				background: #DFEAE4;
+				height: 100%;
+			}
+
+			body {
+				display: -ms-flexbox;
+				display: flex;
+				-ms-flex-flow: row wrap;
+				    flex-flow: row wrap;
+				-ms-flex-pack: center;
+				    justify-content: center;
+				-ms-flex-line-pack: start;
+				    align-content: flex-start;
+				-ms-flex-align: center;
+				    align-items: center;
+			}
+
+			header {
+				padding: .5% 0;
+				-ms-flex: 1 100%;
+				    flex: 1 100%;
+			}
+			h1 {
+				font-size: 280%;
+				color: #CD9691;
+				line-height: 150%;
+			}
+
+			.menu {
+				-ms-flex: 1 100%;
+				    flex: 1 100%;
+			}
+			label {
+				font-size: 80%;
+			}
+			input {
+				color: #0CABAB;
+				background: transparent;
+				border: 1px solid #fff;
+				padding-left: .3%;
+				max-width: 4em;
+			}
+			button {
+				color: inherit;
+				padding: 0 .3%;
+				background: transparent;
+				border: 1px solid #CD9691;
+			}
+
+			#score {
+				font-family: 'Georgia', serif;
+				letter-spacing: .05em;
+				font-variant: small-caps;
+				padding: 1%;
+				-ms-flex: 1 100%;
+				    flex: 1 100%;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header><h1>Prato Fiorito</h1></header>
+		<div class="menu">
+			<label>n*n <input id="nValue" type="number" value="20" step="1" /></label>
+			<label>b <input id="bValue" type="number" value="30" step="1" /></label>
+			<button id="submit">New</button>
+		</div>
+		<div id="score">Start now!</div>
+		<div id="canvas"></div>
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.4/p5.min.js"></script>
+		<script>
+			window.addEventListener("contextmenu", function(e) { e.preventDefault(); });
+
+			var submit = document.querySelector('#submit');
+			var score = document.querySelector('#score');
+
+			////////////////
+			var n = parseInt(document.querySelector('#nValue').value);
+			var nTotal = n*n;
+			var b = parseInt(document.querySelector('#bValue').value);
+
+			var s = 20;
+			var txtSize;
+
+			var ww = n*s+1;
+			var hh = n*s+1;
+
+			var firstCellPressed = -1;
+			var lost = false;
+			var won = false;
+
+			var cells = [];
+
+			var grid;
+			////////////////
+
+			var BACK   = '#DFEAE4';
+			var GRID   = '#CD9691';
+			var GRID_d = '#dcb5b2';
+			var BOMB   = '#BA4A6E';
+			var FLAG   = '#0CABAB';
+
+			var H = 'h';
+			var O = 'o';
+			var F = 'f';
+			////////////////
+
+			function setup() {
+				var cc = createCanvas(ww, hh);
+				cc.parent('canvas');
+
+				frameRate(60);
+
+				grid = new Grid();
+				grid.init(n, b);
+
+				txtSize = floor(s*0.6);
+				textFont('Arial');
+				textSize(txtSize);
+				textAlign(CENTER, CENTER);
+				stroke(BOMB);
+
+				noLoop();
+			}
+
+			function draw() {
+				background(BACK);
+				grid.display();
+			}
+
+			function mousePressed() {
+				grid.mousePress();
+
+				redraw();
+			}
+			////////////////
+
+			function Grid() {
+			 	this.init = function(nn, bb) {
+			 		firstCellPressed = -1;
+
+			 		lost = false;
+			 		won = false;
+
+			 		n = nn;
+			 		b = bb;
+			 		nTotal = n*n;
+
+			 		ww = n*s+1;
+			 		hh = n*s+1;
+
+					// reset and create cells
+					cells.length = 0;
+					for (var i = 0; i < nTotal; i++) {
+						cells.push(new this.Cell(i%n, floor(i/n), i));
+					}   
+				};
+				/*
+				*/
+				this.firstClick = function(first) {
+					firstCellPressed = first;
+
+					// randomly choose the positions of the bombs    
+					var bbs = [];
+					for (var i = 0; i < nTotal; i++) {
+						bbs.push(i < b ? true : false);
+					}
+					shuffle(bbs, true);
+
+					// exclude cell's index clicked and neighbours
+					var ix = [];
+					ix.push(first);
+					for (var z = 0; z < 8; z++) {
+						if (cells[first].vicini[z] > -1 ) {
+							ix.push(cells[first].vicini[z]);
+						}
+					}
+					ix.sort();
+					for (var i = 0; i < ix.length; i++) {
+						if (bbs[ix[i]] == true) {
+							bbs[ix[i]] = false;
+
+							var replacing = true;
+							while (replacing) {
+								var r = floor(random(0, nTotal));
+								if (bbs[r] == false && ix.indexOf(r) == -1) {
+									bbs[r] = true;
+									replacing = false;
+								}
+							}
+						}
+					}
+
+					// set bombs
+					for (var i = 0; i < nTotal; i++) {
+						cells[i].bomb = bbs[i];
+					}
+
+					// determine value of cells
+					for (var i = 0; i < nTotal; i++) {
+						if (cells[i].bomb) {
+							cells[i].value = -1;
+							continue;
+						}
+						for (var z = 0; z < 8; z++) {
+							if (cells[i].vicini[z] > -1 && cells[cells[i].vicini[z]].bomb) {
+								cells[i].value++;
+							}
+						}
+					}
+				};
+				/*
+				*/
+				this.checkEmpties = function(ii) {
+					for (var i = 0; i < 8; i++) {
+						if (cells[ii].vicini[i] > -1 &&
+							cells[cells[ii].vicini[i]].type == H) {
+
+							cells[cells[ii].vicini[i]].type = O;
+
+							if (cells[cells[ii].vicini[i]].value == 0) {
+								this.checkEmpties(cells[ii].vicini[i]);
+							}
+						}
+					}
+				};
+				/*
+				*/
+				this.mousePress = function() {
+					if (!won && !lost) {
+
+						for (var i = 0; i < nTotal; i++) {
+							if (cells[i].isUnderMouse()) {
+
+								if (firstCellPressed < 0) this.firstClick(i);
+
+								if (cells[i].type == H) {
+									if (mouseButton == LEFT) {
+										cells[i].type = O;
+										if (cells[i].value == 0) {
+											// check all adjacent empty cells
+											this.checkEmpties(i);
+										} else if (cells[i].bomb) {
+											lost = true;
+										}
+									} else if (mouseButton == RIGHT) {
+										cells[i].type = F;
+									}
+								} else if (cells[i].type == F && mouseButton == LEFT) {
+									cells[i].type = H;
+								}
+
+								break;
+							}
+						}
+
+						var n_revealed = 0;
+						var n_flag = 0;
+
+						for (var i = 0; i < nTotal; i++) {
+							if (cells[i].type == O && !cells[i].bomb) {
+								n_revealed++;
+							}
+
+							if (cells[i].type == F) {
+								n_flag++;
+							}
+						}
+
+						if (n_revealed == nTotal - b) {
+							won = true;
+						}
+
+						if (lost) {
+							score.innerHTML = 'Lost :(';
+						} else if (won) {
+							score.innerHTML = 'Won :P';
+						} else {
+							score.innerHTML = 'Flags: ' + n_flag + '/' + b;      
+						}
+
+					}
+				};
+				/*
+				*/
+				this.display = function() {
+					for (var i = 0; i < nTotal; i++) {
+						cells[i].display();
+					}
+				};
+				/*
+				* INFO EACH SQUARE
+				*/
+				this.Cell = function(i, j, t) {
+					this.x = i*s;
+					this.y = j*s;
+
+					this.id = [i, j, t];
+
+					this.value = 0;
+					this.type = H;
+					this.bomb = false;
+
+					this.vicini = [];
+					this.vicini.push(this.id[1] - 1 >= 0                        ? this.id[2] - n     : -1);
+					this.vicini.push(this.id[1] + 1 <  n                        ? this.id[2] + n     : -1);
+					this.vicini.push(this.id[0] - 1 >= 0                        ? this.id[2] - 1     : -1);
+					this.vicini.push(this.id[0] + 1 <  n                        ? this.id[2] + 1     : -1);
+					this.vicini.push(this.id[1] - 1 >= 0 && this.id[0] - 1 >= 0 ? this.id[2] - n - 1 : -1);
+					this.vicini.push(this.id[1] - 1 >= 0 && this.id[0] + 1 <  n ? this.id[2] - n + 1 : -1);
+					this.vicini.push(this.id[1] + 1 <  n && this.id[0] - 1 >= 0 ? this.id[2] + n - 1 : -1);
+					this.vicini.push(this.id[1] + 1 <  n && this.id[0] + 1 <  n ? this.id[2] + n + 1 : -1);
+				};
+				/*
+				 */
+				this.Cell.prototype.display = function() {
+					push();      
+					if (this.type == H) fill(GRID);
+					else if (this.type == F) fill(GRID_d);
+					else fill(BACK);
+					rect(this.x, this.y, s, s);
+
+					noStroke();
+					if (this.type == O || lost) {
+						if (this.value > 0) {
+							if (!won) fill(0);
+							else fill(BOMB);
+							text(this.value, s/2 + this.x, s/2 + this.y);
+						} else if (this.bomb) {
+							fill(BOMB);
+							text('B', s/2 + this.x, s/2 + this.y);            
+						}
+
+					} else if (this.type == F || (won && this.bomb)) {
+						if (this.type == H) this.type = F;
+						fill(FLAG);
+						text('F', s/2 + this.x, s/2 + this.y);
+					}
+					pop();
+				};				
+				/*
+				 */
+				this.Cell.prototype.isUnderMouse = function() {
+					if (mouseX > this.x && mouseX < this.x + s && mouseY > this.y && mouseY < this.y + s) {
+						return true;
+					}
+					return false;      
+				};
+
+			} // FINE Grid
+
+			////////////////
+
+			submit.addEventListener('click', function() {
+				var nValue = parseInt(document.querySelector('#nValue').value);
+				var bValue = parseInt(document.querySelector('#bValue').value);
+
+				if (nValue > 50) nValue = 50;
+				else if (nValue < 5) nValue = 4;
+				if (bValue < 5) bValue = 4;
+				if (bValue > nValue*nValue - 9) bValue = nValue*nValue - 9;
+
+				n = nValue;
+				nTotal = n*n;
+				b = bValue;
+
+				document.querySelector('#nValue').value = n;
+				document.querySelector('#bValue').value = b; 
+				score.innerHTML = 'Flags: 0/' + b;  
+
+				grid.init(n, b);
+				resizeCanvas(ww, hh);
+			});
+		</script>
+	</body>
+</html>

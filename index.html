@@ -16,25 +16,63 @@
 			<main>
 				<section>
 					<h2>About</h2>
-					<p>I'm a 22-year-old Italian who is currently studying Economics.</p>
-					<p>Recently I got interested in programming; learning now: Java, Processing, JavaScript, R, HTML and CSS.</p>
+					<p>I'm a 23-year-old Italian who is currently studying Economics.</p>
+					<p>Recently I got interested in programming. Learning now: JavaScript, HTML, CSS, R.</p>
 				</section>
 
 				<section>
 					<h2>Projects</h2>
-					<div id="pjs">
-						<div class="pj"><a href="https://github.com/Schegge/Processing/tree/master/Tamagotchi"><img src="resources/tamagotchi.png"><p>Tamagotchi</p></a></div>
-						<div class="pj"><a href="https://github.com/Schegge/Processing/tree/master/Prato_Fiorito"><img src="resources/minesweeper.png"><p>Minesweeper</p></a></div>
-						<div class="pj"><a href="https://github.com/Schegge/Processing/tree/master/Rosetta_Adventure"><img src="resources/rosetta.png"><p>Rosetta's Adventure</p></a></div>
-						<div class="pj"><a href="https://github.com/Schegge/Userscripts/blob/master/Block%20Youtube%20Users.js"><img src="resources/ytblock.png"><p>Block youtube's users</p></a></div>
-						<div class="pj"><a href="https://github.com/Schegge/Userscripts/blob/master/AO3%20Fic's%20Style%20and%20Bookmarks.js"><img src="resources/ao3style.png"><p>AO3 Fic's style</p></a></div>
-					</div>
+					<div id="pjs"></div>
 				</section>
 			</main>
 
 			<footer>
 				<p>// code by schegge</p>
 			</footer>
+
+			<script>
+				var pjs = [
+					{
+						title: 'Tamagotchi',
+						url: 'p5/Tamagotchi.html',
+						img: 'resources/tamagotchi.png'
+					},
+					{
+						title: 'Minesweeper',
+						url: 'p5/prato-fiorito.html"',
+						img: 'resources/minesweeper.png'
+					},
+					{
+						title: 'Rosetta\'s Adventure',
+						url: 'p5/Rosetta.html',
+						img: 'resources/rosetta.png'
+					},
+					{
+						title: 'Block youtube\'s users',
+						url: 'https://greasyfork.org/en/scripts/11057-block-youtube-users',
+						img: 'resources/ytblock.png'
+					},
+					{
+						title: 'AO3 Fic\'s style',
+						url: 'https://greasyfork.org/en/scripts/10944-ao3-fic-s-style-and-bookmarks',
+						img: 'resources/ao3style.png'
+					},
+					{
+						title: 'The X-Files',
+						url: 'p5/the-x-files.html',
+						img: 'resources/thexfiles.png'
+					},
+					{
+						title: 'Clock',
+						url: 'p5/orologio.html',
+						img: 'resources/clock.png'
+					}
+				];
+
+				for (var i = 0; i < pjs.length; i++) {
+					document.querySelector('#pjs').innerHTML += '<div class="pj"><a target="_blank" href="' + pjs[i].url +'"><img src="' + pjs[i].img + '"><p>' + pjs[i].title + '</p></a></div>';
+				}
+			</script>
 		</div>
 	</body>
 </html>

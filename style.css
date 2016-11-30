@@ -36,12 +36,11 @@ header {
     position: fixed;
     margin-left: 40%;
 }
-
-header > h1 {
-    width: 0;
-    height: 0;
-    overflow: hidden;
-}
+    header > h1 {
+        width: 0;
+        height: 0;
+        overflow: hidden;
+    }
 
 main, footer {
     padding-top: 10%;
@@ -72,45 +71,43 @@ footer {
     font-style: italic;
     color: #c1b3d4;
 }
-
-footer p {
-    text-indent: 0;
-}
+    footer p {
+        text-indent: 0;
+    }
 
 #pjs {
-    display: -webkit-flex;
     display: -ms-flexbox;
     display: flex;
-    -webkit-flex-wrap: wrap;
-        -ms-flex-wrap: wrap;
-            flex-wrap: wrap;
-    -webkit-justify-content: center;
-        -ms-flex-pack: center;
-            justify-content: center;
+    -ms-flex-flow: row wrap;
+        flex-flow: row wrap;
+    -ms-flex-pack: center;
+        justify-content: center;
+    -ms-flex-line-pack: center;
+        align-content: center;
+    -ms-flex-align: start;
+        align-items: flex-start;    
 }
+    #pjs .pj {
+        width: 25%;
+        max-width: 100px;
+        padding: 2%;
+        font-size: 55%;
+        text-align: center;
+        transition: all .5s ease-in-out;
+    }
 
-#pjs .pj {
-    width: 25%;
-    max-width: 100px;
-    padding: 2%;
-    font-size: 55%;
-    text-align: center;
-    transition: all .5s ease-in-out;
-}
+    #pjs .pj:hover {
+        transform: scale(1.2);
+    }
 
-#pjs .pj:hover {
-    -webkit-transform: scale(1.2);
-            transform: scale(1.2);
-}
+    #pjs .pj img {
+        width: 100%;
+    }
 
-#pjs .pj img {
-    width: 100%;
-}
-
-#pjs .pj p {
-    padding: 0;
-    background-color: #e6eefe;
-}
+    #pjs .pj p {
+        padding: 0;
+        background-color: #e6eefe;
+    }
 
 
 @media only screen and (max-device-width: 500px), (max-width: 500px) {
@@ -136,6 +133,7 @@ footer p {
 
     #pjs .pj {
         width: 33%;
+        max-width: none;
         font-size: 14px;
         box-sizing: border-box;
     }
