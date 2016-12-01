@@ -10,6 +10,7 @@ html, body {
     font-size: 16px;
     color: #554686;
     background: #fff;
+    text-shadow: 2px 2px 1px #fff, -2px -2px 1px #fff;
 }
 
 a, a:link, a:visited {
@@ -51,7 +52,7 @@ h2 {
     padding-right: 1em;
     padding-bottom: 1em;
     font-style: italic;
-    font-size: 18px;
+    font-size: 1.2em;
 }
 
 section {
@@ -65,7 +66,7 @@ p {
 
 footer {
     font-family: 'Consolas', monospace;
-    font-size: 8px;
+    font-size: .8em;
     text-align: center;
     font-style: italic;
     color: #c1b3d4;
@@ -108,33 +109,29 @@ footer {
     #pjs .pj p {
         padding: 0;
         background-color: #e6eefe;
+        text-indent: 0;
     }
 
 
 @media only screen and (max-device-width: 600px), (max-width: 600px) {
     html, body {
-        font-size: 18px;
+        font-size: 1.2em;
     }
 
     #container {
         width: 90%;
         min-width: initial;
+        background-size: 50%;
     }
 
     #pjs .pj {
-        width: 33%;
+        font-size: 1em;
         max-width: none;
-        font-size: 14px;
+        word-wrap: break-word;
+        margin: 0;
+        padding: .5em;
+        width: 32%;
         box-sizing: border-box;
     }
-
-    footer {
-        font-size: 12px;
-    }
-
-    h2 {        
-        font-size: 20px;
-    }
-
 
 }

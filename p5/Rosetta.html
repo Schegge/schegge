@@ -54,9 +54,6 @@
       <script>
          var textHtml = document.querySelector('#texts');
 
-         var ww = 16*44;
-         var hh = 9*44;
-
          var scene = 0;
 
          var animation;
@@ -65,9 +62,10 @@
          var comet;
 
          function setup() {
-            var cc = createCanvas(ww, hh);
+            var cc = createCanvas(16*44, 9*44);
             cc.parent('canvas');
 
+            pixelDensity(1);
             frameRate(60);
 
             textFont('Arial');
@@ -94,7 +92,7 @@
          }
 
          function mouseClicked() {
-            if (scene == 0 && mouseX > ww/2 - 45 && mouseX < ww/2 + 45 && mouseY > hh/2 - 45 && mouseY < hh/2 + 45) {
+            if (scene == 0 && mouseX > width/2 - 45 && mouseX < width/2 + 45 && mouseY > height/2 - 45 && mouseY < height/2 + 45) {
                scene = 1;
             }
          }
@@ -104,10 +102,10 @@
           */
          function Rosetta() {            
             this.ps = [
-               createVector(ww       ,          0),
-               createVector(ww/2 - 15, hh/2 -  30),
-               createVector(ww/2 + 35, hh/2 -  80),
-               createVector(ww/2 - 15, hh/2 - 100),
+               createVector(width       ,              0),
+               createVector(width/2 - 15, height/2 -  30),
+               createVector(width/2 + 35, height/2 -  80),
+               createVector(width/2 - 15, height/2 - 100),
             ];
 
             this.position = this.ps[0];
@@ -352,9 +350,9 @@
           */
          function Comet() {            
             this.ps = [
-               createVector(     - 90, hh/2 + 50),
-               createVector(ww/2 - 80, hh/2 + 90),
-               createVector(ww/2 - 25, hh/2 + 60),
+               createVector(     - 90, height/2 + 50),
+               createVector(width/2 - 80, height/2 + 90),
+               createVector(width/2 - 25, height/2 + 60),
             ];
 
             this.position = this.ps[0];
@@ -490,7 +488,7 @@
             var stars = [];
             var starsLength = 30;
             for (var i = 0; i < starsLength; i++) {
-               stars.push([random(ww), random(hh), random(6)]);
+               stars.push([random(width), random(height), random(6)]);
             }
 
             var endBackOpacity = 1;
@@ -509,7 +507,7 @@
 
 
             this.play = function() {
-               if (mouseX > ww/2 - 45 && mouseX < ww/2 + 45 && mouseY > hh/2 - 45 && mouseY < hh/2 + 45) {
+               if (mouseX > width/2 - 45 && mouseX < width/2 + 45 && mouseY > height/2 - 45 && mouseY < height/2 + 45) {
                   cursor(HAND);
                } else {
                   cursor(ARROW);
@@ -517,15 +515,15 @@
                timePlay = frameCount;
                push();
                fill(255, 255, 255, 50);
-               ellipse(ww/2, hh/2, 90, 90);
+               ellipse(width/2, height/2, 90, 90);
                fill(255, 255, 255, 100);
                strokeWeight(2);
                stroke(255, 255, 255, 160);
-               triangle(ww/2 - 20, hh/2 - 30, ww/2 - 20, hh/2 + 30, ww/2 + 35, hh/2);
+               triangle(width/2 - 20, height/2 - 30, width/2 - 20, height/2 + 30, width/2 + 35, height/2);
                fill(255, 255, 255, 180);
                noStroke();
                textSize(17);
-               text("play", ww/2, hh/2);
+               text("play", width/2, height/2);
                pop();
             };
             
@@ -534,12 +532,12 @@
                noStroke();
                fill(40, 127, 155, endBackOpacity);
                rectMode(CORNER);
-               rect(0, 0, ww, hh);
+               rect(0, 0, width, height);
                pop();
             
                push();
                tint(255, endBackOpacity);
-               translate(ww/2, hh/2);
+               translate(width/2, height/2);
                rotate(radians(endRotation));
                   image(finImg, 0, 0);
                pop();
@@ -568,9 +566,9 @@
                   strokeWeight(stars[i][2]);
                   point(stars[i][0], stars[i][1]);
                   stars[i][0]++;
-                  if ( stars[i][0] > ww + stars[i][1] / 2 ) {
+                  if ( stars[i][0] > width + stars[i][1] / 2 ) {
                      stars[i][2] = random(6);
-                     stars[i][1] = random(hh);
+                     stars[i][1] = random(height);
                      stars[i][0] = -stars[i][2] / 2;
                   }
                }
@@ -579,8 +577,8 @@
                //lighter blue in the middle
                for (var i = 0; i < 10; i++) {
                   fill(52, 153, 173, 200-i*20);
-                  rect(ww/2, hh/2 - 5 - i*10, ww, 10);
-                  rect(ww/2, hh/2 + 5 + i*10, ww, 10);
+                  rect(width/2, height/2 - 5 - i*10, width, 10);
+                  rect(width/2, height/2 + 5 + i*10, width, 10);
                }
             };
             
