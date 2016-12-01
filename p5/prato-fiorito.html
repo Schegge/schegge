@@ -25,8 +25,8 @@
 
 			body, html {
 				font-family: 'Verdana', 'Arial', sans-serif;
-				font-size: 14px;
-				line-height: 100%;
+				font-size: 1em;
+				line-height: 1em;
 				color: #703B69;
 				text-align: center;
 				background: #DFEAE4;
@@ -47,14 +47,14 @@
 			}
 
 			header {
-				padding: .5% 0;
+				padding: .5em 0;
 				-ms-flex: 1 100%;
 				    flex: 1 100%;
 			}
 			h1 {
-				font-size: 280%;
+				font-size: 2.8em;
 				color: #CD9691;
-				line-height: 150%;
+				line-height: 1.3em;
 			}
 
 			.menu {
@@ -62,18 +62,19 @@
 				    flex: 1 100%;
 			}
 			label {
-				font-size: 80%;
+				font-size: .8em;
 			}
 			input {
 				color: #0CABAB;
 				background: transparent;
 				border: 1px solid #fff;
-				padding-left: .3%;
+				padding-left: .4em;
 				max-width: 4em;
+				font-size: 1em;
 			}
 			button {
 				color: inherit;
-				padding: 0 .3%;
+				padding: 0 .4em;
 				background: transparent;
 				border: 1px solid #CD9691;
 			}
@@ -82,9 +83,18 @@
 				font-family: 'Georgia', serif;
 				letter-spacing: .05em;
 				font-variant: small-caps;
-				padding: 1%;
+				padding: .5em;
 				-ms-flex: 1 100%;
 				    flex: 1 100%;
+			}
+
+			@media only screen and (max-device-width: 600px), (max-width: 600px) {
+			    html, body {
+			        font-size: 1.3em;
+			    }
+			    h1 {
+					font-size: 2em;
+				}
 			}
 		</style>
 	</head>
@@ -111,11 +121,12 @@
 			var nTotal = n*n;
 			var b = parseInt(document.querySelector('#bValue').value);
 
-			var s = 20;
-			var txtSize;
+			var canvasY = document.querySelector('#canvas').offsetTop;
 
-			var ww = n*s+1;
-			var hh = n*s+1;
+			var s;
+			var ww;
+			var hh;
+			var txtSize;
 
 			var firstCellPressed = -1;
 			var lost = false;
@@ -138,6 +149,10 @@
 			////////////////
 
 			function setup() {
+				s = windowWidth < windowHeight-canvasY ? round(windowWidth*0.9/n) : round((windowHeight-canvasY)*0.9/n);
+				ww = n*s+1;
+				hh = n*s+1;
+
 				var cc = createCanvas(ww, hh);
 				cc.parent('canvas');
 
@@ -146,7 +161,6 @@
 				grid = new Grid();
 				grid.init(n, b);
 
-				txtSize = floor(s*0.6);
 				textFont('Arial');
 				textSize(txtSize);
 				textAlign(CENTER, CENTER);
@@ -177,6 +191,10 @@
 			 		n = nn;
 			 		b = bb;
 			 		nTotal = n*n;
+					
+					s = windowWidth < windowHeight-canvasY ? round(windowWidth*0.9/n) : round((windowHeight-canvasY)*0.9/n);
+
+					txtSize = floor(s*0.6);
 
 			 		ww = n*s+1;
 			 		hh = n*s+1;
@@ -397,9 +415,9 @@
 				b = bValue;
 
 				document.querySelector('#nValue').value = n;
-				document.querySelector('#bValue').value = b; 
-				score.innerHTML = 'Flags: 0/' + b;  
+				document.querySelector('#bValue').value = b;
 
+				score.innerHTML = 'Flags: 0/' + b;
 				grid.init(n, b);
 				resizeCanvas(ww, hh);
 			});
