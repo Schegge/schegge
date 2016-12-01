@@ -77,6 +77,7 @@
 				padding: 0 .4em;
 				background: transparent;
 				border: 1px solid #CD9691;
+				font-size: 1em;
 			}
 
 			#score {
@@ -121,8 +122,6 @@
 			var nTotal = n*n;
 			var b = parseInt(document.querySelector('#bValue').value);
 
-			var canvasY = document.querySelector('#canvas').offsetTop;
-
 			var s;
 			var ww;
 			var hh;
@@ -149,7 +148,7 @@
 			////////////////
 
 			function setup() {
-				s = windowWidth < windowHeight-canvasY ? round(windowWidth*0.9/n) : round((windowHeight-canvasY)*0.9/n);
+				s = windowWidth > windowHeight ? 20 : round(windowWidth*0.9/n);
 				ww = n*s+1;
 				hh = n*s+1;
 
@@ -192,9 +191,10 @@
 			 		b = bb;
 			 		nTotal = n*n;
 					
-					s = windowWidth < windowHeight-canvasY ? round(windowWidth*0.9/n) : round((windowHeight-canvasY)*0.9/n);
+					s = windowWidth > windowHeight ? 20 : round(windowWidth*0.9/n);
 
 					txtSize = floor(s*0.6);
+					textSize(txtSize);
 
 			 		ww = n*s+1;
 			 		hh = n*s+1;
