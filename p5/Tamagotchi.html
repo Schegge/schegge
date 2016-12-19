@@ -312,9 +312,7 @@
          });
          $nuovo.addEventListener('click', function() {
             game.reset();
-            game = new Game();
-            $nome.value = game.name;
-            game.scene = 'menu';
+            window.location.reload();
          });
 
          /*
@@ -386,16 +384,16 @@
                this.lvl = json.lvl;
                
                // end of game 'cause of death
-               this.death = !this.death && diffAccess > 1440*5 ? true : json.death;
+               this.death = !json.death && diffAccess > 1440*5 ? true : json.death;
                if (this.death) {
                   this.scene = 'death';
                   this.night = false;
                   this.poop = false;
 
-                  var node = document.createElement('p');
-                  node.innerHTML = this.name + ' è morto!';
-                  $options.insertBefore(node, $nome.parentNode);
-                  $nome.value = this.name;
+                  $nome.parentNode.innerHTML = this.name + ' è morto!';
+                  $submenu.style.display = 'block';
+                  $options.style.display = 'block';
+                  $salva.style.display = 'none';
                }
             }
 
