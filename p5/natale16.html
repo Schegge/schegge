@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset="UTF-8">
+      <title>Natale 2016</title>
+
+      <link href="https://fonts.googleapis.com/css?family=Molle:400i" rel="stylesheet">
+      <style>
+         * {
+            padding: 0;
+            margin: 0;
+            border: 0;
+            overflow: hidden;
+         }
+         .scritta {
+            font-family: 'Molle', cursive;
+            font-weight: normal;
+            font-size: 4em;
+            color: rgb(255,255,255);
+            text-align: center;
+            text-shadow: 5px 5px 20px rgba(186,74,110, .4), -5px -5px 20px rgba(186,74,110, .2);
+
+            position: absolute;
+            top: 10%;
+            width: 100%;
+            z-index: 99999;
+         }
+      </style>
+   </head>
+
+   <body>
+      <div id="canvas"></div>
+      <div class="scritta">Buon Natale</div>
+
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.4/p5.min.js"></script>
+      <script>
+         var ww = window.innerWidth;
+         var hh = window.innerHeight;
+
+         var stars = [];
+         var luna;
+
+         function setup() {
+            var cc = createCanvas(ww, hh);
+            cc.id('canvas');
+            pixelDensity(1);
+
+            luna = new Luna();
+
+            for (var i = 0; i < 15; i++) {
+               stars.push(new Star());
+            }
+         }
+
+         function draw() {
+            background(110,122,146);
+
+            for (var i = 0; i < stars.length; i++) {
+               stars[i].draw();
+            }
+
+            luna.display();
+         }
+
+         window.addEventListener('resize', function() {
+            var wOld = ww;
+            var hOld = hh;
+
+            ww = window.innerWidth;
+            hh = window.innerHeight;
+            resizeCanvas(ww, hh);
+
+            for (var i = 0; i < stars.length; i++) {
+               stars[i].x = map(stars[i].x, 0, wOld, 0, ww);
+               stars[i].y = map(stars[i].y, 0, hOld, 0, hh);
+            }
+         });
+
+         function Star() {
+            this.x = random(ww);
+            this.y = random(hh);
+
+            this.s = random(10000);            
+            this.v = round(random(1, 2));
+
+            this.w = random(5, 30);
+            this.r = random(PI);
+         }
+         Star.prototype.move = function() {
+            this.y += this.v;
+            this.x += random(-1, 1)*0.4;
+            if (this.y > hh + this.w || this.x > ww + this.w) {
+               this.y = -this.w;
+               this.x = random(ww);
+            }
+         }
+         Star.prototype.draw = function() {
+            this.move();
+
+            push();
+            strokeJoin(ROUND);
+            strokeWeight(6);
+            stroke(228,156,106,100);
+            fill(134,61,88);
+            translate(this.x, this.y);
+            rotate(this.r);
+            beginShape();
+               vertex(cos(TWO_PI/10* 1)*this.w,   sin(TWO_PI/10* 1)*this.w);
+               vertex(cos(TWO_PI/10* 2)*this.w/2, sin(TWO_PI/10* 2)*this.w/2);
+               vertex(cos(TWO_PI/10* 3)*this.w,   sin(TWO_PI/10* 3)*this.w);
+               vertex(cos(TWO_PI/10* 4)*this.w/2, sin(TWO_PI/10* 4)*this.w/2);
+               vertex(cos(TWO_PI/10* 5)*this.w,   sin(TWO_PI/10* 5)*this.w);
+               vertex(cos(TWO_PI/10* 6)*this.w/2, sin(TWO_PI/10* 6)*this.w/2);
+               vertex(cos(TWO_PI/10* 7)*this.w,   sin(TWO_PI/10* 7)*this.w);
+               vertex(cos(TWO_PI/10* 8)*this.w/2, sin(TWO_PI/10* 8)*this.w/2);
+               vertex(cos(TWO_PI/10* 9)*this.w,   sin(TWO_PI/10* 9)*this.w);
+               vertex(cos(TWO_PI/10*10)*this.w/2, sin(TWO_PI/10*10)*this.w/2);
+            endShape(CLOSE);
+            pop();
+         }
+
+         function Luna() {
+            // 1' riga : posizione
+            // 2' riga : vertex()
+            // +' righe: bezierVertex()
+            var CORPO = [
+               0, 0,
+                   
+               - 10,   20,
+               - 40,   40, - 60,   30, -130,   25,
+               -145,   35, -140,   50, -135,   55,
+               -125,   70, - 10,  110,   10,   25
+            ];
+            
+            var TESTA = [
+               18, -25,
+                   
+               - 18,   25,
+               - 20,   13, - 15,    7,    0,    0,
+                  15,    0,   10,   15,   35,   20,
+                  28,   45, - 10,   25,    8,   30
+            ];
+            
+            var ORECCHIA1 = [
+               TESTA[0]+8, TESTA[1]+5,
+               
+                   0,    0,
+               - 14, - 25, - 16, - 23, - 20,    2
+            ];
+            var ORECCHIA2 = [
+               ORECCHIA1[0]-5, ORECCHIA1[1]-3,
+               
+                   0,    0,
+               -  7, - 14, -  9, - 12, -  7,    2
+            ];
+            
+            var NASO = [
+               TESTA[0]+35, TESTA[1]+20,
+                  
+                   0,    0,
+               -  2,    7, -  4,    8, -  7, -  1
+            ];
+            
+            var OCCHIO = [
+               TESTA[0]+12, TESTA[1]+13,
+               
+                   0,    0,
+               -  4,    4, -  8, -  2, -  1, -  3
+            ];
+            
+            var ZAMPA_A = [    
+               CORPO[0]+CORPO[2]-4, CORPO[1]+CORPO[3]+35,
+               
+                   0,    0,
+               -  5,   67,   10,   43,   10,   57,
+               - 15,   57, - 10,   50, - 15,   10
+            ];
+            var ZAMPA_A1 = [
+               ZAMPA_A[0]-8, ZAMPA_A[1]-10,
+               
+                   0,    0,
+               -  5,   67,   10,   43,   10,   57,
+               - 15,   57, - 10,   50, - 15,   10
+            ];
+            
+            var ZAMPA_P = [
+               CORPO[0]+CORPO[10]+25,CORPO[0]+CORPO[11]+20,
+               
+                   0,    0,
+                  20,   25,    0,   45,   20,   55,
+                  20,   60,   20,   60,    2,   57,
+               -  5,   45,    0,   35, - 15,   18,
+               - 20,   10, - 22, -  5, - 20, - 16
+            ];
+            var ZAMPA_P1 = [
+               ZAMPA_P[0]+5, ZAMPA_P[1]-10,
+               
+                   0,    0,
+                  20,   25,    0,   45,   20,   55,
+                  20,   60,   20,   60,    2,   57,
+               -  5,   45,    0,   35, - 15,   18,
+               - 20,   10, - 22, -  5, - 20, - 16
+            ];
+            
+            var CODA = [
+               CORPO[0]+CORPO[10]+20,CORPO[0]+CORPO[11]-5,
+               
+               -  5,    5,
+               - 58, -  5,   40, - 80,    5, -  5,
+                  15, - 50, - 30,    0,   10,    0
+            ];
+            
+            // Luna info  
+            var w = 185;
+            var h = 131;
+            
+            var xFix = 56;
+            var yFix = 51;
+
+            var angle = 0;
+
+            var BACKG = color(12, 255, 0); //color(206,151,112);
+            var FUR = color(242, 233, 225);
+            var PINK = color(214, 171, 177);
+            var BLACK = color(45, 45, 41);
+            
+            var part = function(numeri, c) {
+               var n = numeri.length;
+               push();
+                  translate(numeri[0], numeri[1]);
+                     fill(c);
+                     beginShape();
+                        vertex(numeri[2], numeri[3]);
+                        for (var i = 4; i < n; i += 6) {
+                           bezierVertex( numeri[i  ], numeri[i+1],
+                                                numeri[i+2], numeri[i+3],
+                                                numeri[i+4], numeri[i+5] );
+                        }
+                     endShape(); 
+               pop();
+            };
+            
+            var drawing = function() {  
+               beginShape();
+                  part(ZAMPA_A1, color(FUR, 60));
+                  part(ZAMPA_P1, color(FUR, 60));
+                  part(CORPO, FUR);
+                  part(ZAMPA_A, FUR);
+                  part(ZAMPA_P, FUR);
+                  part(CODA, FUR);
+                  push();
+                     translate(TESTA[2], TESTA[3]);
+                     rotate(angle);
+                     part(TESTA, FUR);
+                     part(ORECCHIA1, FUR);
+                     part(ORECCHIA2, PINK);
+                     part(OCCHIO, BLACK);
+                     part(NASO, BLACK);
+                  pop();
+               endShape();
+            };
+            
+            this.display = function() {
+               var s = min(ww/w*0.5, hh/h*0.5);
+
+               push();
+                  translate(ww*0.5 + w*s*0.32, hh*0.5 - h*s*0.1);
+                     scale(s);
+                     noStroke();
+                     drawing();
+               pop();
+               
+               if (frameCount % 40 == 0) {
+                  CODA[8] += CODA[8] == 5 ? 5 : -5;
+                  angle = angle == 0 ? radians(5) : 0;
+               }
+            };
+            
+         }
+
+      </script>
+   </body>
+</html>
