@@ -4,7 +4,7 @@
       <meta charset="UTF-8">
       <title>Natale 2016</title>
 
-      <link href="https://fonts.googleapis.com/css?family=Molle:400i" rel="stylesheet">
+      <link href="https://fonts.googleapis.com/css?family=Satisfy|Aref+Ruqaa" rel="stylesheet">
       <style>
          * {
             padding: 0;
@@ -12,28 +12,63 @@
             border: 0;
             overflow: hidden;
          }
-         .scritta {
-            font-family: 'Molle', cursive;
+
+         body, html {
+            font-size: 16px;
+         }
+
+         #scritta {
+            font-family: 'Satisfy', cursive;
             font-weight: normal;
-            font-size: 4em;
-            color: rgb(255,255,255);
+            color: rgb(242, 233, 225);
             text-align: center;
-            text-shadow: 5px 5px 20px rgba(186,74,110, .4), -5px -5px 20px rgba(186,74,110, .2);
+            text-shadow: 2px  2px 5px rgba(149, 31, 43, .5),
+                        -2px -2px 5px rgba(165, 163, 108, .4);
 
             position: absolute;
             top: 10%;
             width: 100%;
             z-index: 99999;
          }
+         .fessi {
+            font-family: 'Aref Ruqaa', serif;
+            font-size: .4em!important;
+            margin-top: -1em;
+         }
+
+         #audio {
+            display: none;
+         }
       </style>
    </head>
 
    <body>
       <div id="canvas"></div>
-      <div class="scritta">Buon Natale</div>
+
+      <div id="scritta">
+         <p>Buon Natale</p>
+         <p class="fessi">fessi &#10084;</p>
+      </div>
+
+      <audio id="audio" src="resources/natale16/audio.mp3" loop></audio>
 
       <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.4/p5.min.js"></script>
       <script>
+         var scritta = document.getElementById('scritta');
+
+         // play/pause the audio
+         var audio = document.getElementById('audio');
+         audio.volume = 0.3;
+         document.addEventListener('click', function() {
+            if (audio.currentTime > 0) {
+               audio.pause();
+               audio.currentTime = 0;
+            } else {
+               audio.play();
+            }            
+         });
+
+         // animation
          var ww = window.innerWidth;
          var hh = window.innerHeight;
 
@@ -45,21 +80,23 @@
             cc.id('canvas');
             pixelDensity(1);
 
+            scritta.style.fontSize = min(ww*16/100, hh*16/100) + 'px';
+
             luna = new Luna();
 
-            for (var i = 0; i < 15; i++) {
+            for (var i = 0; i < 24; i++) {
                stars.push(new Star());
             }
          }
 
          function draw() {
-            background(110,122,146);
+            background(73,84,83);
 
             for (var i = 0; i < stars.length; i++) {
                stars[i].draw();
             }
 
-            luna.display();
+            luna.draw();
          }
 
          window.addEventListener('resize', function() {
@@ -70,6 +107,8 @@
             hh = window.innerHeight;
             resizeCanvas(ww, hh);
 
+            scritta.style.fontSize = min(ww*16/100, hh*16/100) + 'px';
+
             for (var i = 0; i < stars.length; i++) {
                stars[i].x = map(stars[i].x, 0, wOld, 0, ww);
                stars[i].y = map(stars[i].y, 0, hOld, 0, hh);
@@ -77,47 +116,80 @@
          });
 
          function Star() {
+            this.t = random(1) < 0.33 ? 'star' : 'snow';
+
             this.x = random(ww);
             this.y = random(hh);
 
-            this.s = random(10000);            
-            this.v = round(random(1, 2));
+            this.f = random(0.1, 0.6);
+            this.w = 0;
+            this.v = floor(random(1, 3) * displayDensity());
+            this.r = random(HALF_PI);
+            this.b = int(random(40, 60));
 
-            this.w = random(5, 30);
-            this.r = random(PI);
+            this.l = random(1) < 0.3 ? 10 : random(1) < 0.8 ? 12 : 14;
+            this.p = random(1) < 0.6 ? 3 : 4;
          }
          Star.prototype.move = function() {
+            this.x += random(-0.4, 0.4) * displayDensity();
             this.y += this.v;
-            this.x += random(-1, 1)*0.4;
-            if (this.y > hh + this.w || this.x > ww + this.w) {
-               this.y = -this.w;
-               this.x = random(ww);
-            }
-         }
-         Star.prototype.draw = function() {
-            this.move();
 
+            if (this.y > hh + this.w) {
+               this.t = random(1) < 0.33 ? 'star' : 'snow';
+
+               this.x = random(ww);
+               this.y = -0.6*min(ww*0.1, hh*0.1); //max this.w
+
+               this.f = random(0.2, 0.6);
+               this.v = floor(random(1, 3) * displayDensity());
+
+               this.l = random(1) < 0.3 ? 10 : random(1) < 0.8 ? 12 : 14;
+               this.p = random(1) < 0.6 ? 3 : 4;
+            }
+         };
+         Star.prototype.draw = function() {
             push();
-            strokeJoin(ROUND);
-            strokeWeight(6);
-            stroke(228,156,106,100);
-            fill(134,61,88);
-            translate(this.x, this.y);
-            rotate(this.r);
-            beginShape();
-               vertex(cos(TWO_PI/10* 1)*this.w,   sin(TWO_PI/10* 1)*this.w);
-               vertex(cos(TWO_PI/10* 2)*this.w/2, sin(TWO_PI/10* 2)*this.w/2);
-               vertex(cos(TWO_PI/10* 3)*this.w,   sin(TWO_PI/10* 3)*this.w);
-               vertex(cos(TWO_PI/10* 4)*this.w/2, sin(TWO_PI/10* 4)*this.w/2);
-               vertex(cos(TWO_PI/10* 5)*this.w,   sin(TWO_PI/10* 5)*this.w);
-               vertex(cos(TWO_PI/10* 6)*this.w/2, sin(TWO_PI/10* 6)*this.w/2);
-               vertex(cos(TWO_PI/10* 7)*this.w,   sin(TWO_PI/10* 7)*this.w);
-               vertex(cos(TWO_PI/10* 8)*this.w/2, sin(TWO_PI/10* 8)*this.w/2);
-               vertex(cos(TWO_PI/10* 9)*this.w,   sin(TWO_PI/10* 9)*this.w);
-               vertex(cos(TWO_PI/10*10)*this.w/2, sin(TWO_PI/10*10)*this.w/2);
-            endShape(CLOSE);
+               switch(this.t) {
+                  case 'snow':
+                     this.w = this.f * min(ww*0.04, hh*0.04);
+                     
+                     noFill();
+                     strokeCap(ROUND);
+                     strokeWeight(round(this.w/5));
+                     stroke(235,213,146,100);
+                     translate(this.x, this.y);
+                     rotate(this.r);
+                     for (var i = 0; i < this.p; i++) {
+                        var t1 = PI / this.p * i;
+                        var t2 = PI / this.p * (i + this.p);
+                        line(cos(t1) * this.w, sin(t1) * this.w,
+                             cos(t2) * this.w, sin(t2) * this.w);
+                     }
+                     break;
+
+                  case 'star':
+                     this.w = this.f * min(ww*0.1, hh*0.1);
+
+                     strokeJoin(ROUND);
+                     strokeWeight(round(this.w/6));
+                     stroke(235,213,146,60);
+                     if (frameCount % this.b === 0) fill(189,71,83);
+                     else fill(149,31,43,200);
+                     translate(this.x, this.y);
+                     rotate(this.r);
+                     beginShape();
+                        for (var i = 0; i < this.l; i++) {
+                           var t1 = TWO_PI / this.l * i;
+                           var t2 = i & 1 ? this.w : this.w/2;
+                           vertex(cos(t1) * t2, sin(t1) * t2);
+                        }
+                     endShape(CLOSE);
+                     break;
+               }
             pop();
-         }
+
+            this.move();
+         };
 
          function Luna() {
             // 1' riga : posizione
@@ -127,103 +199,102 @@
                0, 0,
                    
                - 10,   20,
-               - 40,   40, - 60,   30, -130,   25,
-               -145,   35, -140,   50, -135,   55,
-               -125,   70, - 10,  110,   10,   25
+               - 40,   40, - 60,   30, -120,   25,
+               -135,   35, -130,   50, -125,   55,
+               -115,   70, - 10,  100,   10,   25
             ];
-            
+
             var TESTA = [
                18, -25,
                    
                - 18,   25,
                - 20,   13, - 15,    7,    0,    0,
-                  15,    0,   10,   15,   35,   20,
-                  28,   45, - 10,   25,    8,   30
+                 15,    0,   10,   15,   35,   20,
+                 28,   45, - 10,   25,    8,   30
             ];
-            
+
             var ORECCHIA1 = [
                TESTA[0]+8, TESTA[1]+5,
                
-                   0,    0,
+                  0,    0,
                - 14, - 25, - 16, - 23, - 20,    2
             ];
+
             var ORECCHIA2 = [
                ORECCHIA1[0]-5, ORECCHIA1[1]-3,
                
-                   0,    0,
+                  0,    0,
                -  7, - 14, -  9, - 12, -  7,    2
             ];
-            
+
             var NASO = [
                TESTA[0]+35, TESTA[1]+20,
                   
-                   0,    0,
+                  0,    0,
                -  2,    7, -  4,    8, -  7, -  1
             ];
-            
+
             var OCCHIO = [
                TESTA[0]+12, TESTA[1]+13,
                
-                   0,    0,
+                  0,    0,
                -  4,    4, -  8, -  2, -  1, -  3
             ];
-            
+
             var ZAMPA_A = [    
                CORPO[0]+CORPO[2]-4, CORPO[1]+CORPO[3]+35,
                
-                   0,    0,
+                  0,    0,
                -  5,   67,   10,   43,   10,   57,
                - 15,   57, - 10,   50, - 15,   10
             ];
+
             var ZAMPA_A1 = [
                ZAMPA_A[0]-8, ZAMPA_A[1]-10,
                
-                   0,    0,
+                  0,    0,
                -  5,   67,   10,   43,   10,   57,
                - 15,   57, - 10,   50, - 15,   10
             ];
-            
+
             var ZAMPA_P = [
                CORPO[0]+CORPO[10]+25,CORPO[0]+CORPO[11]+20,
                
-                   0,    0,
-                  20,   25,    0,   45,   20,   55,
-                  20,   60,   20,   60,    2,   57,
+                  0,    0,
+                 20,   25,    0,   45,   20,   55,
+                 20,   60,   20,   60,    2,   57,
                -  5,   45,    0,   35, - 15,   18,
                - 20,   10, - 22, -  5, - 20, - 16
             ];
+
             var ZAMPA_P1 = [
                ZAMPA_P[0]+5, ZAMPA_P[1]-10,
                
-                   0,    0,
-                  20,   25,    0,   45,   20,   55,
-                  20,   60,   20,   60,    2,   57,
+                  0,    0,
+                 20,   25,    0,   45,   20,   55,
+                 20,   60,   20,   60,    2,   57,
                -  5,   45,    0,   35, - 15,   18,
                - 20,   10, - 22, -  5, - 20, - 16
             ];
-            
+
             var CODA = [
-               CORPO[0]+CORPO[10]+20,CORPO[0]+CORPO[11]-5,
+               CORPO[0]+CORPO[10]+20, CORPO[0]+CORPO[11]-5,
                
-               -  5,    5,
-               - 58, -  5,   40, - 80,    5, -  5,
-                  15, - 50, - 30,    0,   10,    0
+               -  8,    5,
+               - 58, -  5,   40, - 85,    5, -  5,
+                 15, - 50, - 30,    0,    5, -  4
             ];
-            
-            // Luna info  
+
             var w = 185;
             var h = 131;
-            
-            var xFix = 56;
-            var yFix = 51;
 
             var angle = 0;
 
-            var BACKG = color(12, 255, 0); //color(206,151,112);
             var FUR = color(242, 233, 225);
+            var FURD = color(202, 193, 185);
             var PINK = color(214, 171, 177);
             var BLACK = color(45, 45, 41);
-            
+
             var part = function(numeri, c) {
                var n = numeri.length;
                push();
@@ -233,17 +304,19 @@
                         vertex(numeri[2], numeri[3]);
                         for (var i = 4; i < n; i += 6) {
                            bezierVertex( numeri[i  ], numeri[i+1],
-                                                numeri[i+2], numeri[i+3],
-                                                numeri[i+4], numeri[i+5] );
+                                         numeri[i+2], numeri[i+3],
+                                         numeri[i+4], numeri[i+5] );
                         }
-                     endShape(); 
+                     endShape();
                pop();
             };
-            
-            var drawing = function() {  
+
+            var drawing = function() {
+               strokeWeight(4);
+               stroke(0,0,0,10);
                beginShape();
-                  part(ZAMPA_A1, color(FUR, 60));
-                  part(ZAMPA_P1, color(FUR, 60));
+                  part(ZAMPA_A1, FURD);
+                  part(ZAMPA_P1, FURD);
                   part(CORPO, FUR);
                   part(ZAMPA_A, FUR);
                   part(ZAMPA_P, FUR);
@@ -259,25 +332,23 @@
                   pop();
                endShape();
             };
-            
-            this.display = function() {
-               var s = min(ww/w*0.5, hh/h*0.5);
+
+            this.draw = function() {
+               var s = min(ww/w*0.6, hh/h*0.6);
 
                push();
-                  translate(ww*0.5 + w*s*0.32, hh*0.5 - h*s*0.1);
-                     scale(s);
-                     noStroke();
-                     drawing();
+                  translate(ww*0.5 + w*s*0.28, hh*0.5 - h*s*0.1);
+                  scale(s);
+                  drawing();
                pop();
-               
-               if (frameCount % 40 == 0) {
-                  CODA[8] += CODA[8] == 5 ? 5 : -5;
-                  angle = angle == 0 ? radians(5) : 0;
+
+               if (frameCount % 40 === 0) {
+                  CODA[8] += CODA[8] === 5 ? 5 : -5;
+                  angle = angle === 0 ? radians(5) : 0;
                }
             };
-            
-         }
 
+         }
       </script>
    </body>
 </html>
