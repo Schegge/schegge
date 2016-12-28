@@ -289,21 +289,23 @@
             add: document.querySelector('#organizeMenu .add'),
             elimina: document.querySelector('#organizeMenu .elimina'),
             salva: document.querySelector('#organizeMenu .salva'),
-            error: document.querySelector('#organizeMenu .error')
+            error: document.querySelector('#organizeMenu .error'),
+            info: document.querySelector('#organizeMenu .info')
          }
 
          organizeMenu.show.addEventListener('click', function() {
             organizeMenu.get.style.display = 'block';
 
             organizeMenu.error.innerHTML = '';
+            organizeMenu.info.innerHTML = '';
             organizeMenu.old.style.display = 'block';
             organizeMenu.nuovo.style.display = 'none';
             document.querySelector('#organizeMenu .new .id').disabled = false;
 
             if (!Object.keys(tasks).length) return;
-            document.querySelector('#organizeMenu .info').innerHTML = 'Attività presenti: ';
+            organizeMenu.info.innerHTML = 'Attività presenti: ';
             for(let t in tasks) {
-               document.querySelector('#organizeMenu .info').innerHTML += '<span>' + t + '</span>';
+               organizeMenu.info.innerHTML += '<span>' + t + '</span>';
             }
          });
 

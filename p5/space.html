@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <title>Space</title>
+
+      <style>
+         html, body {
+            font-family: 'Courier New', 'Courier', monospace;
+            margin: 0;
+            padding: 0;
+            background-color: #343848;
+            text-align: center;
+            overflow: hidden;
+         }
+
+         #canvas {
+            width: 100%;
+            padding: 0;
+            margin: 0 auto;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+         }
+      </style>
+   </head>
+
+   <body>
+      <div id="canvas"></div>
+
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.4/p5.min.js"></script>
+      <script>
+         var level, lang, _lang = 'eng';
+
+         var scene = -1; // -1 lang, 0 instructions, 1 game, 2 points and new game
+         var frameStart = 0;
+
+         var earth, alien;
+
+         var starsLength = 30;
+         var stars = new Array(starsLength);
+         var asts = [];
+         var buls = [];
+
+         var images;
+         var imgAlien, imgAsts, imgAstsDestr, imgAstsCrash, imgBuls, imgEarth, imgStars;
+
+         var ww = window.innerWidth;
+         var hh = window.innerHeight;
+         var pDens, wDens;
+
+         function preload() {
+            var cc = createCanvas(ww, hh);
+            cc.parent('canvas');
+
+            imgAlien = loadImage('resources/space/imgAlien.png');
+            imgAsts = loadImage('resources/space/imgAst.png');
+            imgAstsDestr = loadImage('resources/space/imgAstDestr.png');
+            imgAstsCrash = loadImage('resources/space/imgAstCrash.png');
+            imgBuls = loadImage('resources/space/imgBul.png');
+            imgEarth = loadImage('resources/space/imgEarth.png');
+            imgStars = loadImage('resources/space/imgStar.png');
+         }
+
+         function setup() {
+            pixelDensity(1);
+            frameRate(60);
+            smooth();
+            noStroke();
+            rectMode(CENTER);
+            textAlign(CENTER, CENTER);
+            imageMode(CENTER);
+
+            textFont('Courier');
+            textSize(13);
+            textLeading(15);
+
+            pDens = displayDensity();
+            wDens = round(min(hh/2/imgEarth.width, ww/imgEarth.width)) * pDens;
+
+            level = new Level(20);
+               
+            earth = new Earth();
+            alien = new Alien();
+            
+            for (var i = 0; i < starsLength; i++) {
+               stars[i] = new Stars();
+            }
+         }
+
+         function draw() {
+            background('#343848');
+
+            for (var i = 0; i < starsLength; i++) {
+               stars[i].update();
+            }
+            
+            earth.drawing();
+            
+            switch(scene) {  
+               case -1:
+                  chooseLang();
+                  break;
+               
+               case 0:
+                  level.instructions();
+                  break;
+                  
+               case 2:
+               case 1:
+                  /*
+                   * THE GAME
+                   */
+                   
+                  // control if the game is finished
+                  if (level.astsLeft <= 0) level.end = true;
+                  
+                  // asteroids & bullets
+                  if (!level.end && level.astsCurrent < level.numAsts &&
+                      frameCount - frameStart > 50 + 280*level.astsCurrent - 7*sq(level.astsCurrent)) {
+                   asts.push(new Asteroids(level.astsCurrent));
+                   level.astsCurrent++;
+                  }
+                  
+                  for (var i = 0; i < asts.length; i++) {
+                      asts[i].update();
+                  }
+            
+                  for (var i = 0; i < buls.length; i++) {
+                     buls[i].update();
+                     if (buls[i].out) {
+                        buls.splice(i, 1);
+                        i--;
+                     }
+                  }
+                  
+                  // stats or points
+                  if (!level.end) {
+                     level.stats();
+                  } else {
+                     level.fine();
+                     scene = 2;
+                  }
+                  break;
+            }
+            
+            alien.update();
+         }
+
+         function mousePressed() {
+            switch(scene) {
+               case -1:
+                  if (mouseX > width/2) _lang = 'ita'; // ita
+                  else _lang = 'eng';
+                  lang = new Lang(); // eng
+                  scene = 0;
+                  break;
+                  
+               case 0:
+                  scene = 1;
+                  frameStart = frameCount;
+                  break;
+                  
+               case 1:
+                  if (!level.end) {
+                     buls.push(new Bullets(mouseX, mouseY));
+                     level.bulsUsed++
+                  }
+                  break;
+                  
+               case 2:
+                  if (mouseY > height*0.82) {
+                     asts.length = 0;
+                     level = new Level(20);
+                     scene = 0;
+                  }
+                  break;
+            }  
+         }
+
+         // LANGUAGE
+         function Lang() {
+            this.istructions = [];
+            this.stats = '';
+            this.fine = [];
+            this.newGame = '';
+
+            switch(_lang) {
+               case 'eng':
+                  this.istructions.push('Help the alien to protect their\nplanet from asteroids!\nDestroy them using the mouse.\nDestroy ');
+                  this.istructions.push(' asteroids.\n \nClick here to start.');
+                  
+                  this.stats = 'Asteroids left: ';
+                  
+                  this.fine.push('SCORE: ');
+                  this.fine.push('%\nDestroyed asteroids: ');
+                  this.fine.push('/');
+                  this.fine.push('\nUsed bullets: ');
+                  
+                  this.newGame = ('Click to start\na new game!');
+                  break;
+
+               case 'ita':
+                  this.istructions.push('Aiuta l\'alieno a salvare il suo\npianeta dagli asteroidi!\nDistruggili usando il mouse.\nDevi distruggere ');
+                  this.istructions.push(' asteroidi.\n \nClicca qui per iniziare.');
+                  
+                  this.stats = 'Asteroidi rimasti: ';
+                  
+                  this.fine.push('PUNTEGGIO: ');
+                  this.fine.push('%\nAsteroidi distrutti: ');
+                  this.fine.push('/');
+                  this.fine.push('\nColpi usati: ');
+                  
+                  this.newGame = ('Clicca per\ngiocare di nuovo!');
+                  break;
+            }         
+         }
+
+         function chooseLang() {
+            push();               
+               fill(255, 255, 255, 50);
+               rect(width*0.5, height*0.2, width*0.7, height*0.3);
+               
+               fill(255, 255, 255);
+               text("Choose your language:\nScegli la tua lingua:\n \nENGLISH     ITALIANO", width*0.5, height*0.2);            
+            pop();  
+         }
+
+         // LEVEL
+         function Level(_numAsts) {
+            this.numAsts = _numAsts;
+            this.astsCurrent = 0;
+            this.astsLeft = _numAsts;
+            
+            this.astsDestroyed = 0;
+            this.astsCrashed = 0;
+            this.bulsUsed = 0;
+            this.points = 0;
+            
+            this.end = false;
+         }            
+         Level.prototype.instructions = function() {
+            push();
+               fill(255, 255, 255, 50);
+               rect(width*0.5, height*0.2, width*0.7, height*0.3);
+               
+               fill(255, 255, 255);
+               text(lang.istructions[0] + this.numAsts + lang.istructions[1], width*0.5, height*0.2);
+            pop(); 
+         };
+         Level.prototype.stats = function() {
+            this.astsLeft = this.numAsts - this.astsDestroyed - this.astsCrashed;
+            
+            push();
+               textAlign(LEFT, TOP);
+                  
+               fill(255, 255, 255, 150);
+               text(lang.stats + this.astsLeft, 10, 10);
+            pop();      
+         };
+         Level.prototype.fine = function() {
+            this.points = map(this.astsDestroyed, 0, this.numAsts, 0, 100) - abs(this.bulsUsed - this.numAsts)/2;
+            if (this.points < 0) this.points = 0;
+            
+            push();
+               fill(255, 255, 255, 50);
+               rect(width*0.5, height*0.2, width*0.6, height*0.2);
+               fill(0, 0, 0, 40);   
+               rect(width*0.5, height*0.92, width*0.4, height*0.1);
+               
+               fill('#ffffff');
+               text(lang.fine[0] + this.points +
+                    lang.fine[1] + this.astsDestroyed +
+                    lang.fine[2] + this.numAsts +
+                    lang.fine[3] + this.bulsUsed,
+                    width*0.5, height*0.2);
+               text(lang.newGame, width*0.5, height*0.92);
+            pop();  
+         };
+
+         // ALIEN
+         function Alien() {  
+            this.x = width*0.5;
+            this.y = height*0.7;
+            
+            this.n = 0;
+            this.inc = 1;
+            this.max = 15;
+            
+            this.drawing = function() {
+               push();
+                  translate(this.x, this.y);
+                  scale(wDens);
+                  image(imgAlien, 0, 0);
+               pop();  
+            };
+            
+            this.update = function() {    
+               if ((frameCount - frameStart) % 4 == 0) {
+                  this.y += this.inc * pDens;
+                  this.n++;
+                  if (this.n >this.max || this.n < -this.max) {
+                     this.inc = -this.inc;
+                     this.n = 0;
+                  }
+               }
+               
+               this.drawing();
+            };          
+         }
+         
+         // ASTEROIDS
+         function Asteroids(_id) {  
+            this.w = imgAsts.width * wDens;
+            this.h = imgAsts.height * wDens;
+            
+            var l = (width - imgEarth.width) / 2 + this.w;
+            this.x = round(random(l, width-l));
+            this.y = -this.h/2;
+            
+            this.rCrash = random(0.6, 0.8);
+            
+            this.destroyed = false;
+            this.crashed = false;
+            
+            this.id = _id;
+         }            
+         Asteroids.prototype.hit = function() {
+            for (var b = 0; b < buls.length; b++) {
+               if (!this.destroyed && !this.crashed && !buls[b].out) {
+                  var d = dist(this.x, this.y, buls[b].x, buls[b].y);
+                  
+                  if (d < (buls[b].w/2 + this.w/2 - 4)) {
+                     this.destroyed = true;
+                     level.astsDestroyed++;
+                     buls[b].out = true;
+                     break;
+                  }
+               }
+               
+            }
+         };            
+         Asteroids.prototype.drawing = function() {
+            push();
+               translate(this.x, this.y);
+               scale(wDens);
+               
+               if (this.crashed) {
+                  image(imgAstsCrash, 0, 0);
+                  
+               } else if (this.destroyed) {
+                  image(imgAstsDestr, 0, 0);
+                  
+               } else {
+                  image(imgAsts, 0, 0);
+               }
+               
+            pop();  
+         };            
+         Asteroids.prototype.update = function() {    
+            if (!this.crashed && !this.destroyed) {
+               if (this.y > height * this.rCrash) {
+                  this.crashed = true;
+                  level.astsCrashed++;
+               }
+               
+               if ((frameCount - frameStart) % 2 == 0) {
+                  this.y += 1 + round(this.id/2) * pDens;
+               }
+            }
+            
+            this.hit();
+            
+            this.drawing();
+         };
+
+         // BULLETS
+         function Bullets(mx, my) {  
+            this.x = alien.x;
+            this.y = alien.y;  
+            
+            this.w = imgBuls.width * wDens;
+            this.h = imgBuls.height * wDens;
+            
+            this.out = false;
+            
+            var angle = atan2(my - this.y, mx - this.x);
+            this.cosen = cos(angle);
+            this.sen = sin(angle);
+         }           
+         Bullets.prototype.update = function() {
+            this.x += 4 * this.cosen * pDens;
+            this.y += 4 * this.sen * pDens;
+         
+            if (this.x - this.w/2 > width  || this.x + this.w/2 < 0 ||
+                this.y - this.h/2 > height || this.y + this.h/2 < 0) {
+               this.out = true;
+            }
+
+            push();
+               translate(this.x, this.y);
+               scale(wDens);
+               image(imgBuls, 0, 0);
+            pop();  
+         };
+
+         // STARS
+         function Stars() {  
+            this.x = round(random(width));
+            this.y = round(random(height));
+            
+            this.w = imgStars.width * wDens;
+            this.h = imgStars.height * wDens;
+         }
+         Stars.prototype.drawing = function() {
+            push();
+               translate(this.x, this.y);
+               scale(wDens);
+               image(imgStars, 0, 0);
+            pop();  
+         };
+         Stars.prototype.update = function() {
+            if ((frameCount - frameStart) % 2 == 0) {
+               this.x += pDens;
+               this.y += random(-0.4, 0.4);
+            }
+            
+            if (this.x - this.w/2 > width) {
+               this.x = -this.w/2;
+               this.y = round(random(height));
+            }
+            
+            this.drawing();
+         };
+
+         // EARTH
+         function Earth() {  
+            this.x = width*0.5;
+            this.y = height*0.7;;
+            
+            this.drawing = function() {
+               push();
+                  translate(this.x, this.y);
+                  scale(wDens);
+                  image(imgEarth, 0, 0);  
+               pop();
+            };            
+         }
+      </script>
+   </body>
+</html>
