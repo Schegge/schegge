@@ -71,12 +71,12 @@
             textAlign(CENTER, CENTER);
             imageMode(CENTER);
 
-            textFont('Courier');
-            textSize(13);
-            textLeading(15);
-
             pDens = displayDensity();
-            wDens = round(min(hh/2/imgEarth.width, ww/imgEarth.width)) * pDens;
+            wDens = min(hh/2/imgEarth.width, ww/1.1/imgEarth.width);
+
+            textFont('Courier');
+            textSize(13 * wDens);
+            textLeading(15 * wDens);
 
             level = new Level(20);
                
@@ -147,7 +147,7 @@
             alien.update();
          }
 
-         function mousePressed() {
+         function mouseClicked() {
             switch(scene) {
                case -1:
                   if (mouseX > width/2) _lang = 'ita'; // ita
@@ -314,7 +314,7 @@
             this.w = imgAsts.width * wDens;
             this.h = imgAsts.height * wDens;
             
-            var l = (width - imgEarth.width) / 2 + this.w;
+            var l = (width - imgEarth.width * wDens) / 2 + this.w;
             this.x = round(random(l, width-l));
             this.y = -this.h/2;
             
