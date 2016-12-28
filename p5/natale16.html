@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
    <head>
-      <meta charset="UTF-8">
+      <meta charset="utf-8">
       <title>Natale 2016</title>
 
       <link href="https://fonts.googleapis.com/css?family=Satisfy|Aref+Ruqaa" rel="stylesheet">
@@ -13,7 +13,7 @@
             overflow: hidden;
          }
 
-         body, html {
+         html, body {
             font-size: 16px;
          }
 
@@ -30,14 +30,36 @@
             width: 100%;
             z-index: 99999;
          }
-         .fessi {
-            font-family: 'Aref Ruqaa', serif;
-            font-size: .4em!important;
-            margin-top: -1em;
-         }
+            .buon-natale {
+               animation: boom 2.2s linear 0s infinite alternate;
+            }
+            .fessi {
+               font-family: 'Aref Ruqaa', serif;
+               font-size: .4em!important;
+               margin-top: -1em;
+            }
 
          #audio {
             display: none;
+         }
+
+         @keyframes boom {
+            0% {               
+               transform: scale(1);
+            }
+            25% {
+               transform: rotate(3deg);
+            }
+            50% {
+               transform: scale(1.04);
+               color: rgb(235,213,146);
+            }
+            75% {
+               transform: rotate(-3deg);
+            }
+            100% {
+               transform: scale(1);
+            }
          }
       </style>
    </head>
@@ -46,11 +68,11 @@
       <div id="canvas"></div>
 
       <div id="scritta">
-         <p>Buon Natale</p>
+         <p class="buon-natale">Buon Natale</p>
          <p class="fessi">fessi &#10084;</p>
       </div>
 
-      <audio id="audio" src="resources/natale16/audio.mp3" loop></audio>
+      <audio id="audio" src="resources/natale16/audio.mp3" autoplay loop></audio>
 
       <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.4/p5.min.js"></script>
       <script>
@@ -58,14 +80,13 @@
 
          // play/pause the audio
          var audio = document.getElementById('audio');
-         audio.volume = 0.3;
          document.addEventListener('click', function() {
             if (audio.currentTime > 0) {
                audio.pause();
                audio.currentTime = 0;
             } else {
                audio.play();
-            }            
+            }
          });
 
          // animation
@@ -75,10 +96,14 @@
          var stars = [];
          var luna;
 
+         var dDens;
+
          function setup() {
             var cc = createCanvas(ww, hh);
-            cc.id('canvas');
+            cc.parent('canvas');
+            frameRate(60);
             pixelDensity(1);
+            dDens = displayDensity() === 1 ? 0 : displayDensity();
 
             scritta.style.fontSize = min(ww*16/100, hh*16/100) + 'px';
 
@@ -116,32 +141,32 @@
          });
 
          function Star() {
-            this.t = random(1) < 0.33 ? 'star' : 'snow';
+            this.t = random(1) < 0.4 ? 'star' : 'snow';
 
             this.x = random(ww);
             this.y = random(hh);
 
             this.f = random(0.1, 0.6);
             this.w = 0;
-            this.v = floor(random(1, 3) * displayDensity());
+            this.v = floor(random(1, 3)) + (dDens * 2);
             this.r = random(HALF_PI);
-            this.b = int(random(40, 60));
+            this.b = int(random(30, 50));
 
             this.l = random(1) < 0.3 ? 10 : random(1) < 0.8 ? 12 : 14;
             this.p = random(1) < 0.6 ? 3 : 4;
          }
          Star.prototype.move = function() {
-            this.x += random(-0.4, 0.4) * displayDensity();
+            this.x += random(-0.4, 0.4) + random(-0.5, 0.5) * dDens;
             this.y += this.v;
 
             if (this.y > hh + this.w) {
-               this.t = random(1) < 0.33 ? 'star' : 'snow';
+               this.t = random(1) < 0.4 ? 'star' : 'snow';
 
                this.x = random(ww);
                this.y = -0.6*min(ww*0.1, hh*0.1); //max this.w
 
                this.f = random(0.2, 0.6);
-               this.v = floor(random(1, 3) * displayDensity());
+               this.v = floor(random(1, 3)) + (dDens * 2);
 
                this.l = random(1) < 0.3 ? 10 : random(1) < 0.8 ? 12 : 14;
                this.p = random(1) < 0.6 ? 3 : 4;
@@ -281,7 +306,7 @@
                CORPO[0]+CORPO[10]+20, CORPO[0]+CORPO[11]-5,
                
                -  8,    5,
-               - 58, -  5,   40, - 85,    5, -  5,
+               - 58, -  5,   40, - 85,    7, -  5,
                  15, - 50, - 30,    0,    5, -  4
             ];
 
@@ -342,8 +367,10 @@
                   drawing();
                pop();
 
-               if (frameCount % 40 === 0) {
-                  CODA[8] += CODA[8] === 5 ? 5 : -5;
+
+               var t = frameRate() < 40 ? 20 : 40;
+               if (frameCount % t === 0) {
+                  CODA[8] += CODA[8] === 7 ? 4 : -4;
                   angle = angle === 0 ? radians(5) : 0;
                }
             };
