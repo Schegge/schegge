@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+   <meta charset="utf-8">
+   <title>Snow over mountains</title>
+   <style>
+   html,
+   body {
+      background: rgb(106, 160, 168);
+      text-align: center;
+      overflow: hidden;
+      margin: 0;
+      padding: 0;
+   }
+
+   #canvas {
+      padding: 0;
+      margin: 0;
+   }
+   </style>
+</head>
+
+<body>
+   <div id="canvas"></div>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.4/p5.min.js"></script>
+   <script>
+   var positions = [];
+   var snowBig;
+
+   var ww = window.innerWidth;
+   var hh = window.innerHeight;
+
+   // programma principale
+   function setup() {
+      var cc = createCanvas(ww, hh);
+      cc.parent('canvas');
+
+      for (var i = 0; i < 40; i++) {
+         positions.push([random(ww), random(hh)]);
+      }
+
+      snowBig = 4 * displayDensity();
+   }
+
+   function draw() {
+      background(106, 160, 168);
+      snow();
+      mountains();
+   }
+
+   window.addEventListener('resize', function() {
+      ww = window.innerWidth;
+      hh = window.innerHeight;
+      resizeCanvas(ww, hh);
+
+      for (var i = 0; i < positions.length; i++) {
+         positions[i][0] = random(ww);
+         positions[i][1] = random(hh);
+      }
+   });
+
+   function snow() {
+      for (var i = 0; i < positions.length; i++) {
+         push();
+         strokeWeight(1);
+         stroke(255, 255, 255, 150);
+         noFill();
+         ellipse(positions[i][0], positions[i][1], snowBig, snowBig);
+         pop();
+
+         positions[i][0] += random(-2, 2) * displayDensity();
+         positions[i][1] += random(1, 2) * displayDensity();
+         if (positions[i][1] > hh + snowBig) {
+            positions[i][0] = random(ww);
+            positions[i][1] = -snowBig;
+         }
+      }
+   }
+
+   function mountains() {
+      push();
+      noStroke();
+      translate(0, hh);
+      fill(84, 67, 34);
+      triangle(ww * 0.3, -hh * 0.15, -ww * 0.19, 0, ww * 0.66, 0);
+      fill(105, 85, 48);
+      triangle(ww * 0.75, -hh * 0.12, ww * 0.37, 0, ww * 1.1, 0);
+      fill(214, 214, 214);
+      triangle(ww * 0.3, -hh * 0.155, ww * 0.18, -hh * 0.115, ww * 0.44, -hh * 0.094);
+      pop();
+   }
+   </script>
+</body>
+
+</html>

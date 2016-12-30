@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+   <meta charset="utf-8">
+   <title>APH Germany</title>
+   <style>
+   html,
+   body {
+      font-family: 'Georgia', serif;
+      background: #62A7BF;
+      padding: 0;
+      margin: 0;
+      overflow-y: hidden;
+   }
+   </style>
+</head>
+
+<body>
+   <div id="canvas"></div>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.4/p5.min.js"></script>
+   <script>
+   var ludwig;
+   var speech;
+   var hearts = [];
+   var heartsLength = 10;
+
+   var ww = window.innerWidth;
+   var hh = window.innerHeight;
+
+   function setup() {
+      var cc = createCanvas(ww, hh);
+      cc.parent('canvas');
+      frameRate(60);
+      noStroke();
+
+      textFont('Geogria');
+      textAlign(CENTER, CENTER);
+      textSize(20);
+      textLeading(18);
+
+      ludwig = new Ludwig();
+      speech = new Speech();
+      for (var i = 0; i < heartsLength; i++) {
+         hearts.push(new Heart(
+            random(ludwig.w - ludwig.faceW * 1.5, ludwig.w + ludwig.faceW * 1.5),
+            random(ludwig.h + ludwig.faceH * 1.4, hh)
+         ));
+      }
+   }
+
+   function draw() {
+      background('#62A7BF');
+
+      speech.drawing();
+
+      for (var i = 0; i < heartsLength; i++) {
+         if (frameCount > i * 60) {
+            hearts[i].allMethods();
+         }
+      }
+
+      ludwig.drawing();
+      ludwig.update();
+      if (frameCount % 240 === 0) ludwig.closeEyes = true;
+   }
+
+   function Ludwig() {
+      this.w = ww / 1.4;
+      this.h = hh - 200;
+
+      this.faceW = 50;
+      this.faceH = this.faceW * 1.6;
+
+      // BODY
+      var body = [
+         [-0.8, 0],
+         [-0.55, 1.05],
+         [-2.2, 1.21],
+         [-2.4, 1.31],
+         [-2.45, 1.51],
+         [-2.3, hh / this.faceH]
+      ];
+
+      var shirt = [0, body[1][1] + 0.2];
+
+      var coat = [
+         [0, body[1][1] + 1.5],
+         [-0.4, body[1][1] + 0.8]
+      ];
+
+      var collar = [
+         shirt, [-0.65, 1.05],
+         body[2],
+         [-0.3, shirt[1] + 0.25],
+         shirt
+      ];
+
+      var tie = [
+         [0, shirt[1] + 0.05],
+         [collar[3][0], shirt[1] - 0.05],
+         [-0.12, collar[3][1]],
+         [collar[3][0], coat[0][1]]
+      ];
+
+      // FACE
+
+      var face = [
+         [-0.8, -0.6],
+         [-1, 0],
+         [-0.8, 0.6],
+         [-0.2, 1]
+      ];
+
+      var ear = [
+         [-1, 0],
+         [-1.08, 0.02],
+         [-1.13, 0.05],
+         [-1.18, 0.2],
+         [-0.93, 0.48],
+         [-0.8, 0.46]
+      ];
+
+      var hair = [
+         [0, -0.8],
+         [-0.5, -0.7],
+         [-0.8, -0.6],
+         [-1, -0.4],
+         [-1.05, -0.2],
+         [-0.9, 0.4],
+         [-0.8, 0.45],
+         [-0.9, -0.1],
+         [-0.7, -0.4],
+         [0, -0.3]
+      ];
+
+      var eyeRef = 0.05;
+      var eye = [
+         [-0.18, eyeRef],
+         [-0.62, eyeRef],
+         [-0.58, 0.17],
+         [-0.21, 0.17]
+      ];
+
+      var pupil = [
+         (this.faceW * eye[0][0] + this.faceW * eye[1][0]) / 2,
+         (this.faceH * eye[0][1] + this.faceH * eye[2][1]) / 2
+      ];
+
+      var eyebrow = [
+         [-0.12, 0.02],
+         [-0.15, -0.05],
+         [-0.71, -0.14]
+      ];
+
+      var blush = [
+         [-0.18, 0.23],
+         [-0.23, 0.33],
+         [-0.30, 0.25],
+         [-0.35, 0.35],
+         [-0.42, 0.26],
+         [-0.47, 0.33],
+         [-0.54, 0.23],
+         [-0.59, 0.31]
+      ];
+
+      var nose = [
+         [0, 0.15],
+         [-0.02, 0.25],
+         [-0.06, 0.38],
+         [-0.02, 0.47],
+         [0, 0.5]
+      ];
+
+      var mouth = [
+         [0, 0.62],
+         [pupil[0] * 0.6, 0.6],
+         [pupil[0] * 0.8, 0.65],
+         [pupil[0] * 0.85, 0.7],
+         [pupil[0] * 0.8, 0.75],
+         [pupil[0] * 0.7, 0.8],
+         [0, 0.78]
+      ];
+
+      // ANIMATION
+      this.closeEyes = false;
+      var closeEyesUnit = 0.01;
+      var mouthUnit = 0.003;
+
+      this.update = function() {
+         if (this.closeEyes) {
+            eye[0][1] += closeEyesUnit;
+            eye[1][1] += closeEyesUnit;
+            if (eye[1][1] >= eye[2][1]) {
+               closeEyesUnit = -closeEyesUnit;
+            }
+            if (closeEyesUnit < 0 && eye[1][1] <= eyeRef) {
+               closeEyesUnit = -closeEyesUnit;
+               eye[0][1] = eyeRef;
+               eye[1][1] = eyeRef;
+               this.closeEyes = false;
+            }
+         }
+
+         for (var i = 0; i < mouth.length; i++) {
+            if (i <= 2) mouth[i][1] += mouthUnit;
+            else if (i >= 4) mouth[i][1] -= mouthUnit;
+         }
+         if (mouth[0][1] > 0.68 || mouth[0][1] < 0.6) {
+            mouthUnit = -mouthUnit;
+         }
+      };
+
+      this.eyes = function(seg) {
+         var pup = [
+            [pupil[0] * 0.9, this.faceH * eye[0][1]],
+            [pupil[0] * 1.1, this.faceH * eye[0][1]],
+            [pupil[0] * 1.2, pupil[1]],
+            [pupil[0] * 1.1, this.faceH * eye[2][1]],
+            [pupil[0] * 0.9, this.faceH * eye[2][1]],
+            [pupil[0] * 0.8, pupil[1]]
+         ];
+
+         fill('#FFFFFF');
+         beginShape();
+         for (var i = 0; i < eye.length; i++) {
+            vertex(seg * this.faceW * eye[i][0], this.faceH * eye[i][1]);
+         }
+         endShape();
+
+         fill('#56D3D6');
+         beginShape();
+         for (var i = 0; i < pup.length; i++) {
+            vertex(seg * pup[i][0], pup[i][1]);
+         }
+         endShape();
+
+         push();
+         stroke('#EDCAB6');
+         strokeWeight(1);
+         beginShape(LINES);
+         for (var i = 0; i < eye.length; i++) {
+            vertex(seg * this.faceW * eye[i][0], this.faceH * eye[i][1]);
+         }
+         endShape();
+         pop();
+      };
+
+      // DESIGN
+      this.drawing = function() {
+         push();
+         translate(this.w, this.h);
+
+         // body
+         fill('#EDCAB6');
+         beginShape();
+         for (var i = 0; i < body.length; i++) {
+            vertex(this.faceW * body[i][0], this.faceH * body[i][1]);
+         }
+         for (var i = body.length - 1; i >= 0; i--) {
+            vertex(-this.faceW * body[i][0], this.faceH * body[i][1]);
+         }
+         endShape();
+
+         // shirt
+         fill('#ffffff');
+         beginShape();
+         vertex(this.faceW * shirt[0], this.faceH * shirt[1]);
+         for (var i = 1; i < body.length; i++) {
+            vertex(this.faceW * (body[i][0] - 0.1), this.faceH * body[i][1]);
+         }
+         for (var i = body.length - 1; i >= 1; i--) {
+            vertex(-this.faceW * (body[i][0] - 0.1), this.faceH * body[i][1]);
+         }
+         endShape();
+
+         // tie
+         fill(200);
+         beginShape();
+         for (var i = 0; i < tie.length; i++) {
+            vertex(this.faceW * tie[i][0], this.faceH * tie[i][1]);
+         }
+         for (var i = tie.length - 1; i >= 0; i--) {
+            vertex(-this.faceW * tie[i][0], this.faceH * tie[i][1]);
+         }
+         endShape();
+
+         // collar
+         fill(230);
+         beginShape();
+         for (var i = 0; i < collar.length; i++) {
+            vertex(this.faceW * collar[i][0], this.faceH * collar[i][1]);
+         }
+         for (var i = collar.length - 1; i >= 0; i--) {
+            vertex(-this.faceW * collar[i][0], this.faceH * collar[i][1]);
+         }
+         endShape();
+
+         // coat
+         fill(110);
+         beginShape();
+         vertex(this.faceW * coat[0][0], this.faceH * coat[0][1]);
+         vertex(this.faceW * coat[1][0], this.faceH * coat[1][1]);
+         for (var i = 1; i < body.length; i++) {
+            vertex(this.faceW * (body[i][0] - 0.15), this.faceH * (body[i][1] - 0.01));
+         }
+         for (var i = body.length - 1; i >= 1; i--) {
+            vertex(-this.faceW * (body[i][0] - 0.15), this.faceH * (body[i][1] - 0.01));
+         }
+         vertex(-this.faceW * coat[1][0], this.faceH * coat[1][1]);
+         endShape();
+
+         // face
+         fill('#FAE0CF');
+         beginShape();
+         for (var i = 0; i < face.length; i++) {
+            vertex(this.faceW * face[i][0], this.faceH * face[i][1]);
+         }
+         for (var i = face.length - 1; i >= 0; i--) {
+            vertex(-this.faceW * face[i][0], this.faceH * face[i][1]);
+         }
+         endShape();
+
+         // ears
+         fill('#FAE0CF');
+         beginShape();
+         for (var i = 0; i < ear.length; i++) {
+            vertex(this.faceW * ear[i][0], this.faceH * ear[i][1]);
+         }
+         endShape();
+         beginShape();
+         for (var i = 0; i < ear.length; i++) {
+            vertex(-this.faceW * ear[i][0], this.faceH * ear[i][1]);
+         }
+         endShape();
+
+         // hair
+         fill('#FFD83B');
+         beginShape();
+         for (var i = 0; i < hair.length; i++) {
+            vertex(this.faceW * hair[i][0], this.faceH * hair[i][1]);
+         }
+         for (var i = hair.length - 1; i >= 0; i--) {
+            vertex(-this.faceW * hair[i][0], this.faceH * hair[i][1]);
+         }
+         endShape();
+
+         // eyes
+         this.eyes(1);
+         this.eyes(-1);
+
+         // eyebrows
+         fill('#FFD83B');
+         beginShape();
+         for (var i = 0; i < eyebrow.length; i++) {
+            vertex(this.faceW * eyebrow[i][0], this.faceH * eyebrow[i][1]);
+         }
+         endShape();
+         beginShape();
+         for (var i = eyebrow.length - 1; i >= 0; i--) {
+            vertex(-this.faceW * eyebrow[i][0], this.faceH * eyebrow[i][1]);
+         }
+         endShape();
+
+         // blush
+         push();
+         stroke('#F2A4AA');
+         strokeWeight(1);
+         beginShape(LINES);
+         for (var i = 0; i < blush.length; i++) {
+            vertex(this.faceW * blush[i][0], this.faceH * blush[i][1]);
+         }
+         endShape();
+         beginShape(LINES);
+         for (var i = 0; i < blush.length; i++) {
+            vertex(-this.faceW * blush[i][0], this.faceH * blush[i][1]);
+         }
+         endShape();
+         pop();
+
+         // nose
+         push();
+         noFill();
+         stroke('#E8BA9F');
+         strokeWeight(1);
+         beginShape();
+         for (var i = 0; i < nose.length; i++) {
+            vertex(this.faceW * nose[i][0], this.faceH * nose[i][1]);
+         }
+         endShape();
+         pop();
+
+         // mouth
+         fill('#F0B9A9');
+         beginShape();
+         for (var i = 0; i < mouth.length; i++) {
+            vertex(mouth[i][0], this.faceH * mouth[i][1]);
+         }
+         for (var i = mouth.length - 1; i >= 0; i--) {
+            vertex(-mouth[i][0], this.faceH * mouth[i][1]);
+         }
+         endShape();
+
+         pop();
+      };
+   }
+
+   function Speech() {
+      var x = ludwig.w - ludwig.faceW * 5;
+      var y = ludwig.h - ludwig.faceH / 2;
+
+      var w = 100;
+      var h = 65;
+
+      var points = [
+         [0, -1],
+         [-0.9, -1],
+         [-1, -0.9],
+         [-1, 0.9],
+         [-0.9, 1],
+         [0, 1]
+      ];
+
+      this.drawing = function() {
+         push();
+         translate(x, y);
+
+         fill('#C9DDE3');
+         beginShape();
+         for (var i = 0; i < points.length; i++) {
+            vertex(w * points[i][0], h * points[i][1]);
+         }
+         for (var i = points.length - 1; i >= 0; i--) {
+            vertex(-w * points[i][0], h * points[i][1]);
+         }
+         endShape();
+         beginShape();
+         vertex(w * 1.2, h * 0.4);
+         vertex(w * 0.9, h * 0.4);
+         vertex(w * 0.9, h * 0.7);
+         endShape();
+
+         fill('#62A7BF');
+         text(
+            "ITALIEN!\n" +
+            "I can't believe you!\n" +
+            "Flirting when\n" +
+            "you've got me!\n" +
+            "HEIRATE MICH!",
+            0, -2
+         );
+
+         pop();
+      };
+   }
+
+   function Heart(_x, _y) {
+      var x = _x;
+      var xInit = _x;
+      var y = _y;
+      var yInit = _y;
+
+      var w = random(10, 15);;
+      var h = w * 0.7;
+
+      var velocity = 0;
+      var jump = random(20, 60);
+      var direction = random(0, 1);
+
+      var points = [
+         [0, -0.7],
+         [-0.25, -0.9],
+         [-0.5, -1],
+         [-0.95, -0.8],
+         [-1, 0],
+         [-0.5, 0.7],
+         [0, 1]
+      ];
+
+      var update = function() {
+         if (direction < 0.6) x--;
+         else x++;
+         y += velocity * velocity + velocity * jump - 3.5;
+         velocity += 0.0008;
+      };
+
+      var checkBorders = function() {
+         if (x - w > ww || x + w < 0 || y + h < 0 || y - h > hh) {
+            x = xInit;
+            y = yInit;
+            velocity = 0;
+            jump = random(20, 40);
+            direction = random(0, 1);
+         }
+      };
+
+      var drawing = function() {
+         push();
+         translate(x, y);
+
+         fill('#ED2D67');
+         beginShape();
+         for (var i = 0; i < points.length; i++) {
+            vertex(w * points[i][0], h * points[i][1]);
+         }
+         for (var i = points.length - 1; i >= 0; i--) {
+            vertex(-w * points[i][0], h * points[i][1]);
+         }
+         endShape();
+
+         pop();
+      }
+
+      this.allMethods = function() {
+         drawing();
+         update();
+         checkBorders();
+      };
+   }
+   </script>
+</body>
+
+</html>
