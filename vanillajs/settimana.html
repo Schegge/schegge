@@ -1,422 +1,472 @@
 <!DOCTYPE html>
 <html>
-   <head>
-      <meta charset="UTF-8">
-      <title>Settimana</title>
-      <link href="https://fonts.googleapis.com/css?family=Molle:400i" rel="stylesheet">
-      <style>
-         body, html {
-            padding: 0;
-            margin: 0;
-            font-family: 'Georgia', serif;
-            font-size: 14px;
-            line-height: 1em;
-            color: #703B69;
-            background: #DFEAE4;
-         }
 
-         body {
-            width: 90%;
-            margin: 0 auto;
-         }
+<head>
+   <meta charset="UTF-8">
+   <title>Settimana</title>
+   <link href="https://fonts.googleapis.com/css?family=Molle:400i" rel="stylesheet">
+   <style>
+   body,
+   html {
+      padding: 0;
+      margin: 0;
+      font-family: 'Georgia', serif;
+      font-size: 14px;
+      line-height: 1em;
+      color: #703B69;
+      background: #DFEAE4;
+   }
 
-         :focus {
-            color: #BA4A6E;
-            outline: 0;
-            background-color: #dfeae4;
-            border-color: #CD9691;
-         }
-         ::selection {
-            color: #DFEAE4;
-            background-color: #0CABAB;
-         }
-         p {
-            padding: 0;
-            margin: 0;
-         }
+   body {
+      width: 90%;
+      margin: 0 auto;
+   }
 
-         header {
-            padding: 3em 0 2em;
-            text-align: center;
-         }
-         h1 {
-            color: #BA4A6E;
-            font-size: 2.5em;
-            text-shadow: 0 3px 0 #fff;
-            font-family: 'Molle', cursive;
-            padding: 0;
-            margin: 0;
-         }
-         header div {
-            text-align: right;
-            margin: 0 4em;
-         }
-         #organize {
-            cursor: pointer;
-            color: #CD9691;
-            font-variant: small-caps;
-         }
+   :focus {
+      color: #BA4A6E;
+      outline: 0;
+      background-color: #dfeae4;
+      border-color: #CD9691;
+   }
 
-         main {
-            display: flex;
-            flex-flow: row nowrap;
-            align-content: flex-start;
-            align-items: flex-start;
-            justify-content: center;
-            padding: 0 1em;
-         }
+   ::selection {
+      color: #DFEAE4;
+      background-color: #0CABAB;
+   }
 
-         .day {
-            display: flex;
-            flex-flow: column wrap;
-            padding: 0;
-            margin: .5em;
-            width: calc(100% / 7);
-            min-width: 1px;
-            box-sizing: border-box;
-            text-align: center;
-         }
-         .day h2 {
-            order: 1;
-            font-family: 'Arial', sans-serif;
-            color: #DFEAE4;
-            background: #0CABAB;
-            font-size: 1.2em;
-            line-height: 1.4em;
-            border-radius: .2em;
-            box-shadow: 0 4px 0 0 #0a9b9b;
-            font-weight: bold;
-            font-variant: small-caps;
-            margin: 0 0 1em 0;
-            padding: 0;
-         }
+   p {
+      padding: 0;
+      margin: 0;
+   }
 
-         .task {
-            position: relative;
-            margin-bottom: 1em;
-            padding: .2em;
-            border-radius: .2em;
-            background: rgba(255, 255, 255, .3);
-            box-shadow: 0 2px 0 1px rgba(0, 0, 0, .03);
-            overflow: hidden;
-            font-size: .8em;
-            box-sizing: border-box;
-            transition-duration: .5s;
-         }
-         .task p:nth-of-type(1) {
-            color: #CD9691;
-            font-family: 'Consolas', monospace;
-            background: rgba(0, 0, 0, .02);
-         }
-         .task p:nth-of-type(2) {
-            font-variant: small-caps;
-            margin-bottom: .3em;
-            color: #BA4A6E;
-         }
-         .task p:nth-of-type(n+3) {
-            padding: 0 .4em;
-         }
-         .task .more {
-            display: none;
-            margin: 2em 0 0;
-         }
-         .task:hover {
-            width: 200%;
-            height: 180px!important;
-            position: relative;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: #ebf4ef;
-            z-index: 88;
-         }
-         .task:hover .more {
-            display: block;
-            overflow-y: auto;
-         }
+   header {
+      padding: 3em 0 2em;
+      text-align: center;
+   }
 
-         .menu {
-            position: fixed;
-            left: 50%;
-            bottom: 2em;
-            transform: translateX(-50%);
-            margin: 0;
-            padding: 1em;
-            background: rgba(255, 255, 255, .9);
-            text-align: center;
-            border-radius: .4em;
-            box-shadow: 0 0 1em 1em rgba(0, 0, 0, .1);
-            width: 500px;
-            z-index: 99;
-         }
-         .error {
-            color: #BA4A6E;
-            font-size: .8em;
-            font-family: 'Consolas', monospace;
-            padding: 0 0 2em;
-         }
-         .info {
-            margin: 0 0 2em;
-         }
-         .info span {
-            background: rgba(0, 0, 0, .1);
-            margin: 0 .5em;
-         }
-         label {
-            display: block;
-            margin: 1em auto;
-            color: #CD9691;
-         }
-         input, textarea {
-            font-family: 'Consolas', monospace;
-         }
-         input, textarea, button {
-            border: 2px solid #DFEAE4;
-            color: rgba(0, 0, 0, .5);
-            padding: .1em .2em;
-         }
-         textarea {
-            display: block;
-            resize: none;
-            margin: 0 auto;
-         }
-         button {
-            cursor: pointer;
-            margin: 1em .5em;
-            color: #CD9691;
-            background: #fff;
-         }
-         button:hover {
-            background-color: #CD9691;
-            border-color: #CD9691;
-            color: #fff;
-         }
-         .modifica, .salva {
-            color: #BA4A6E;
-         }
-         .add {
-            color: #0CABAB;
-         }
-         .elimina {
-            color: #703B69;
-         }
-         .esci {
-            font-style: italic;
-         }
-      </style>
-      <style id="s"></style>
-   </head>
+   h1 {
+      color: #BA4A6E;
+      font-size: 2.5em;
+      text-shadow: 0 3px 0 #fff;
+      font-family: 'Molle', cursive;
+      padding: 0;
+      margin: 0;
+   }
 
-   <body>
-      <header>
-         <h1>Settimana</h1>
-         <div><span id="organize">Gestisci</span></div>
-      </header>
+   header div {
+      text-align: right;
+      margin: 0 4em;
+   }
 
-      <main></main>
+   #organize {
+      cursor: pointer;
+      color: #CD9691;
+      font-variant: small-caps;
+   }
 
-      <div id="organizeMenu" class="menu" draggable style="display:none">
-         <div class="error"></div>
-         <div class="info"></div>
+   main {
+      display: flex;
+      flex-flow: row nowrap;
+      align-content: flex-start;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 0 1em;
+   }
 
-         <div class="old">
-            <label>ID attività <input class="id" type="text" maxLength="15"></label>
-            <button class="modifica">Modifica</button>
-            <button class="add">Nuovo</button>
-            <button class="elimina">Elimina</button>
-         </div>
+   .day {
+      display: flex;
+      flex-flow: column wrap;
+      padding: 0;
+      margin: .5em;
+      width: calc(100% / 7);
+      min-width: 1px;
+      box-sizing: border-box;
+      text-align: center;
+   }
 
-         <div class="new" style="display:none">
-            <label>ID attività <input class="id" type="text" maxLength="20"></label>
-            <label>Nome attività <input class="what" type="text" maxLength="60"></label>
-            <label>Frequenza</label><textarea cols="50" rows="3" class="when" placeholder="esempio: lunedì 10:00 12:30, martedì 15:15 18:00"></textarea>
-            <label>Appunti</label><textarea cols="50" rows="4" class="more"></textarea>
-            <button class="salva">Salva</button>
-         </div>
+   .day h2 {
+      order: 1;
+      font-family: 'Arial', sans-serif;
+      color: #DFEAE4;
+      background: #0CABAB;
+      font-size: 1.2em;
+      line-height: 1.4em;
+      border-radius: .2em;
+      box-shadow: 0 4px 0 0 #0a9b9b;
+      font-weight: bold;
+      font-variant: small-caps;
+      margin: 0 0 1em 0;
+      padding: 0;
+   }
 
-         <button class="esci">Esci</button>
+   .task {
+      position: relative;
+      margin-bottom: 1em;
+      padding: .2em;
+      border-radius: .2em;
+      background: rgba(255, 255, 255, .3);
+      box-shadow: 0 2px 0 1px rgba(0, 0, 0, .03);
+      overflow: hidden;
+      font-size: .8em;
+      box-sizing: border-box;
+      transition-duration: .5s;
+   }
+
+   .task p:nth-of-type(1) {
+      color: #CD9691;
+      font-family: 'Consolas', monospace;
+      background: rgba(0, 0, 0, .02);
+   }
+
+   .task p:nth-of-type(2) {
+      font-variant: small-caps;
+      margin-bottom: .3em;
+      color: #BA4A6E;
+   }
+
+   .task p:nth-of-type(n+3) {
+      padding: 0 .4em;
+   }
+
+   .task .more {
+      display: none;
+      margin: 2em 0 0;
+   }
+
+   .task:hover {
+      width: 200%;
+      height: 180px!important;
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #ebf4ef;
+      z-index: 88;
+   }
+
+   .task:hover .more {
+      display: block;
+      overflow-y: auto;
+   }
+
+   .menu {
+      position: fixed;
+      left: 50%;
+      bottom: 2em;
+      transform: translateX(-50%);
+      margin: 0;
+      padding: 1em;
+      background: rgba(255, 255, 255, .9);
+      text-align: center;
+      border-radius: .4em;
+      box-shadow: 0 0 1em 1em rgba(0, 0, 0, .1);
+      width: 500px;
+      z-index: 99;
+   }
+
+   .error {
+      color: #BA4A6E;
+      font-size: .8em;
+      font-family: 'Consolas', monospace;
+      padding: 0 0 2em;
+   }
+
+   .info {
+      margin: 0 0 2em;
+   }
+
+   .info span {
+      background: rgba(0, 0, 0, .1);
+      margin: 0 .5em;
+   }
+
+   label {
+      display: block;
+      margin: 1em auto;
+      color: #CD9691;
+   }
+
+   input,
+   textarea {
+      font-family: 'Consolas', monospace;
+   }
+
+   input,
+   textarea,
+   button {
+      border: 2px solid #DFEAE4;
+      color: rgba(0, 0, 0, .5);
+      padding: .1em .2em;
+   }
+
+   textarea {
+      display: block;
+      resize: none;
+      margin: 0 auto;
+   }
+
+   button {
+      cursor: pointer;
+      margin: 1em .5em;
+      color: #CD9691;
+      background: #fff;
+   }
+
+   button:hover {
+      background-color: #CD9691;
+      border-color: #CD9691;
+      color: #fff;
+   }
+
+   .modifica,
+   .salva {
+      color: #BA4A6E;
+   }
+
+   .add {
+      color: #0CABAB;
+   }
+
+   .elimina {
+      color: #703B69;
+   }
+
+   .esci {
+      font-style: italic;
+   }
+   </style>
+   <style id="s"></style>
+</head>
+
+<body>
+   <header>
+      <h1>Settimana</h1>
+      <div><span id="organize">Gestisci</span></div>
+   </header>
+   <main></main>
+   <div id="organizeMenu" class="menu" draggable style="display:none">
+      <div class="error"></div>
+      <div class="info"></div>
+      <div class="old">
+         <label>ID attività
+            <input class="id" type="text" maxLength="15">
+         </label>
+         <button class="modifica">Modifica</button>
+         <button class="add">Nuovo</button>
+         <button class="elimina">Elimina</button>
       </div>
+      <div class="new" style="display:none">
+         <label>ID attività*
+            <input class="id" type="text" maxLength="20">
+         </label>
+         <label>Nome attività*
+            <input class="what" type="text" maxLength="60">
+         </label>
+         <label>Frequenza*</label>
+         <textarea class="when" cols="50" rows="3" placeholder="(esempio) lunedì 09:00 12:30, martedì/giovedì/sabato 15:15 18:00"></textarea>
+         <label>Appunti</label>
+         <textarea cols="50" rows="4" class="more"></textarea>
+         <button class="salva">Salva</button>
+      </div>
+      <button class="esci">Esci</button>
+   </div>
+   <script>
+   const days = ['lunedì', 'martedì', 'mercoledì', 'giovedì', 'venerdì', 'sabato', 'domenica'];
+   const parse = /^\s*([a-zì\/]+)\s+(\d{2}\:\d{2})\s+(\d{2}\:\d{2})\s*$/;
 
-      <script>
-         const days = ['lunedì', 'martedì', 'mercoledì', 'giovedì', 'venerdì', 'sabato', 'domenica'];
+   var tasks = JSON.parse(localStorage.getItem('settimana')) || {};
 
-         var tasks = JSON.parse(localStorage.getItem('settimana')) || {};
+   for (let d of days) {
+      let section = document.createElement('section');
+      section.className = 'day ' + d;
+      section.innerHTML = '<h2>' + d + '</h2>';
+      document.getElementsByTagName('main')[0].appendChild(section);
+   }
 
-         for(let d of days) {
-            let section = document.createElement('section');
-            section.className = 'day ' + d;
-            section.innerHTML = '<h2>' + d + '</h2>';
-            document.getElementsByTagName('main')[0].appendChild(section);
+   for (let t in tasks) addTask(t);
+   updateStyle();
+
+   function addTask(t) {
+      for (let i = 0; i < tasks[t].when.length; i++) {
+         let ds = tasks[t].when[i][1].split('/');
+         for (let j = 0; j < ds.length; j++) {
+
+            let article = document.createElement('article');
+            article.className = 'task ' + t + ' h' + tasks[t].when[i][2].replace(/[^0-9]/g, '');
+            article.innerHTML += '<p>' + tasks[t].when[i][2] + ' - ' + tasks[t].when[i][3] + '</p>';
+            article.innerHTML += '<p>' + t + '</p><p>' + tasks[t].what + '</p>';
+            article.innerHTML += '<p class="more">' + tasks[t].more + '</p>';
+
+            document.querySelector('.' + ds[j].trim()).appendChild(article);
          }
+      }
+   }
 
-         for(let t in tasks) addTask(t);
-         updateStyle();
+   function updateStyle() {
+      document.querySelector('style#s').innerHTML = '';
+      for (let t in tasks) {
+         for (let i = 0; i < tasks[t].when.length; i++) {
+            let ds = tasks[t].when[i][1].split('/');
+            for (let j = 0; j < ds.length; j++) {
 
-         function addTask(t) {
-            for(let i = 0; i < tasks[t].when.length; i++) {
-               let article = document.createElement('article');
-               article.className = 'task ' + t + ' h' + tasks[t].when[i][1].replace(/[^0-9]/g, '');
-               article.innerHTML += '<p>' + tasks[t].when[i][1] + ' - ' + tasks[t].when[i][2] + '</p>';
-               article.innerHTML += '<p>' + t + '</p><p>' + tasks[t].what + '</p>';
-               article.innerHTML += '<p class="more">' + tasks[t].more + '</p>';
-               document.querySelector('.' + tasks[t].when[i][0]).appendChild(article);
+               let height = (parseInt(tasks[t].when[i][3].split(':')[0]) - parseInt(tasks[t].when[i][2].split(':')[0])) * 40;
+               if (height < 40) height = 40;
+
+               document.querySelector('style#s').innerHTML +=
+                  '.' + ds[j].trim() + ' .task.' + t + '.h' + tasks[t].when[i][2].replace(/[^0-9]/g, '') +
+                  ' { order: ' + tasks[t].when[i][2].replace(/[^0-9]/g, '') +
+                  '; height: ' + height + 'px; }\n';
             }
          }
+      }
+   }
 
-         function updateStyle() {
-            document.querySelector('style#s').innerHTML = '';
-            for(let t in tasks) {
-               for(let i = 0; i < tasks[t].when.length; i++) {
-                  let height = (parseInt(tasks[t].when[i][2].split(':')[0]) - parseInt(tasks[t].when[i][1].split(':')[0])) * 40;
-                  if (height < 40) height = 40;
+   // ORGANIZE MENU
 
-                  document.querySelector('style#s').innerHTML +=
-                    '.' + tasks[t].when[i][0] + ' .task.' + t + '.h' + tasks[t].when[i][1].replace(/[^0-9]/g, '') +
-                    ' { order: ' + tasks[t].when[i][1].replace(/[^0-9]/g, '')  +
-                    '; height: ' + height + 'px; }\n';
+   const organizeMenu = {
+      show: document.getElementById('organize'),
+      get: document.getElementById('organizeMenu'),
+      old: document.querySelector('#organizeMenu .old'),
+      nuovo: document.querySelector('#organizeMenu .new'),
+      esci: document.querySelector('#organizeMenu .esci'),
+      modifica: document.querySelector('#organizeMenu .modifica'),
+      add: document.querySelector('#organizeMenu .add'),
+      elimina: document.querySelector('#organizeMenu .elimina'),
+      salva: document.querySelector('#organizeMenu .salva'),
+      error: document.querySelector('#organizeMenu .error'),
+      info: document.querySelector('#organizeMenu .info')
+   }
+
+   organizeMenu.show.addEventListener('click', function() {
+      organizeMenu.get.style.display = 'block';
+
+      organizeMenu.error.innerHTML = '';
+      organizeMenu.info.innerHTML = '';
+      organizeMenu.old.style.display = 'block';
+      organizeMenu.nuovo.style.display = 'none';
+      document.querySelector('#organizeMenu .new .id').disabled = false;
+
+      if (!Object.keys(tasks).length) return;
+      organizeMenu.info.innerHTML = 'Attività presenti: ';
+      for (let t in tasks) {
+         organizeMenu.info.innerHTML += '<span>' + t + '</span>';
+      }
+   });
+
+   organizeMenu.esci.addEventListener('click', function() {
+      organizeMenu.get.style.display = 'none';
+   });
+
+   organizeMenu.modifica.addEventListener('click', function() {
+      organizeMenu.error.innerHTML = '';
+      let id = document.querySelector('#organizeMenu .old .id').value.trim();
+
+      if (!id || !tasks[id]) {
+         organizeMenu.error.innerHTML = 'Attività "' + id + '" non esiste.';
+         return;
+      }
+
+      organizeMenu.old.style.display = 'none';
+      organizeMenu.nuovo.style.display = 'block';
+
+      document.querySelector('#organizeMenu .new .id').value = id;
+      document.querySelector('#organizeMenu .new .id').disabled = true;
+      document.querySelector('#organizeMenu .new .what').value = tasks[id].what;
+      document.querySelector('#organizeMenu .new .when').value = '';
+      for (let i = 0; i < tasks[id].when.length; i++) {
+         document.querySelector('#organizeMenu .new .when').value += i === 0 ? tasks[id].when[i][0] : ', ' + tasks[id].when[i][0];
+      }
+      document.querySelector('#organizeMenu .new .more').value = tasks[id].more;
+   });
+
+   organizeMenu.add.addEventListener('click', function() {
+      organizeMenu.error.innerHTML = '';
+      let id = document.querySelector('#organizeMenu .old .id').value.trim();
+
+      if (tasks[id]) {
+         organizeMenu.error.innerHTML = 'Attività "' + id + '" esiste già.';
+         return;
+      }
+
+      organizeMenu.old.style.display = 'none';
+      organizeMenu.nuovo.style.display = 'block';
+
+      document.querySelector('#organizeMenu .new .id').value = id;
+      document.querySelector('#organizeMenu .new .what').value = '';
+      document.querySelector('#organizeMenu .new .when').value = '';
+      document.querySelector('#organizeMenu .new .more').value = '';
+   });
+
+   organizeMenu.elimina.addEventListener('click', function() {
+      let t = document.querySelector('#organizeMenu .id').value.trim();
+
+      if (t && tasks[t]) {
+         delete tasks[t];
+         for (let item of document.querySelectorAll('.' + t)) {
+            item.parentNode.removeChild(item);
+         }
+
+         localStorage.setItem('settimana', JSON.stringify(tasks));
+         return;
+      }
+
+      organizeMenu.error.innerHTML = 'Attività "' + t + '" non esiste.'
+   });
+
+   organizeMenu.salva.addEventListener('click', function() {
+      let id = document.querySelector('#organizeMenu .new .id').value.trim();
+      let what = document.querySelector('#organizeMenu .new .what').value.trim();
+      let when = document.querySelector('#organizeMenu .new .when').value.trim();
+      let more = document.querySelector('#organizeMenu .new .more').value.trim() || '';
+      when = when.split(',');
+      for (let i = 0; i < when.length; i++) {
+         when[i] = when[i].trim();
+         when[i] = when[i].match(parse);
+      }
+
+      ///
+      let error = '';
+
+      if (!id || !what || !when) {
+         error += 'C\'è almeno un campo obbligatorio vuoto.<br>';
+      }
+
+      for (let i = 0; i < when.length; i++) {
+         if (!when[i] || when[i].length !== 4 || !when[i][0] || !when[i][1] || !when[i][2] || !when[i][3]) {
+
+            error += 'La formattazione della frequenza è sbagliata.<br>';
+            break;
+
+         } else if (when[i][1]) {
+            let ds = when[i][1].split('/');
+            for (let j = 0; j < ds.length; j++) {
+               if (!days.includes(ds[j].trim())) {
+
+                  error += 'Il giorno "' + ds[j] + '" non esiste.<br>';
                }
             }
          }
+      }
 
-         // ORGANIZE MENU
+      if (error) {
+         organizeMenu.error.innerHTML = error;
+         return;
+      }
+      ///
 
-         const organizeMenu = {
-            show: document.getElementById('organize'),
-            get: document.getElementById('organizeMenu'),
-            old: document.querySelector('#organizeMenu .old'),
-            nuovo: document.querySelector('#organizeMenu .new'),
-            esci: document.querySelector('#organizeMenu .esci'),
-            modifica: document.querySelector('#organizeMenu .modifica'),
-            add: document.querySelector('#organizeMenu .add'),
-            elimina: document.querySelector('#organizeMenu .elimina'),
-            salva: document.querySelector('#organizeMenu .salva'),
-            error: document.querySelector('#organizeMenu .error'),
-            info: document.querySelector('#organizeMenu .info')
-         }
+      tasks[id] = {
+         what,
+         when,
+         more
+      };
+      for (let item of document.querySelectorAll('.' + id)) {
+         item.parentNode.removeChild(item);
+      }
+      addTask(id);
+      updateStyle();
+      organizeMenu.get.style.display = 'none';
+      localStorage.setItem('settimana', JSON.stringify(tasks));
+   });
+   </script>
+</body>
 
-         organizeMenu.show.addEventListener('click', function() {
-            organizeMenu.get.style.display = 'block';
-
-            organizeMenu.error.innerHTML = '';
-            organizeMenu.info.innerHTML = '';
-            organizeMenu.old.style.display = 'block';
-            organizeMenu.nuovo.style.display = 'none';
-            document.querySelector('#organizeMenu .new .id').disabled = false;
-
-            if (!Object.keys(tasks).length) return;
-            organizeMenu.info.innerHTML = 'Attività presenti: ';
-            for(let t in tasks) {
-               organizeMenu.info.innerHTML += '<span>' + t + '</span>';
-            }
-         });
-
-         organizeMenu.esci.addEventListener('click', function() {
-            organizeMenu.get.style.display = 'none';
-         });
-
-         organizeMenu.modifica.addEventListener('click', function() {
-            organizeMenu.error.innerHTML = '';
-            let id = document.querySelector('#organizeMenu .old .id').value.trim();
-
-            if (!id || !tasks[id]) {
-               organizeMenu.error.innerHTML = 'Attività "' + id + '" non esiste.';
-               return;
-            }
-
-            organizeMenu.old.style.display = 'none';
-            organizeMenu.nuovo.style.display = 'block';
-
-            document.querySelector('#organizeMenu .new .id').value = id;
-            document.querySelector('#organizeMenu .new .id').disabled = true;
-            document.querySelector('#organizeMenu .new .what').value = tasks[id].what;
-            document.querySelector('#organizeMenu .new .when').value =
-              JSON.stringify(tasks[id].when).replace(/\,/g, ' ').replace(/\] \[/g, ', ').replace(/[\]\[\"]/g, '');
-            document.querySelector('#organizeMenu .new .more').value = tasks[id].more;
-         });
-
-         organizeMenu.add.addEventListener('click', function() {
-            organizeMenu.error.innerHTML = '';
-            let id  = document.querySelector('#organizeMenu .old .id').value.trim();
-
-            if (tasks[id]) {
-               organizeMenu.error.innerHTML = 'Attività "' + id + '" esiste già.';
-               return;
-            }
-
-            organizeMenu.old.style.display = 'none';
-            organizeMenu.nuovo.style.display = 'block';
-
-            document.querySelector('#organizeMenu .new .id').value = id;
-            document.querySelector('#organizeMenu .new .what').value = '';
-            document.querySelector('#organizeMenu .new .when').value = '';
-            document.querySelector('#organizeMenu .new .more').value = '';
-         });
-
-         organizeMenu.elimina.addEventListener('click', function() {
-            let t = document.querySelector('#organizeMenu .id').value.trim();
-
-            if (t && tasks[t]) {
-               delete tasks[t];
-               for(let item of document.querySelectorAll('.' + t)) {
-                  item.parentNode.removeChild(item);
-               }
-
-               organizeMenu.get.style.display = 'none';
-               localStorage.setItem('settimana', JSON.stringify(tasks));
-               return
-            }
-
-            organizeMenu.error.innerHTML = 'Attività "' + t + '" non esiste.'
-         });
-
-         organizeMenu.salva.addEventListener('click', function() {
-            let id = document.querySelector('#organizeMenu .new .id').value.trim();
-            let what = document.querySelector('#organizeMenu .new .what').value.trim();
-            let when = document.querySelector('#organizeMenu .new .when').value.trim();
-            let more = document.querySelector('#organizeMenu .new .more').value.trim() || ' ';
-            when = when.split(',');
-            for(let i = 0; i < when.length; i++) {
-               when[i] = when[i].trim().split(' ');
-            }
-
-            ///
-            let error = '';
-
-            if (!id || !what || !when) {
-               error += 'C\'è almeno un campo obbligatorio vuoto.<br>';
-            }
-
-            for(let i = 0; i < when.length; i++) {
-               if (when[i].length !== 3 ||
-                 !when[i][1] || !when[i][2] ||
-                 !when[i][1].match(/^\d\d\:\d\d$/) || !when[i][2].match(/^\d\d\:\d\d$/)) {
-
-                  error += 'La formattazione della frequenza è sbagliata. Ricontrolla spazi e orari.<br>';
-                  break;
-               }
-            }
-
-            for(let i = 0; i < when.length; i++) {
-               if (!days.includes(when[i][0])) {
-                  error += 'Il giorno "' + when[i][0] + '" non esiste.<br>';
-               }
-            }
-
-            if (error) {
-               organizeMenu.error.innerHTML = error;
-               return;
-            }
-            ///
-
-            tasks[id] = { what, when, more };
-            for(let item of document.querySelectorAll('.' + id)) {
-               item.parentNode.removeChild(item);
-            }
-            addTask(id);
-            updateStyle();
-            organizeMenu.get.style.display = 'none';
-            localStorage.setItem('settimana', JSON.stringify(tasks));
-         });
-
-      </script>
-   </body>
 </html>

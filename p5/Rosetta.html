@@ -1,659 +1,699 @@
 <!DOCTYPE html>
 <html>
-   <head>
-      <meta charset="UTF-8">
-      <title>Rosetta</title>
 
-      <style>
-         * {
-            margin: 0;
-            padding: 0;
+<head>
+   <meta charset="UTF-8">
+   <title>Rosetta</title>
+   <style>
+   * {
+      margin: 0;
+      padding: 0;
+   }
+
+   :focus {
+      outline: none;
+   }
+
+   body,
+   html {
+      font-family: 'Verdana', 'Arial', sans-serif;
+      font-size: 15px;
+      color: #fff;
+      text-align: center;
+      background: rgb(40, 127, 155);
+      height: 100%;
+   }
+
+   body {
+      display: -ms-flexbox;
+      display: flex;
+      -ms-flex-flow: row wrap;
+      flex-flow: row wrap;
+      -ms-flex-pack: center;
+      justify-content: center;
+      -ms-flex-line-pack: center;
+      align-content: center;
+      -ms-flex-align: center;
+      align-items: center;
+   }
+
+   #canvas,
+   #texts {
+      -ms-flex: 1 100%;
+      flex: 1 100%;
+   }
+
+   #texts {
+      text-shadow: 2px 2px 1px rgba(0, 0, 0, .4);
+   }
+   </style>
+</head>
+
+<body>
+   <div id="canvas"></div>
+   <div id="texts">Rosetta &amp; Phiale's Adventure</div>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.4/p5.min.js"></script>
+   <script>
+   var textHtml = document.querySelector('#texts');
+
+   var scene = 0;
+
+   var animation;
+   var rosetta;
+   var philae;
+   var comet;
+
+   function setup() {
+      var cc = createCanvas(16 * 44, 9 * 44);
+      cc.parent('canvas');
+
+      pixelDensity(1);
+      frameRate(60);
+
+      textFont('Arial');
+      textAlign(CENTER, CENTER);
+      imageMode(CENTER);
+
+      rosetta = new Rosetta();
+      philae = new Philae();
+      comet = new Comet();
+      animation = new Animation();
+   }
+
+   function draw() {
+      animation.space();
+
+      switch (scene) {
+         case 0:
+            animation.play();
+            break;
+         case 1:
+            animation.animation();
+            break;
+      }
+   }
+
+   function mouseClicked() {
+      if (scene == 0 && mouseX > width / 2 - 45 && mouseX < width / 2 + 45 && mouseY > height / 2 - 45 && mouseY < height / 2 + 45) {
+         scene = 1;
+      }
+   }
+
+   /*
+    * ROSETTA
+    */
+   function Rosetta() {
+      this.ps = [
+         createVector(width, 0),
+         createVector(width / 2 - 15, height / 2 - 30),
+         createVector(width / 2 + 35, height / 2 - 80),
+         createVector(width / 2 - 15, height / 2 - 100),
+      ];
+
+      this.position = this.ps[0];
+      this.center = this.ps[1];
+      var velocity = createVector(0, 0);
+      var acceleration = createVector(0, 0);
+      this.doScaling = true;
+      this.end = false;
+      var scaling = 0;
+
+      var rosettaImg = createGraphics(385, 145);
+      rosettaImg.noStroke();
+      rosettaImg.background(55, 105, 125, 0);
+      rosettaImg.rectMode(CORNER);
+      rosettaImg.translate(190, 71);
+      //solar wings
+      rosettaImg.strokeWeight(2);
+      rosettaImg.stroke(55, 105, 125);
+      rosettaImg.line(-25, 16, -35, 10);
+      rosettaImg.line(-26, 25, -35, 33);
+      rosettaImg.fill(102, 180, 201);
+      rosettaImg.quad(-31, 3, -132, 24, -131, 42, -31, 37);
+      rosettaImg.fill(110, 190, 213);
+      rosettaImg.quad(41, -6, 183, -25, 193, 18, 47, 34);
+      //face
+      rosettaImg.fill(196, 229, 238);
+      rosettaImg.quad(-25, 0, 25, -10, 30, 40, -25, 40);
+      rosettaImg.fill(116, 147, 163);
+      rosettaImg.quad(25, -10, 35, -5, 38, 35, 30, 40);
+      //smile
+      rosettaImg.ellipse(-12, 10, 3, 7);
+      rosettaImg.ellipse(4, 7, 3, 7);
+      rosettaImg.noFill();
+      rosettaImg.push();
+      rosettaImg.rotate(radians(-5));
+      rosettaImg.arc(-4, 18, 35, 18, radians(-5), radians(180));
+      rosettaImg.pop();
+      //solar wings [2]
+      rosettaImg.line(41, 3, 33, 10);
+      rosettaImg.line(44, 23, 33, 20);
+      //solar wings [3]
+      rosettaImg.line(-118, 25, -117, 38);
+      rosettaImg.line(-92, 19, -91, 36);
+      rosettaImg.line(-60, 13, -59, 35);
+      rosettaImg.line(73, -7, 79, 26);
+      rosettaImg.line(108, -10, 115, 21);
+      rosettaImg.line(147, -15, 154, 17);
+      //antenna
+      rosettaImg.line(14, -9, 9, -42);
+      rosettaImg.line(6, -7, 9, -42);
+      rosettaImg.fill(81, 129, 148);
+      rosettaImg.ellipse(8, -47, 11, 22);
+      rosettaImg.fill(196, 229, 238);
+      rosettaImg.ellipse(5, -47, 11, 24);
+      rosettaImg.strokeWeight(4);
+      rosettaImg.line(-7, -47, 4, -47);
+
+      this.move = function() {
+         var dir = p5.Vector.sub(this.center, this.position);
+         dir.normalize();
+         dir.mult(0.06);
+         acceleration = dir;
+         velocity.add(acceleration);
+         velocity.limit(1);
+         if (this.end) velocity.limit(0.3);
+         this.position.add(velocity);
+         acceleration.mult(0);
+      };
+
+      //scaling animation in the beginning
+      var toBig = function() {
+            scale(scaling);
+            scaling += 0.0028;
+            if (scaling >= 1) {
+               scaling = 1;
+               this.doScaling = false;
+            }
+         }
+         //scaling animation in the end
+      var toSmall = function() {
+         scale(scaling);
+         scaling -= 0.002;
+         if (scaling <= 0.6) {
+            scaling = 0.6;
+         }
+      }
+
+      this.drawing = function() {
+         push();
+         translate(this.position.x, this.position.y);
+         if (this.doScaling) {
+            if (!this.end) toBig();
+            else toSmall();
+         }
+         image(rosettaImg, 0, 0);
+         pop();
+      };
+   }
+
+   /*
+    * PHILAE
+    */
+   function Philae() {
+      this.x = 0;
+      this.y = 0;
+      this.xDestination = 0;
+      this.yDestination = 0;
+      var scaling = 0;
+      var hanging = 0;
+      var hangingRate = 0.2;
+      this.movingToComet = false;
+      this.rotation = 0
+      this.sleeping = false;
+      var eyesClosing = 0;
+
+      var philaeImg = createGraphics(60, 61);
+      philaeImg.noStroke();
+      philaeImg.background(55, 105, 125, 0);
+      philaeImg.rectMode(CORNER);
+      philaeImg.strokeWeight(2);
+      philaeImg.translate(30, 28);
+      philaeImg.stroke(55, 105, 125);
+      philaeImg.fill(196, 229, 238);
+      philaeImg.quad(-13, -4, 18, -4, 21, 30, -14, 30);
+      philaeImg.fill(116, 147, 163);
+      philaeImg.quad(18, -4, 26, -1, 29, 24, 21, 30);
+      philaeImg.noFill();
+      philaeImg.push();
+      philaeImg.rotate(radians(-5));
+      philaeImg.arc(1, 18, 22, 7, radians(10), radians(184));
+      philaeImg.pop();
+
+      //drawing of philae when he is attached to rosetta
+      this.drawingR = function() {
+         push();
+         rectMode(CORNER);
+         translate(this.x, this.y);
+         scale(scaling);
+         scaling += 0.02;
+         if (scaling >= 1) {
+            scaling = 1;
          }
 
-         :focus {
-            outline: none;
+         strokeWeight(2);
+         stroke(55, 105, 125);
+
+         //left hand
+         line(-8 + hanging, 8, -10, -14);
+         //face
+         image(philaeImg, hanging, 0);
+         //smile
+         ellipse(-5 + hanging, 8, 1, 5);
+         ellipse(5 + hanging, 7, 1, 5);
+         //legs
+         line(-2 + hanging, 30, -2 - hanging, 43 - hanging / 2);
+         line(13 + hanging, 30, 13 - hanging, 44 - hanging / 2);
+         fill(110, 190, 213);
+         ellipse(-5 - hanging, 43 - hanging / 2, 10, 7);
+         ellipse(10 - hanging, 44 - hanging / 2, 10, 7);
+         //right hand
+         line(23 + hanging, 8, 21, -14);
+         pop();
+
+         // swaying
+         hanging += hangingRate;
+         if (hanging >= 3) {
+            hangingRate = -hangingRate;
          }
-
-         body, html {
-            font-family: 'Verdana', 'Arial', sans-serif;
-            font-size: 15px;
-            color: #fff;
-            text-align: center;
-            background: rgb(40, 127, 155);
-            height: 100%;
+         if (hanging <= -3) {
+            hangingRate = -hangingRate;
          }
+      }; // fine drawR
 
-         body {
-            display: -ms-flexbox;
-            display: flex;
-            -ms-flex-flow: row wrap;
-                flex-flow: row wrap;
-            -ms-flex-pack: center;
-                justify-content: center;
-            -ms-flex-line-pack: center;
-                align-content: center;
-            -ms-flex-align: center;
-                align-items: center;
-         }
-
-         #canvas, #texts {
-            -ms-flex: 1 100%;
-                flex: 1 100%;
-         }
-         #texts {
-            text-shadow: 2px 2px 1px rgba(0,0,0,.4);
-         }
-      </style>
-   </head>
-
-   <body>
-      <div id="canvas"></div>
-      <div id="texts">Rosetta &amp; Phiale's Adventure</div>
-
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.4/p5.min.js"></script>
-      <script>
-         var textHtml = document.querySelector('#texts');
-
-         var scene = 0;
-
-         var animation;
-         var rosetta;
-         var philae;
-         var comet;
-
-         function setup() {
-            var cc = createCanvas(16*44, 9*44);
-            cc.parent('canvas');
-
-            pixelDensity(1);
-            frameRate(60);
-
-            textFont('Arial');
-            textAlign(CENTER, CENTER);
-            imageMode(CENTER);
-
-            rosetta = new Rosetta();
-            philae = new Philae();
-            comet = new Comet();            
-            animation = new Animation();
-         }
-
-         function draw() {
-            animation.space();
-
-            switch(scene) {
-               case 0:
-                  animation.play();
-                  break; 
-               case 1:
-                  animation.animation();
-                  break;
+      //drawing of philae when moving and is attached to the comet
+      this.drawingC = function() {
+         push();
+         rectMode(CORNER);
+         translate(this.x, this.y);
+         rotate(radians(this.rotation));
+         scale(scaling);
+         if (this.movingToComet) { //scaling animation when landing
+            scaling -= 0.0015;
+            if (scaling <= 0.65) {
+               scaling = 0.65;
             }
          }
 
-         function mouseClicked() {
-            if (scene == 0 && mouseX > width/2 - 45 && mouseX < width/2 + 45 && mouseY > height/2 - 45 && mouseY < height/2 + 45) {
-               scene = 1;
+         strokeWeight(2);
+         stroke(55, 105, 125);
+
+         // face
+         image(philaeImg, 0, 0);
+         //smile
+         if (this.sleeping) { //eyes closing animation to put philae to sleep
+            eyesClosing += 0.05;
+            if (eyesClosing >= 4) {
+               eyesClosing = 4;
+            }
+         }
+         ellipse(-5, 8, 1 + eyesClosing, 5 - eyesClosing);
+         ellipse(5, 7, 1 + eyesClosing, 5 - eyesClosing);
+         //legs
+         line(-2, 30, -2, 35);
+         line(13, 30, 13, 36);
+         fill(110, 190, 213);
+         ellipse(-5, 38, 10, 7);
+         ellipse(10, 39, 10, 7);
+         //right hand
+         line(23, 9, 18, 23);
+
+         pop();
+      }; // fine drawC
+
+      this.move = function() {
+         if (this.x > this.xDestination) {
+            this.x /= 1.0015;
+            if (this.x < this.xDestination) {
+               this.x = this.xDestination;
+            }
+         } else {
+            this.x *= 1.0015;
+            if (this.x > this.xDestination) {
+               this.x = this.xDestination;
+            }
+         }
+         if (this.y < this.yDestination) {
+            this.y *= 1.0015;
+            if (this.y > this.yDestination) {
+               this.y = this.yDestination;
+            }
+         } else {
+            this.y /= 1.0015;
+            if (this.y < this.yDestination) {
+               this.y = this.yDestination;
+            }
+         }
+      }; // fine move
+   }
+
+   /*
+    * COMET
+    */
+   function Comet() {
+      this.ps = [
+         createVector(-90, height / 2 + 50),
+         createVector(width / 2 - 80, height / 2 + 90),
+         createVector(width / 2 - 25, height / 2 + 60),
+      ];
+
+      this.position = this.ps[0];
+      this.center = this.ps[1];
+      var velocity = createVector(0, 0);
+      var acceleration = createVector(0, 0);
+      var rotation = 0;
+      var comaOpacity = 0;
+      this.end = false;
+
+      var cometImg = createGraphics(120, 120);
+      cometImg.background(120, 0);
+      cometImg.translate(65, 70);
+      cometImg.noStroke();
+      //border
+      cometImg.fill(120);
+      cometImg.ellipse(0, 0, 103, 83);
+      cometImg.ellipse(-20, -20, 87, 67);
+      //bottom
+      cometImg.fill(155);
+      cometImg.ellipse(0, 0, 100, 80);
+      cometImg.fill(135);
+      cometImg.ellipse(-4, -7, 67, 56);
+      //top
+      cometImg.fill(172);
+      cometImg.ellipse(-20, -20, 84, 64);
+      cometImg.rotate(radians(-15));
+      cometImg.fill(183);
+      cometImg.ellipse(-23, -32, 45, 34);
+      cometImg.fill(193);
+      cometImg.ellipse(-24, -33, 31, 22);
+
+      this.move = function() {
+         var dir = p5.Vector.sub(this.center, this.position);
+         dir.normalize();
+         dir.mult(5);
+         acceleration = dir;
+         velocity.add(acceleration);
+         velocity.limit(0.5);
+         this.position.add(velocity);
+         acceleration.mult(0);
+         rotation += 1;
+      };
+
+      this.coma = function() {
+         push();
+         translate(this.position.x - 75, this.position.y);
+         if (!this.end) {
+            comaOpacity += 0.2;
+            if (comaOpacity >= 150) {
+               comaOpacity = 150;
+            }
+         } else {
+            comaOpacity -= 0.2;
+            if (comaOpacity <= 0) {
+               comaOpacity = 0;
+            }
+         }
+         noStroke();
+
+         fill(255, 255, 255, comaOpacity);
+         beginShape();
+         vertex(0, 0);
+         bezierVertex(0, -24, 35, -155, 270 + random(-5, 5), 0);
+         bezierVertex(35, 155, 0, 24, 0, 0);
+         endShape();
+         pop();
+      };
+
+      this.drawing = function() {
+         push();
+         translate(this.position.x, this.position.y);
+         rotate(radians(rotation));
+         image(cometImg, 0, 0);
+         pop();
+      };
+   }
+
+
+   /*
+    * ANIMATION
+    */
+   function Animation() {
+      var scritte = [
+         /* 0*/
+         "once upon a time...",
+         /* 1*/
+         "a spacecraft called rosetta",
+         /* 2*/
+         "and her brother philae",
+         /* 3*/
+         "set off on an adventure",
+         /* 4*/
+         "a long long journey to visit a comet",
+         /* 5*/
+         "called 67p/churyumov-gerasimenko",
+         /* 6*/
+         "after a 10-year journey",
+         /* 7*/
+         "they finally reached their destination",
+         /* 8*/
+         "rosetta's exciting mission was to follow the comet",
+         /* 9*/
+         "as it travelled around the sun",
+         /*10*/
+         "while philae would visit the surface",
+         /*11*/
+         "as rosetta got closer to the comet",
+         /*12*/
+         "she realized its shape was rather strange",
+         /*13*/
+         "after a long night of preparation",
+         /*14*/
+         "philae was ready for separation and landing",
+         /*15*/
+         "he reached the surface of the comet",
+         /*16*/
+         "but all was not well",
+         /*17*/
+         "his harpoons did not fire",
+         /*18*/
+         "he rised from the surface",
+         /*19*/
+         "but eventually came back down again",
+         /*20*/
+         "it took him just over two days to conduct",
+         /*21*/
+         "all the experiments he had brought with him",
+         /*22*/
+         "after all his hard work",
+         /*23*/
+         "philae began to feel tired",
+         /*24*/
+         "he fell into a deep sleep safe in the knowledge",
+         /*25*/
+         "that he did his main job well",
+         /*26*/
+         "...",
+         /*27*/
+         "......",
+         /*28*/
+         "rosetta was waiting for philae to wake up",
+         /*29*/
+         "not even knowing where he had landed",
+         /*30*/
+         "but her brother didn't report back for a long time",
+         /*31*/
+         "time passed and briefly he spoke to her",
+         /*32*/
+         "before losing contact again",
+         /*33*/
+         "rosetta found him again just before",
+         /*34*/
+         "the end of her adventure",
+         /*35*/
+         "crushing into the comet's surface",
+         /*36*/
+         "to rest forever near her brother"
+      ];
+      var textsLength = scritte.length;
+
+      var timePlay; //time passed in play
+      var timeDraw; //time passed in animation
+      var time = 60 * 3; //every text appear for 3 seconds, frameRate=60
+      var startTime = []; //when each text starts
+      for (var i = 0; i < textsLength; i++) {
+         startTime.push(2 + time * i);
+      }
+
+      var stars = [];
+      var starsLength = 30;
+      for (var i = 0; i < starsLength; i++) {
+         stars.push([random(width), random(height), random(6)]);
+      }
+
+      var endBackOpacity = 1;
+      var endFinOpacity = 1;
+      var endRotation = 0;
+      var endRotRate = 0.3;
+
+      var finImg = createGraphics(187, 60);
+      finImg.background(100, 0);
+      finImg.textSize(58);
+      finImg.translate(0, 53);
+      finImg.fill(0, 0, 0, 100);
+      finImg.text("‹ f i n ›", 2, 2);
+      finImg.fill(255, 255, 255);
+      finImg.text("‹ f i n ›", 0, 0);
+
+
+      this.play = function() {
+         if (mouseX > width / 2 - 45 && mouseX < width / 2 + 45 && mouseY > height / 2 - 45 && mouseY < height / 2 + 45) {
+            cursor(HAND);
+         } else {
+            cursor(ARROW);
+         }
+         timePlay = frameCount;
+         push();
+         fill(255, 255, 255, 50);
+         ellipse(width / 2, height / 2, 90, 90);
+         fill(255, 255, 255, 100);
+         strokeWeight(2);
+         stroke(255, 255, 255, 160);
+         triangle(width / 2 - 20, height / 2 - 30, width / 2 - 20, height / 2 + 30, width / 2 + 35, height / 2);
+         fill(255, 255, 255, 180);
+         noStroke();
+         textSize(17);
+         text("play", width / 2, height / 2);
+         pop();
+      };
+
+      this.ending = function() {
+         push();
+         noStroke();
+         fill(40, 127, 155, endBackOpacity);
+         rectMode(CORNER);
+         rect(0, 0, width, height);
+         pop();
+
+         push();
+         tint(255, endBackOpacity);
+         translate(width / 2, height / 2);
+         rotate(radians(endRotation));
+         image(finImg, 0, 0);
+         pop();
+
+         endBackOpacity++;
+         if (endBackOpacity >= 255) {
+            endBackOpacity = 255;
+            endFinOpacity++;
+            if (endFinOpacity >= 255) {
+               endFinOpacity = 255;
+            }
+            endRotation += endRotRate;
+            if (endRotation >= 10) {
+               endRotRate = -endRotRate;
+            }
+            if (endRotation <= -10) {
+               endRotRate = -endRotRate;
+            }
+         }
+      };
+
+      this.space = function() {
+         background(40, 127, 155);
+         for (var i = 0; i < starsLength; i++) {
+            stroke(255);
+            strokeWeight(stars[i][2]);
+            point(stars[i][0], stars[i][1]);
+            stars[i][0]++;
+            if (stars[i][0] > width + stars[i][1] / 2) {
+               stars[i][2] = random(6);
+               stars[i][1] = random(height);
+               stars[i][0] = -stars[i][2] / 2;
+            }
+         }
+         noStroke();
+         rectMode(CENTER);
+         //lighter blue in the middle
+         for (var i = 0; i < 10; i++) {
+            fill(52, 153, 173, 200 - i * 20);
+            rect(width / 2, height / 2 - 5 - i * 10, width, 10);
+            rect(width / 2, height / 2 + 5 + i * 10, width, 10);
+         }
+      };
+
+      this.animation = function() {
+         cursor(ARROW);
+         timeDraw = frameCount - timePlay;
+
+         for (var i = 0; i < textsLength; i++) {
+            if (timeDraw > startTime[i] && timeDraw <= startTime[i] + time) {
+               textHtml.innerHTML = scritte[i];
+            } else if (timeDraw > startTime[textsLength - 1] + time) {
+               textHtml.innerHTML = '&nbsp;';
             }
          }
 
-         /*
-          * ROSETTA
-          */
-         function Rosetta() {            
-            this.ps = [
-               createVector(width       ,              0),
-               createVector(width/2 - 15, height/2 -  30),
-               createVector(width/2 + 35, height/2 -  80),
-               createVector(width/2 - 15, height/2 - 100),
-            ];
+         rosetta.move();
 
-            this.position = this.ps[0];
-            this.center = this.ps[1];
-            var velocity = createVector(0, 0);
-            var acceleration = createVector(0, 0);
-            this.doScaling = true;
-            this.end = false;
-            var scaling = 0;
-            
-            var rosettaImg = createGraphics(385, 145);
-            rosettaImg.noStroke();
-            rosettaImg.background(55, 105, 125, 0);
-            rosettaImg.rectMode(CORNER);
-            rosettaImg.translate(190, 71);
-               //solar wings
-               rosettaImg.strokeWeight(2);
-               rosettaImg.stroke(55, 105, 125);
-               rosettaImg.line(-25, 16, -35, 10);
-               rosettaImg.line(-26, 25, -35, 33);
-               rosettaImg.fill(102, 180, 201);
-               rosettaImg.quad(-31, 3, -132, 24, -131, 42, -31, 37);
-               rosettaImg.fill(110, 190, 213);
-               rosettaImg.quad(41, -6, 183, -25, 193, 18, 47, 34);
-               //face
-               rosettaImg.fill(196, 229, 238);
-               rosettaImg.quad(-25, 0, 25, -10, 30, 40, -25, 40);
-               rosettaImg.fill(116, 147, 163);
-               rosettaImg.quad(25, -10, 35, -5, 38, 35, 30, 40);
-               //smile
-               rosettaImg.ellipse(-12, 10, 3, 7);
-               rosettaImg.ellipse(4, 7, 3, 7);
-               rosettaImg.noFill();
-               rosettaImg.push();
-               rosettaImg.rotate(radians(-5));
-               rosettaImg.arc(-4, 18, 35, 18, radians(-5), radians(180));
-               rosettaImg.pop();
-               //solar wings [2]
-               rosettaImg.line(41, 3, 33, 10);
-               rosettaImg.line(44, 23, 33, 20);
-               //solar wings [3]
-               rosettaImg.line(-118, 25, -117, 38);
-               rosettaImg.line(-92, 19, -91, 36);
-               rosettaImg.line(-60, 13, -59, 35);
-               rosettaImg.line(73, -7, 79, 26);
-               rosettaImg.line(108, -10, 115, 21);
-               rosettaImg.line(147, -15, 154, 17);
-               //antenna
-               rosettaImg.line(14, -9, 9, -42);
-               rosettaImg.line(6, -7, 9, -42);
-               rosettaImg.fill(81, 129, 148);
-               rosettaImg.ellipse(8, -47, 11, 22);
-               rosettaImg.fill(196, 229, 238);
-               rosettaImg.ellipse(5, -47, 11, 24);
-               rosettaImg.strokeWeight(4);
-               rosettaImg.line(-7, -47, 4, -47);
-
-            this.move = function() {
-               var dir = p5.Vector.sub(this.center, this.position);
-               dir.normalize();
-               dir.mult(0.06);
-               acceleration = dir;
-               velocity.add(acceleration);
-               velocity.limit(1);
-               if(this.end) velocity.limit(0.3);
-               this.position.add(velocity);
-               acceleration.mult(0);
-            }; 
-
-            //scaling animation in the beginning
-            var toBig = function() {
-               scale(scaling);
-               scaling += 0.0028;
-               if (scaling >= 1) {
-                  scaling = 1;
-                  this.doScaling = false;
-               }
-            }
-            //scaling animation in the end
-            var toSmall = function() {
-               scale(scaling);
-               scaling -= 0.002;
-               if (scaling <= 0.6) {
-                  scaling = 0.6;
-               }
-            }
-
-            this.drawing = function() {    
-               push();
-               translate(this.position.x, this.position.y);
-               if (this.doScaling) {
-                  if(!this.end) toBig();
-                  else toSmall();
-               }
-               image(rosettaImg, 0, 0);
-               pop();
-            };
+         if (timeDraw > startTime[2] && timeDraw <= startTime[14]) {
+            philae.x = rosetta.position.x;
+            philae.y = rosetta.position.y + 54;
+            philae.drawingR();
+         }
+         if (timeDraw > startTime[10]) {
+            comet.drawing();
+            comet.move();
+         }
+         if (timeDraw > startTime[11]) {
+            rosetta.center = rosetta.ps[2];
+         }
+         if (timeDraw > startTime[14]) {
+            philae.movingToComet = true;
+            philae.drawingC();
+            philae.move();
+            philae.rotation++;
+         }
+         if ((timeDraw > startTime[14] && timeDraw <= startTime[18]) || timeDraw > startTime[19]) {
+            philae.xDestination = comet.position.x;
+            philae.yDestination = comet.position.y;
+         }
+         if (timeDraw > startTime[14]) {
+            rosetta.center = rosetta.ps[3];
+         }
+         if (timeDraw > startTime[18] && timeDraw <= startTime[19]) {
+            philae.xDestination = comet.position.x + 80;
+         }
+         if (timeDraw > startTime[20]) {
+            comet.center = comet.ps[2];
+         }
+         if (timeDraw > startTime[23]) {
+            philae.x = comet.position.x;
+            philae.y = comet.position.y;
+         }
+         if (timeDraw > startTime[24]) {
+            philae.sleeping = true;
+         }
+         if (timeDraw > startTime[25]) {
+            comet.coma();
+         }
+         if (timeDraw > startTime[31]) {
+            comet.end = true;
+         }
+         if (timeDraw > startTime[35]) {
+            rosetta.doScaling = true;
+            rosetta.end = true;
+            rosetta.center = createVector(comet.position.x, comet.position.y);
          }
 
-         /*
-          * PHILAE
-          */
-         function Philae() {
-            this.x = 0;
-            this.y = 0;
-            this.xDestination = 0;
-            this.yDestination = 0;
-            var scaling = 0;
-            var hanging = 0;
-            var hangingRate = 0.2;
-            this.movingToComet = false;
-            this.rotation = 0
-            this.sleeping = false;
-            var eyesClosing = 0;
-            
-            var philaeImg = createGraphics(60, 61);
-            philaeImg.noStroke();
-            philaeImg.background(55, 105, 125, 0);
-            philaeImg.rectMode(CORNER);
-            philaeImg.strokeWeight(2);
-            philaeImg.translate(30, 28);
-               philaeImg.stroke(55, 105, 125);
-               philaeImg.fill(196, 229, 238);
-               philaeImg.quad(-13, -4, 18, -4, 21, 30, -14, 30);
-               philaeImg.fill(116, 147, 163);
-               philaeImg.quad(18, -4, 26, -1, 29, 24, 21, 30);
-               philaeImg.noFill();
-               philaeImg.push();
-               philaeImg.rotate(radians(-5));
-               philaeImg.arc(1, 18, 22, 7, radians(10), radians(184));
-               philaeImg.pop();
+         rosetta.drawing();
 
-            //drawing of philae when he is attached to rosetta
-            this.drawingR = function() {                  
-               push();
-               rectMode(CORNER);
-               translate(this.x, this.y);
-               scale(scaling);
-               scaling += 0.02;
-               if (scaling >= 1) { 
-                  scaling = 1;
-               }
-               
-               strokeWeight(2);
-               stroke(55, 105, 125);
-
-               //left hand
-               line(-8 + hanging, 8, -10, -14);
-               //face
-               image(philaeImg, hanging, 0);    
-               //smile
-               ellipse(-5 + hanging, 8, 1, 5);
-               ellipse(5 + hanging, 7, 1, 5);    
-               //legs
-               line(-2 + hanging, 30, -2 - hanging, 43 - hanging/2);
-               line(13 + hanging, 30, 13 - hanging, 44 - hanging/2);
-               fill(110, 190, 213);
-               ellipse(-5 - hanging, 43 - hanging/2, 10, 7);
-               ellipse(10 - hanging, 44 - hanging/2, 10, 7);
-               //right hand
-               line(23 + hanging, 8, 21, -14);
-               pop();
-
-               // swaying
-               hanging += hangingRate;
-               if (hanging >= 3) {
-                  hangingRate = -hangingRate;
-               }
-               if (hanging <= -3) {
-                  hangingRate = -hangingRate;
-               }
-            }; // fine drawR
-
-            //drawing of philae when moving and is attached to the comet
-            this.drawingC = function() {
-               push();
-               rectMode(CORNER);
-               translate(this.x, this.y);
-               rotate(radians(this.rotation));
-               scale(scaling);
-               if (this.movingToComet) {//scaling animation when landing
-                  scaling -= 0.0015;
-                  if (scaling <= 0.65) { 
-                     scaling = 0.65;
-                  }
-               }
-
-               strokeWeight(2);
-               stroke(55, 105, 125);
-
-               // face
-               image(philaeImg, 0, 0); 
-               //smile
-               if (this.sleeping) {//eyes closing animation to put philae to sleep
-                  eyesClosing += 0.05;
-                  if (eyesClosing >= 4) { 
-                     eyesClosing = 4;
-                  }
-               }
-               ellipse(-5, 8, 1 + eyesClosing, 5 - eyesClosing);
-               ellipse(5, 7, 1 + eyesClosing, 5 - eyesClosing);
-               //legs
-               line(-2, 30, -2, 35);
-               line(13, 30, 13, 36);
-               fill(110, 190, 213);
-               ellipse(-5, 38, 10, 7);
-               ellipse(10, 39, 10, 7);
-               //right hand
-               line(23, 9, 18, 23);
-
-               pop();
-            }; // fine drawC
-
-            this.move = function() {
-               if (this.x > this.xDestination) {
-                  this.x /= 1.0015;
-                  if (this.x < this.xDestination) { 
-                     this.x = this.xDestination;
-                  }
-               } else {
-                  this.x *= 1.0015;
-                  if (this.x > this.xDestination) { 
-                     this.x = this.xDestination;
-                  }
-               }
-               if (this.y < this.yDestination) {
-                  this.y *= 1.0015;
-                  if (this.y > this.yDestination) { 
-                     this.y = this.yDestination;
-                  }
-               } else {
-                  this.y /= 1.0015;
-                  if (this.y < this.yDestination) { 
-                     this.y = this.yDestination;
-                  }
-               }
-            }; // fine move
+         if (timeDraw > startTime[textsLength - 1]) {
+            this.ending();
          }
+      };
 
-         /*
-          * COMET
-          */
-         function Comet() {            
-            this.ps = [
-               createVector(     - 90, height/2 + 50),
-               createVector(width/2 - 80, height/2 + 90),
-               createVector(width/2 - 25, height/2 + 60),
-            ];
+   }
+   </script>
+</body>
 
-            this.position = this.ps[0];
-            this.center = this.ps[1];
-            var velocity = createVector(0, 0);
-            var acceleration = createVector(0, 0);
-            var rotation = 0;
-            var comaOpacity = 0;
-            this.end = false;
-            
-            var cometImg = createGraphics(120, 120);
-            cometImg.background(120, 0);
-            cometImg.translate(65, 70);
-            cometImg.noStroke();
-               //border
-               cometImg.fill(120);
-               cometImg.ellipse(0, 0, 103, 83);
-               cometImg.ellipse(-20, -20, 87, 67);
-               //bottom
-               cometImg.fill(155);
-               cometImg.ellipse(0, 0, 100, 80);
-               cometImg.fill(135);
-               cometImg.ellipse(-4, -7, 67, 56);
-               //top
-               cometImg.fill(172);
-               cometImg.ellipse(-20, -20, 84, 64);
-               cometImg.rotate(radians(-15));
-               cometImg.fill(183);
-               cometImg.ellipse(-23, -32, 45, 34);
-               cometImg.fill(193);
-               cometImg.ellipse(-24, -33, 31, 22);
-
-            this.move = function() {
-               var dir = p5.Vector.sub(this.center, this.position);
-               dir.normalize();
-               dir.mult(5);
-               acceleration = dir;
-               velocity.add(acceleration);
-               velocity.limit(0.5);
-               this.position.add(velocity);
-               acceleration.mult(0);
-               rotation += 1;
-            };
-
-            this.coma = function() {
-               push();
-               translate(this.position.x - 75, this.position.y);
-               if(!this.end) {
-                  comaOpacity += 0.2;
-                  if (comaOpacity >= 150) {
-                     comaOpacity = 150;
-                  }
-               } else {
-                  comaOpacity -= 0.2;
-                  if (comaOpacity <= 0) {
-                     comaOpacity = 0;
-                  }
-               }
-               noStroke();
-
-               fill(255, 255, 255, comaOpacity);
-               beginShape();
-               vertex(0, 0);
-               bezierVertex(0, -24, 35, -155, 270 + random(-5, 5), 0);
-               bezierVertex(35, 155, 0, 24, 0, 0);
-               endShape();
-               pop();
-            };
-
-            this.drawing = function() {
-               push();
-               translate(this.position.x, this.position.y);
-               rotate(radians(rotation));    
-                  image(cometImg, 0, 0);
-               pop();
-            };
-         }
-
-
-         /*
-          * ANIMATION
-          */
-         function Animation() {
-            var scritte = [
-               /* 0*/ "once upon a time...",
-               /* 1*/ "a spacecraft called rosetta",
-               /* 2*/ "and her brother philae",
-               /* 3*/ "set off on an adventure",
-               /* 4*/ "a long long journey to visit a comet",
-               /* 5*/ "called 67p/churyumov-gerasimenko",
-               /* 6*/ "after a 10-year journey",
-               /* 7*/ "they finally reached their destination",
-               /* 8*/ "rosetta's exciting mission was to follow the comet",
-               /* 9*/ "as it travelled around the sun",
-               /*10*/ "while philae would visit the surface",
-               /*11*/ "as rosetta got closer to the comet",
-               /*12*/ "she realized its shape was rather strange",
-               /*13*/ "after a long night of preparation",
-               /*14*/ "philae was ready for separation and landing",
-               /*15*/ "he reached the surface of the comet",
-               /*16*/ "but all was not well",
-               /*17*/ "his harpoons did not fire",
-               /*18*/ "he rised from the surface",
-               /*19*/ "but eventually came back down again",
-               /*20*/ "it took him just over two days to conduct",
-               /*21*/ "all the experiments he had brought with him",
-               /*22*/ "after all his hard work",
-               /*23*/ "philae began to feel tired",
-               /*24*/ "he fell into a deep sleep safe in the knowledge",
-               /*25*/ "that he did his main job well",
-               /*26*/ "...",
-               /*27*/ "......",
-               /*28*/ "rosetta was waiting for philae to wake up",
-               /*29*/ "not even knowing where he had landed",
-               /*30*/ "but her brother didn't report back for a long time",
-               /*31*/ "time passed and briefly he spoke to her",
-               /*32*/ "before losing contact again",
-               /*33*/ "rosetta found him again just before",
-               /*34*/ "the end of her adventure",
-               /*35*/ "crushing into the comet's surface",
-               /*36*/ "to rest forever near her brother"
-            ];
-            var textsLength = scritte.length;
-            
-            var timePlay; //time passed in play
-            var timeDraw; //time passed in animation
-            var time = 60*3; //every text appear for 3 seconds, frameRate=60
-            var startTime = []; //when each text starts
-            for (var i = 0; i < textsLength; i++) {
-               startTime.push(2 + time * i);
-            }
-
-            var stars = [];
-            var starsLength = 30;
-            for (var i = 0; i < starsLength; i++) {
-               stars.push([random(width), random(height), random(6)]);
-            }
-
-            var endBackOpacity = 1;
-            var endFinOpacity = 1;
-            var endRotation = 0;
-            var endRotRate = 0.3;
-            
-            var finImg = createGraphics(187, 60);
-            finImg.background(100, 0);
-            finImg.textSize(58);
-            finImg.translate(0, 53);
-               finImg.fill(0, 0, 0, 100);
-               finImg.text("‹ f i n ›", 2, 2);
-               finImg.fill(255, 255, 255);
-               finImg.text("‹ f i n ›", 0, 0);
-
-
-            this.play = function() {
-               if (mouseX > width/2 - 45 && mouseX < width/2 + 45 && mouseY > height/2 - 45 && mouseY < height/2 + 45) {
-                  cursor(HAND);
-               } else {
-                  cursor(ARROW);
-               }
-               timePlay = frameCount;
-               push();
-               fill(255, 255, 255, 50);
-               ellipse(width/2, height/2, 90, 90);
-               fill(255, 255, 255, 100);
-               strokeWeight(2);
-               stroke(255, 255, 255, 160);
-               triangle(width/2 - 20, height/2 - 30, width/2 - 20, height/2 + 30, width/2 + 35, height/2);
-               fill(255, 255, 255, 180);
-               noStroke();
-               textSize(17);
-               text("play", width/2, height/2);
-               pop();
-            };
-            
-            this.ending = function() {
-               push();
-               noStroke();
-               fill(40, 127, 155, endBackOpacity);
-               rectMode(CORNER);
-               rect(0, 0, width, height);
-               pop();
-            
-               push();
-               tint(255, endBackOpacity);
-               translate(width/2, height/2);
-               rotate(radians(endRotation));
-                  image(finImg, 0, 0);
-               pop();
-               
-               endBackOpacity++;
-               if (endBackOpacity >= 255) {
-                  endBackOpacity = 255;
-                  endFinOpacity++;
-                  if (endFinOpacity >= 255) {
-                     endFinOpacity = 255;
-                  }
-                  endRotation += endRotRate;
-                  if (endRotation >= 10) {
-                     endRotRate = -endRotRate;
-                  }
-                  if (endRotation <= -10) {
-                     endRotRate = -endRotRate;
-                  }
-               }
-            };
-            
-            this.space = function() {
-               background(40, 127, 155);
-               for (var i = 0; i < starsLength; i++) {
-                  stroke(255);
-                  strokeWeight(stars[i][2]);
-                  point(stars[i][0], stars[i][1]);
-                  stars[i][0]++;
-                  if ( stars[i][0] > width + stars[i][1] / 2 ) {
-                     stars[i][2] = random(6);
-                     stars[i][1] = random(height);
-                     stars[i][0] = -stars[i][2] / 2;
-                  }
-               }
-               noStroke();
-               rectMode(CENTER);
-               //lighter blue in the middle
-               for (var i = 0; i < 10; i++) {
-                  fill(52, 153, 173, 200-i*20);
-                  rect(width/2, height/2 - 5 - i*10, width, 10);
-                  rect(width/2, height/2 + 5 + i*10, width, 10);
-               }
-            };
-            
-            this.animation = function() {
-               cursor(ARROW);
-               timeDraw = frameCount - timePlay;
-               
-               for (var i = 0; i < textsLength; i++) {
-                  if (timeDraw > startTime[i] && timeDraw <= startTime[i] + time) {
-                     textHtml.innerHTML = scritte[i];
-                  } else if (timeDraw > startTime[textsLength-1] + time) {
-                     textHtml.innerHTML = '&nbsp;';
-                  }
-               }
-               
-               rosetta.move();
-               
-               if (timeDraw > startTime[2] && timeDraw <= startTime[14]) {
-                  philae.x = rosetta.position.x;
-                  philae.y = rosetta.position.y + 54;
-                  philae.drawingR();
-               }
-               if (timeDraw > startTime[10]) {
-                  comet.drawing();
-                  comet.move();
-               }
-               if (timeDraw > startTime[11]) {
-                  rosetta.center = rosetta.ps[2];
-               }
-               if (timeDraw > startTime[14]) {
-                  philae.movingToComet = true;
-                  philae.drawingC();
-                  philae.move();
-                  philae.rotation++;
-               }
-               if ( (timeDraw > startTime[14] && timeDraw <= startTime[18]) || timeDraw > startTime[19]) {
-                  philae.xDestination = comet.position.x;
-                  philae.yDestination = comet.position.y;
-               }
-               if (timeDraw > startTime[14]) {
-                  rosetta.center = rosetta.ps[3];
-               }
-               if (timeDraw > startTime[18] && timeDraw <= startTime[19]) {
-                  philae.xDestination = comet.position.x + 80;
-               }
-               if (timeDraw > startTime[20]) {
-                  comet.center = comet.ps[2];
-               }
-               if (timeDraw > startTime[23]) {
-                  philae.x = comet.position.x;
-                  philae.y = comet.position.y;
-               }
-               if (timeDraw > startTime[24]) {
-                  philae.sleeping = true;
-               }
-               if (timeDraw > startTime[25]) {
-                  comet.coma();
-               }
-               if (timeDraw > startTime[31]) {
-                  comet.end = true;
-               }
-               if (timeDraw > startTime[35]) {
-                  rosetta.doScaling = true;
-                  rosetta.end = true;
-                  rosetta.center = createVector(comet.position.x, comet.position.y);
-               }
-               
-               rosetta.drawing();
-               
-               if (timeDraw > startTime[textsLength-1]) {
-                  this.ending();
-               }
-            };
-
-         }
-      </script>
-   </body>
 </html>

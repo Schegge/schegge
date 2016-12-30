@@ -1,204 +1,215 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="UTF-8">
-		<title>The X-Files</title>
 
-		<link href="https://fonts.googleapis.com/css?family=Roboto:700" rel="stylesheet">
-		<style>
-			* {
-				margin: 0;
-				padding: 0;
-			}
+<head>
+   <meta charset="UTF-8">
+   <title>The X-Files</title>
+   <link href="https://fonts.googleapis.com/css?family=Roboto:700" rel="stylesheet">
+   <style>
+   * {
+      margin: 0;
+      padding: 0;
+   }
 
-			:focus {
-				outline: none;
-			}
+   :focus {
+      outline: none;
+   }
 
-			body, html {
-				font-family: 'Roboto', sans-serif;
-				text-align: center;
-				background: rgb(93, 194, 177);
-				font-size: 14px;
-				color: #49AD9B;
-				height: 100%;
-			}
+   body,
+   html {
+      font-family: 'Roboto', sans-serif;
+      text-align: center;
+      background: rgb(93, 194, 177);
+      font-size: 14px;
+      color: #49AD9B;
+      height: 100%;
+   }
 
-			body {
-				display: -ms-flexbox;
-				display: flex;
-				-ms-flex-flow: row wrap;
-				    flex-flow: row wrap;
-				-ms-flex-pack: center;
-				    justify-content: center;
-				-ms-flex-line-pack: start;
-				    align-content: flex-start;
-				-ms-flex-align: center;
-				    align-items: center;
-			}
+   body {
+      display: -ms-flexbox;
+      display: flex;
+      -ms-flex-flow: row wrap;
+      flex-flow: row wrap;
+      -ms-flex-pack: center;
+      justify-content: center;
+      -ms-flex-line-pack: start;
+      align-content: flex-start;
+      -ms-flex-align: center;
+      align-items: center;
+   }
 
-			header {
-				padding: 1% 0;
-				-ms-flex: 1 100%;
-				    flex: 1 100%;
-			}
-				h1 {
-					font-size: 280%;
-				}
-		</style>
-	</head>
+   header {
+      padding: 1% 0;
+      -ms-flex: 1 100%;
+      flex: 1 100%;
+   }
 
-	<body>
-		<header><h1>The X-Files</h1></header>
+   h1 {
+      font-size: 280%;
+   }
+   </style>
+</head>
 
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.4/p5.min.js"></script>
-		<script>
-			var ufo;
-			var ufoPosLength = 20;
-			var ufoPos = [];
+<body>
+   <header>
+      <h1>The X-Files</h1></header>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.4/p5.min.js"></script>
+   <script>
+   var ufo;
+   var ufoPosLength = 20;
+   var ufoPos = [];
 
-			var mnts = [
-					[[3, -6, 4, 0], '#49AD9B'],
-					[[28, 36, 15, 34, 27, 40], '#19471C'],
-					[[34, 55, 24, 32, 63, 53, 11, 52, 51, 37, 66, 51, 61], '#1E211C']
-				 ];
+   var mnts = [
+      [
+         [3, -6, 4, 0],
+         '#49AD9B'
+      ],
+      [
+         [28, 36, 15, 34, 27, 40],
+         '#19471C'
+      ],
+      [
+         [34, 55, 24, 32, 63, 53, 11, 52, 51, 37, 66, 51, 61],
+         '#1E211C'
+      ]
+   ];
 
-			/**
-			**/
+   /**
+    **/
 
-			function setup() {
-				createCanvas(400, 500);
-				noStroke();
+   function setup() {
+      createCanvas(400, 500);
+      noStroke();
 
-				textFont('Roboto');
-				textSize(38);
-				textLeading(40);
-				textAlign(CENTER, CENTER);
+      textFont('Roboto');
+      textSize(38);
+      textLeading(40);
+      textAlign(CENTER, CENTER);
 
-				ufoPos.push(createVector(width / 2, -25));
-				ufoPos.push(createVector(width / 2, height / 2.5));
-				for (var i = 2; i < ufoPosLength; i++) {
-					ufoPos.push(createVector( round(random(60, width - 60)), round(random(60, height - 170)) ));
-				}
-				  
-				ufo = new Ufo();  
-			}
+      ufoPos.push(createVector(width / 2, -25));
+      ufoPos.push(createVector(width / 2, height / 2.5));
+      for (var i = 2; i < ufoPosLength; i++) {
+         ufoPos.push(createVector(round(random(60, width - 60)), round(random(60, height - 170))));
+      }
 
-			function draw() {
-				background(93, 194, 177);
-				mountains();
-				believe();
-				ufo.drawing();
-				ufo.move();
-				ufo.update();
-			}
+      ufo = new Ufo();
+   }
 
-			/**
-			**/
+   function draw() {
+      background(93, 194, 177);
+      mountains();
+      believe();
+      ufo.drawing();
+      ufo.move();
+      ufo.update();
+   }
 
-			function mountain(h, n, ver, color) {
-				push();
-					translate(0, h);
-					fill(color);
-					beginShape();
-					vertex(0, height-h);
-					for (var i = 0; i <= n; i++) {
-						vertex(i*width/n, ver[i]);
-					}
-					vertex(width, height-h);
-					endShape();
-				pop();
-			};
+   /**
+    **/
 
-			function mountains() {
-				for (var i = 0; i < mnts.length; i++) {
-					mountain(height-150+i*0.2, mnts[i][0].length-1, mnts[i][0], mnts[i][1]);
-				}
-			};
+   function mountain(h, n, ver, color) {
+      push();
+      translate(0, h);
+      fill(color);
+      beginShape();
+      vertex(0, height - h);
+      for (var i = 0; i <= n; i++) {
+         vertex(i * width / n, ver[i]);
+      }
+      vertex(width, height - h);
+      endShape();
+      pop();
+   };
 
-			function believe() {
-				push();
-					translate(width / 2, height - 50);
-				
-					fill(255);
-					text("I  W A N T  T O\nB E L I E V E", 0, 0);
-				pop();
-			}
+   function mountains() {
+      for (var i = 0; i < mnts.length; i++) {
+         mountain(height - 150 + i * 0.2, mnts[i][0].length - 1, mnts[i][0], mnts[i][1]);
+      }
+   };
 
-			function Ufo() {
-				this.position = ufoPos[0];
-				this.center = ufoPos[1];
-				this.acceleration = createVector(0, 0);
-				this.velocity = createVector(0, 0);
-			
-				this.move = function() {
-					var dir = p5.Vector.sub(this.center, this.position);
-					dir.normalize();
-					this.acceleration = dir;
-					this.velocity.add(this.acceleration);
-					this.velocity.limit(1.2);
-					this.position.add(this.velocity);
-				};
+   function believe() {
+      push();
+      translate(width / 2, height - 50);
 
-			    this.update = function() {
-					for (var i = 0; i < ufoPosLength; i++) {
-						if (this.center == ufoPos[i]) {
-							if ( ( this.position.x >= this.center.x - 5 && this.position.x <= this.center.x + 5 ) &&
-								  ( this.position.y >= this.center.y - 5 && this.position.y <= this.center.y + 5 ) ) {
-								var j = i + 1;
-								if (j == 10) {
-									this.center = ufoPos[1];
-								} else {
-									this.center = ufoPos[j];
-								}
-							}
-						}
-					}
-				};
+      fill(255);
+      text("I  W A N T  T O\nB E L I E V E", 0, 0);
+      pop();
+   }
 
-				this.drawing = function() {
-					var programTime = millis() * 0.001;
-				 
-					push();
-						translate(this.position.x, this.position.y);
-					
-						if (programTime > 1 && round(programTime) % 3 == 0) {
-							// il raggio
-							fill(223, 224, 179, 100);
-							beginShape();
-								vertex(-55, height - this.position.y);
-								vertex(-20, 0);
-								vertex(20, 0);
-								vertex(55, height - this.position.y);
-							endShape();
-						}
-						
-						// il sopra
-						fill(64, 97, 79);
-						beginShape();
-							vertex(-50, 0);
-							vertex(-15, -8);
-							vertex(0, -15);
-							vertex(15, -8);
-							vertex(50, 0);
-						endShape();
-						
-						// il sotto
-						fill(30, 33, 28);
-						beginShape();
-							vertex(50, 0);
-							vertex(25, 7);
-							vertex(0, 9);
-							vertex(-25, 7);
-							vertex(-50, 0);
-							vertex(0, -3);
-						endShape();
-						
-					pop();
-				};
-				
-			} // fine class Ufo
+   function Ufo() {
+      this.position = ufoPos[0];
+      this.center = ufoPos[1];
+      this.acceleration = createVector(0, 0);
+      this.velocity = createVector(0, 0);
 
-		</script>
-	</body>
+      this.move = function() {
+         var dir = p5.Vector.sub(this.center, this.position);
+         dir.normalize();
+         this.acceleration = dir;
+         this.velocity.add(this.acceleration);
+         this.velocity.limit(1.2);
+         this.position.add(this.velocity);
+      };
+
+      this.update = function() {
+         for (var i = 0; i < ufoPosLength; i++) {
+            if (this.center == ufoPos[i]) {
+               if ((this.position.x >= this.center.x - 5 && this.position.x <= this.center.x + 5) &&
+                  (this.position.y >= this.center.y - 5 && this.position.y <= this.center.y + 5)) {
+                  var j = i + 1;
+                  if (j == 10) {
+                     this.center = ufoPos[1];
+                  } else {
+                     this.center = ufoPos[j];
+                  }
+               }
+            }
+         }
+      };
+
+      this.drawing = function() {
+         var programTime = millis() * 0.001;
+
+         push();
+         translate(this.position.x, this.position.y);
+
+         if (programTime > 1 && round(programTime) % 3 == 0) {
+            // il raggio
+            fill(223, 224, 179, 100);
+            beginShape();
+            vertex(-55, height - this.position.y);
+            vertex(-20, 0);
+            vertex(20, 0);
+            vertex(55, height - this.position.y);
+            endShape();
+         }
+
+         // il sopra
+         fill(64, 97, 79);
+         beginShape();
+         vertex(-50, 0);
+         vertex(-15, -8);
+         vertex(0, -15);
+         vertex(15, -8);
+         vertex(50, 0);
+         endShape();
+
+         // il sotto
+         fill(30, 33, 28);
+         beginShape();
+         vertex(50, 0);
+         vertex(25, 7);
+         vertex(0, 9);
+         vertex(-25, 7);
+         vertex(-50, 0);
+         vertex(0, -3);
+         endShape();
+
+         pop();
+      };
+
+   } // fine class Ufo
+   </script>
+</body>
+
 </html>

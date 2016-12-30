@@ -1,761 +1,802 @@
 <!DOCTYPE html>
 <html>
-   <head>
-      <meta charset="UTF-8">
-      <title>Tamagotchi</title>
 
-      <link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
-      <style>
-         * {
-            margin: 0;
-            padding: 0;
-         }
+<head>
+   <meta charset="UTF-8">
+   <title>Tamagotchi</title>
+   <link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
+   <style>
+   * {
+      margin: 0;
+      padding: 0;
+   }
 
-         :focus {
-            outline: none;
-         }
-         ::-moz-selection {
-            background-color: #3ca2a2;
-            color: #fff;
-         }
-         ::selection {
-            background-color: #3ca2a2;
-            color: #fff;
-         }
+   :focus {
+      outline: none;
+   }
 
-         body, html {
-            background: #4ba9a9 url('resources/tamagotchi/bg.png');
-            font-family: 'Roboto Mono', monospace;
-            text-align: center;
-            font-size: 12px;
-            color: #fff;
-         }
+   ::-moz-selection {
+      background-color: #3ca2a2;
+      color: #fff;
+   }
 
-         .loading {
-            font-family: 'Verdana', 'Arial', sans-serif;
-            font-size: 2em;
-            position: fixed;
-            top: 5em;
-            left: 50%;
-            transform: translateX(-50%);
-         }
-            #p5_loading {
-               display: none;
-            }
-            p {
-               padding: .2em;
-            }
+   ::selection {
+      background-color: #3ca2a2;
+      color: #fff;
+   }
 
-         .game {
-            width: 400px;
-            margin: 2em auto 0;
-            display: -ms-flexbox;
-            display: flex;
-            -ms-flex-flow: row wrap;
-                flex-flow: row wrap;
-            -ms-flex-pack: center;
-                justify-content: center;
-            -ms-flex-line-pack: start;
-                align-content: flex-start;
-            -ms-flex-align: start;
-                align-items: flex-start;
-            visibility: hidden;
-         }
+   body,
+   html {
+      background: #4ba9a9 url('resources/tamagotchi/bg.png');
+      font-family: 'Roboto Mono', monospace;
+      text-align: center;
+      font-size: 12px;
+      color: #fff;
+   }
 
-         #info, #select, #canvas, .submenu {;
-            -ms-flex: 1 100%;;
-                flex: 1 100%;
-         }
+   .loading {
+      font-family: 'Verdana', 'Arial', sans-serif;
+      font-size: 2em;
+      position: fixed;
+      top: 5em;
+      left: 50%;
+      transform: translateX(-50%);
+   }
 
-         #info {
-            margin: .5% 0;
-            font-size: 2em;
-         }
+   #p5_loading {
+      display: none;
+   }
 
-         #select {
-            display: -ms-flexbox;
-            display: flex;
-            -ms-flex-flow: row nowrap;
-                flex-flow: row nowrap;
-            -ms-flex-pack: center;
-                justify-content: center;
-            -ms-flex-line-pack: end;
-                align-content: flex-end;
-            -ms-flex-align: end;
-                align-items: flex-end;
-         }
-            #select > div {
-               -ms-flex: 1 auto;
-                   flex: 1 auto;
-               width: 16%;
-            }
-               #select > div > img {
-                  cursor: pointer;
-               }
-               #select > div:not(:last-child) > p:after {
-                  content: '%';
-               }
+   p {
+      padding: .2em;
+   }
 
-         .submenu {
-            position: absolute;
-            margin-top: 8em;
-            background: #4ba9a9;
-            padding: 1em;
-            box-sizing: border-box;
-            z-index: 9;
-            display: none;
-         }
-            .submenu > div {
-               display: none;
-            }
-               #options p {
-                  padding: .2em 0;
-               }
-               input {
-                  font-family: 'Verdana', 'Arial', sans-serif;
-                  text-align: center;
-                  color: #215A6D;
-                  background: #4ba9a9;
-                  border: 1px dotted #fff;
-                  display: block;
-                  margin: auto;
-               }
-               .salva, .nuovo {
-                  cursor: pointer;
-               }
-            #foods > img {
-               cursor: pointer;
-            }
-      </style>
-   </head>
+   .game {
+      width: 400px;
+      margin: 2em auto 0;
+      display: -ms-flexbox;
+      display: flex;
+      -ms-flex-flow: row wrap;
+      flex-flow: row wrap;
+      -ms-flex-pack: center;
+      justify-content: center;
+      -ms-flex-line-pack: start;
+      align-content: flex-start;
+      -ms-flex-align: start;
+      align-items: flex-start;
+      visibility: hidden;
+   }
 
-   <body>
-      <div class="loading">
-         <p>Tamagotchi</p>
-         <p><i>Loading...</i></p>
-         <p style="font-size:.5em">(Internet Explorer not working!)</p>
+   #info,
+   #select,
+   #canvas,
+   .submenu {
+      ;
+      -ms-flex: 1 100%;
+      ;
+      flex: 1 100%;
+   }
+
+   #info {
+      margin: .5% 0;
+      font-size: 2em;
+   }
+
+   #select {
+      display: -ms-flexbox;
+      display: flex;
+      -ms-flex-flow: row nowrap;
+      flex-flow: row nowrap;
+      -ms-flex-pack: center;
+      justify-content: center;
+      -ms-flex-line-pack: end;
+      align-content: flex-end;
+      -ms-flex-align: end;
+      align-items: flex-end;
+   }
+
+   #select > div {
+      -ms-flex: 1 auto;
+      flex: 1 auto;
+      width: 16%;
+   }
+
+   #select > div > img {
+      cursor: pointer;
+   }
+
+   #select > div:not(:last-child) > p:after {
+      content: '%';
+   }
+
+   .submenu {
+      position: absolute;
+      margin-top: 8em;
+      background: #4ba9a9;
+      padding: 1em;
+      box-sizing: border-box;
+      z-index: 9;
+      display: none;
+   }
+
+   .submenu > div {
+      display: none;
+   }
+
+   #options p {
+      padding: .2em 0;
+   }
+
+   input {
+      font-family: 'Verdana', 'Arial', sans-serif;
+      text-align: center;
+      color: #215A6D;
+      background: #4ba9a9;
+      border: 1px dotted #fff;
+      display: block;
+      margin: auto;
+   }
+
+   .salva,
+   .nuovo {
+      cursor: pointer;
+   }
+
+   #foods > img {
+      cursor: pointer;
+   }
+   </style>
+</head>
+
+<body>
+   <div class="loading">
+      <p>Tamagotchi</p>
+      <p><i>Loading...</i></p>
+      <p style="font-size:.5em">(Internet Explorer not working!)</p>
+   </div>
+   <div class="game">
+      <div class="submenu">
+         <div id="foods">
+            <img class="water 10" src="resources/tamagotchi/food_water.png">
+            <img class="bone 20" src="resources/tamagotchi/food_bone.png">
+            <img class="fish 30" src="resources/tamagotchi/food_fish.png">
+         </div>
+         <div id="options">
+            <p>Cambia nome:
+               <input id="nome" maxLength="10" type="text" />
+            </p>
+            <p class="salva">Salva</p>
+            <p class="nuovo">Nuovo Gioco</p>
+         </div>
       </div>
-      <div class="game">
-            <div class="submenu">
-               <div id="foods">
-                  <img class="water 10" src="resources/tamagotchi/food_water.png">
-                  <img class="bone 20" src="resources/tamagotchi/food_bone.png">
-                  <img class="fish 30" src="resources/tamagotchi/food_fish.png">
-               </div>
-               <div id="options">
-                  <p>Cambia nome: <input id="nome" maxLength="10" type="text" /></p>
-                  <p class="salva">Salva</p>
-                  <p class="nuovo">Nuovo Gioco</p>
-               </div>
-            </div>
-
-            <div id="info">&nbsp;</div>
-
-            <div id="select">
-               <div><p>100</p><img class="food" src="resources/tamagotchi/selector_food.png"></div>
-               <div><p>100</p><img class="wash" src="resources/tamagotchi/selector_wash.png"></div>
-               <div><p>100</p><img class="medicine" src="resources/tamagotchi/selector_medicine.png"></div>
-               <div><p>100</p><img class="fun" src="resources/tamagotchi/selector_fun.png"></div>
-               <div><p>100</p><img class="sleep" src="resources/tamagotchi/selector_sleep.png"></div>
-               <div><p>&nbsp;</p><img class="menu" src="resources/tamagotchi/selector_menu.png"></div>
-            </div>
-
-         <div id="canvas"></div>
+      <div id="info">&nbsp;</div>
+      <div id="select">
+         <div>
+            <p>100</p><img class="food" src="resources/tamagotchi/selector_food.png"></div>
+         <div>
+            <p>100</p><img class="wash" src="resources/tamagotchi/selector_wash.png"></div>
+         <div>
+            <p>100</p><img class="medicine" src="resources/tamagotchi/selector_medicine.png"></div>
+         <div>
+            <p>100</p><img class="fun" src="resources/tamagotchi/selector_fun.png"></div>
+         <div>
+            <p>100</p><img class="sleep" src="resources/tamagotchi/selector_sleep.png"></div>
+         <div>
+            <p>&nbsp;</p><img class="menu" src="resources/tamagotchi/selector_menu.png"></div>
       </div>
+      <div id="canvas"></div>
+   </div>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.4/p5.min.js"></script>
+   <script>
+   var $game = document.querySelector('.game');
 
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.4/p5.min.js"></script>
-      <script>
-         var $game = document.querySelector('.game');
+   var $info = document.querySelector('#info');
+   var $select = document.querySelector('#select');
+   var $food = document.querySelector('.food');
+   var $wash = document.querySelector('.wash');
+   var $medicine = document.querySelector('.medicine');
+   var $fun = document.querySelector('.fun');
+   var $sleep = document.querySelector('.sleep');
+   var $menu = document.querySelector('.menu');
 
-         var $info = document.querySelector('#info');
-         var $select = document.querySelector('#select');
-            var $food = document.querySelector('.food');
-            var $wash = document.querySelector('.wash');
-            var $medicine = document.querySelector('.medicine');
-            var $fun = document.querySelector('.fun');
-            var $sleep = document.querySelector('.sleep');
-            var $menu = document.querySelector('.menu');
+   var $submenu = document.querySelector('.submenu');
+   var $foods = document.querySelector('#foods');
+   var $options = document.querySelector('#options');
+   var $nome = document.querySelector('#nome');
+   var $salva = document.querySelector('.salva');
+   var $nuovo = document.querySelector('.nuovo');
 
-         var $submenu = document.querySelector('.submenu');
-            var $foods = document.querySelector('#foods');
-            var $options = document.querySelector('#options');         
-               var $nome = document.querySelector('#nome');
-               var $salva = document.querySelector('.salva');
-               var $nuovo = document.querySelector('.nuovo');
+   var ww = $game.offsetWidth;
+   var hh = Math.round(ww * 0.9);
 
-         var ww = $game.offsetWidth;
-         var hh = Math.round(ww*0.9);
+   var scenes = ['death', 'home', 'food', 'wash', 'medicine', 'fun', 'sleep', 'menu'];
 
-         var scenes = ['death', 'home', 'food', 'wash', 'medicine', 'fun', 'sleep', 'menu'];
+   var images;
+   var game;
+   var tama;
 
-         var images;
-         var game;
-         var tama;
+   var food;
+   var wash;
+   var fun;
+   var medicine;
 
-         var food;
-         var wash;
-         var fun;
-         var medicine;
+   var n = 3;
 
-         var n = 3;
+   function preload() {
+      var cc = createCanvas(ww, hh);
+      cc.parent('canvas');
 
-         function preload() {
-            var cc = createCanvas(ww, hh);
-            cc.parent('canvas');
+      images = new Images();
+   }
 
-            images = new Images();
+   function setup() {
+      frameRate(60);
+      noStroke();
+
+      game = new Game();
+      tama = new Tama();
+
+      food = new Food();
+      wash = new Wash();
+      medicine = new Medicine();
+      fun = new Fun();
+   }
+
+
+   function draw() {
+      game.decrease();
+
+      background('#3CA2A2');
+
+      game.mouseOver();
+
+      tama.display();
+
+      switch (game.scene) {
+         case 'home':
+            break;
+         case 'food':
+            game.food();
+            break;
+         case 'wash':
+            game.cleany();
+            break;
+         case 'medicine':
+            game.healthy();
+            break;
+         case 'fun':
+            game.play();
+            break;
+         case 'sleep':
+            game.nighty();
+            break;
+         case 'death':
+         case 'menu':
+            game.menu();
+            break;
+      }
+   }
+
+   function mousePressed() {
+      if (!game.death) {
+         if (tama.isUnderMouse()) {
+            if (game.night) {
+               game.night = false;
+               game.scene = 'home';
+            }
+            if (game.happy < 100 && random(10) < 6) game.happy++;
+         }
+      }
+   }
+
+   // CLICKING
+   function changeScenes(el) {
+      if (game.death) return;
+      if (el.classList[0] == undefined) return;
+
+      if ((el.classList[0] != 'food' && el.classList[0] != 'menu') || (el.classList[0] == game.scene)) {
+         $submenu.style.display = 'none';
+         $foods.style.display = 'none';
+         $options.style.display = 'none';
+      } else {
+         $submenu.style.display = 'block';
+         if (el.classList[0] == 'menu') {
+            $foods.style.display = 'none';
+            $options.style.display = 'block';
+            $nome.value = game.name;
+         } else { //el.classList[0] == 'food'
+            $foods.style.display = 'block';
+            $options.style.display = 'none';
+         }
+      }
+
+      if (el.classList[0] == game.scene) {
+         if (game.night && game.scene == 'menu') game.scene = 'sleep';
+         else game.scene = 'home';
+      } else {
+         if (game.night && el.classList[0] != 'menu') game.night = false;
+         game.scene = el.classList[0];
+      }
+
+      if (el.classList[0] == 'sleep') game.night = !game.night;
+
+      switch (game.scene) {
+         case 'medicine':
+            medicine.frameStart = frameCount;
+            break;
+         case 'fun':
+            fun.init();
+            break;
+      }
+   }
+
+   $select.addEventListener('click', function(e) {
+      changeScenes(e.target);
+      $info.innerHTML = game.name + ' (' + game.life + 'g)';
+   });
+
+   $foods.addEventListener('click', function(e) {
+      if (food.currentFood != undefined) return;
+
+      food.frameStart = frameCount;
+      food.currentFood = e.target.classList[0];
+      food.value = parseInt(e.target.classList[1]);
+   });
+
+   $salva.addEventListener('click', function() {
+      game.save();
+   });
+   $nuovo.addEventListener('click', function() {
+      game.reset();
+      window.location.reload();
+   });
+
+   /*
+    * GAME
+    */
+   function Game() {
+      this.scene = 'home';
+
+      var ver = 1;
+
+      this.name = 'Tama';
+      this.hungry = 100;
+      this.clean = 100;
+      this.health = 100;
+      this.sleep = 100;
+      this.happy = 100;
+      this.lvl = 1;
+      this.night = false;
+      this.poop = false;
+
+      this.death = false;
+
+      var today;
+      // julian day number
+      var a = floor((14 - month()) / 12);
+      var y = year() + 4800 - a;
+      var m = month() + 12 * a - 3;
+      today = day() + floor((153 * m + 2) / 5) + 365 * y + floor(y / 4) - floor(y / 100) + floor(y / 400) - 32045
+      var diffAccess = 0;
+      var birth = today;
+      var lastAccessDay = today;
+      var lastAccessMinutes = hour() * 60 + minute();
+      this.life = 0;
+      var decr = 0;
+
+      var json = localStorage.getItem('tama_save');
+      if (json) {
+         json = JSON.parse(json);
+
+         // tama's info
+         this.name = json.name;
+         birth = json.birth;
+         this.life = today - birth;
+
+         // last access
+         lastAccessDay = json.lastAccessDay;
+         lastAccessMinutes = json.lastAccessMinutes;
+
+         diffAccess = (today - lastAccessDay) * 1440 + (hour() * 60 + minute() - lastAccessMinutes);
+         decr = round(map(diffAccess, 0, 1440, 0, 60));
+
+         lastAccessDay = today;
+         lastAccessMinutes = hour() * 60 + minute();
+
+         // game variables
+         this.night = json.night;
+         if (this.night) {
+            this.sleep = diffAccess > 0 ? 100 : json.sleep + (100 - json.sleep) / 2;
+            this.scene = 'sleep';
+         } else {
+            this.sleep = json.sleep > decr ? json.sleep - decr : 0;
          }
 
-         function setup() {
-            frameRate(60);
-            noStroke();
+         this.hungry = json.hungry - decr > 0 ? json.hungry - decr : 0;
+         this.clean = json.clean > decr ? json.clean - decr : 0;
+         this.poop = diffAccess > 1440 / 2 ? true : json.poop;
+         this.health = json.health > round(decr / 3) ? json.health - round(decr / 3) : 0;
+         this.happy = json.happy > decr ? json.happy - decr : 0;
+         this.lvl = json.lvl;
 
-            game = new Game();
-            tama = new Tama();
-            
-            food = new Food();
-            wash = new Wash();
-            medicine = new Medicine();
-            fun = new Fun();
-         }
-
-
-         function draw() {
-            game.decrease();
-            
-            background('#3CA2A2');
-            
-            game.mouseOver();
-            
-            tama.display();
-            
-            switch(game.scene) {
-               case 'home': break;
-               case 'food': game.food(); break;
-               case 'wash': game.cleany(); break;
-               case 'medicine': game.healthy(); break;
-               case 'fun': game.play(); break;
-               case 'sleep': game.nighty(); break;
-               case 'death':
-               case 'menu': game.menu(); break;
-            }
-         }
-
-         function mousePressed() {  
-            if (!game.death) {
-               if (tama.isUnderMouse()) {
-                  if (game.night) {
-                     game.night = false;
-                     game.scene = 'home';
-                  }
-                  if (game.happy < 100 && random(10) < 6 ) game.happy++;
-               }               
-            }
-         }
-
-         // CLICKING
-         function changeScenes(el) {
-            if (game.death) return;
-            if (el.classList[0] == undefined) return;
-
-            if ((el.classList[0] != 'food' && el.classList[0] != 'menu') || (el.classList[0] == game.scene)) {
-                  $submenu.style.display = 'none';
-                  $foods.style.display = 'none';
-                  $options.style.display = 'none';
-            } else {
-               $submenu.style.display = 'block';
-               if (el.classList[0] == 'menu') {
-                  $foods.style.display = 'none';
-                  $options.style.display = 'block';
-                  $nome.value = game.name;
-               } else { //el.classList[0] == 'food'
-                  $foods.style.display = 'block';
-                  $options.style.display = 'none';
-               }
-            }
-
-            if (el.classList[0] == game.scene) {
-               if (game.night && game.scene == 'menu') game.scene = 'sleep';
-               else game.scene = 'home';
-            } else {
-               if (game.night && el.classList[0] != 'menu') game.night = false;
-               game.scene = el.classList[0];
-            }
-
-            if (el.classList[0] == 'sleep') game.night = !game.night;
-
-            switch(game.scene) {
-               case 'medicine':
-                  medicine.frameStart = frameCount;
-                  break;
-               case 'fun':
-                  fun.init();
-                  break;
-            }
-         }
-
-         $select.addEventListener('click', function(e) {
-            changeScenes(e.target);
-            $info.innerHTML = game.name + ' (' + game.life + 'g)';
-         });
-
-         $foods.addEventListener('click', function(e) {
-            if (food.currentFood != undefined) return;
-
-            food.frameStart = frameCount;
-            food.currentFood = e.target.classList[0];
-            food.value = parseInt(e.target.classList[1]);
-         });
-
-         $salva.addEventListener('click', function() {
-            game.save();
-         });
-         $nuovo.addEventListener('click', function() {
-            game.reset();
-            window.location.reload();
-         });
-
-         /*
-          * GAME
-          */
-         function Game() {
-            this.scene = 'home';
-            
-            var ver = 1;
-            
-            this.name = 'Tama';
-            this.hungry = 100;
-            this.clean = 100;
-            this.health = 100;
-            this.sleep = 100;
-            this.happy = 100;
-            this.lvl = 1;
+         // end of game 'cause of death
+         this.death = !json.death && diffAccess > 1440 * 5 ? true : json.death;
+         if (this.death) {
+            this.scene = 'death';
             this.night = false;
             this.poop = false;
 
-            this.death = false;
+            $nome.parentNode.innerHTML = this.name + ' è morto!';
+            $submenu.style.display = 'block';
+            $options.style.display = 'block';
+            $salva.style.display = 'none';
+         }
+      }
 
-            var today;               
-               // julian day number
-               var a = floor((14 - month())/12);
-               var y = year() + 4800 - a;
-               var m = month() + 12*a - 3;
-               today = day() + floor((153*m+2)/5) + 365*y + floor(y/4) - floor(y/100) + floor(y/400) - 32045
-            var diffAccess = 0;
-            var birth = today;
-            var lastAccessDay = today;
-            var lastAccessMinutes = hour()*60+minute();
-            this.life = 0;
-            var decr = 0;
+      $info.innerHTML = this.name + ' (' + this.life + 'g)';
+      this.save = '';
 
-            var json = localStorage.getItem('tama_save');
-            if (json) {
-               json = JSON.parse(json);
-               
-               // tama's info
-               this.name = json.name;
-               birth = json.birth;
-               this.life = today - birth;
-               
-               // last access
-               lastAccessDay = json.lastAccessDay;
-               lastAccessMinutes = json.lastAccessMinutes;
-               
-               diffAccess = (today - lastAccessDay)*1440 + (hour()*60 + minute() - lastAccessMinutes);
-               decr = round( map(diffAccess, 0, 1440, 0, 60) );
-               
-               lastAccessDay = today;
-               lastAccessMinutes = hour()*60+minute();
-               
-               // game variables
-               this.night = json.night;
-               if (this.night) {
-                  this.sleep = diffAccess > 0 ? 100 : json.sleep + (100-json.sleep)/2;
-                  this.scene = 'sleep';
-               } else {
-                  this.sleep = json.sleep > decr ? json.sleep - decr : 0;
-               }
-               
-               this.hungry = json.hungry - decr > 0 ? json.hungry - decr : 0;
-               this.clean = json.clean > decr ? json.clean - decr : 0;
-               this.poop = diffAccess > 1440/2 ? true : json.poop;
-               this.health = json.health > round(decr/3) ? json.health - round(decr/3) : 0;
-               this.happy = json.happy > decr ? json.happy - decr : 0;    
-               this.lvl = json.lvl;
-               
-               // end of game 'cause of death
-               this.death = !json.death && diffAccess > 1440*5 ? true : json.death;
-               if (this.death) {
-                  this.scene = 'death';
-                  this.night = false;
-                  this.poop = false;
+      console.log(this.name + ' | ' + today + ' ' + birth + ' ' + this.life + ' | ' + diffAccess + ' ' + decr + ' | ' + this.hungry + ' ' + this.clean + ' ' + this.health + ' ' + this.happy + ' ' + this.sleep + ' | ' + this.lvl + ' | ' + this.death);
 
-                  $nome.parentNode.innerHTML = this.name + ' è morto!';
-                  $submenu.style.display = 'block';
-                  $options.style.display = 'block';
-                  $salva.style.display = 'none';
-               }
-            }
+      this.update = function() {
+         $food.previousSibling.innerHTML = this.hungry;
+         $wash.previousSibling.innerHTML = this.clean;
+         $medicine.previousSibling.innerHTML = this.health;
+         $fun.previousSibling.innerHTML = this.happy;
+         $sleep.previousSibling.innerHTML = this.sleep;
+      }
 
-            $info.innerHTML = this.name + ' (' + this.life + 'g)';
-            this.save = '';
-
-            console.log(this.name + ' | ' + today + ' ' + birth + ' ' + this.life + ' | ' + diffAccess + ' ' + decr + ' | ' + this.hungry + ' ' + this.clean + ' ' + this.health + ' ' + this.happy + ' ' + this.sleep + ' | ' + this.lvl + ' | ' + this.death);
-            
-            this.update = function() {
-               $food.previousSibling.innerHTML = this.hungry;
-               $wash.previousSibling.innerHTML = this.clean;
-               $medicine.previousSibling.innerHTML = this.health;
-               $fun.previousSibling.innerHTML = this.happy;
-               $sleep.previousSibling.innerHTML = this.sleep;
-            }
-
-            this.decrease = function() {
-               if (frameCount % 1800 == 0) {
-                  if (this.hungry > 0) this.hungry--;
-                  if (this.sleep > 0 && !this.night) this.sleep--;
-                  if (this.clean > 0) this.clean--;
-                  if (this.happy > 0 && game.scene != 'fun') this.happy--;
-               }
-               
-               this.update();
-            };
-            
-            this.food = function() {
-               food.display();
-            };
-            
-            this.cleany = function() {
-               if (tama.isUnderMouse() && frameCount % 10 == 0) {
-                  if (this.clean < 100) {
-                     this.clean++;
-                  } else {
-                     this.poop = false;
-                  }
-               }
-               wash.display();
-            };
-            
-            this.healthy = function() {
-               medicine.display();
-            };
-            
-            this.play = function() {
-               if (frameCount % 40 == 0 && this.happy < 100) {
-                  this.happy++;
-               }
-               fun.funGame();    
-            };
-            
-            this.nighty = function() {
-               if ( frameCount % 300 == 0
-                  && this.sleep < 100 ) {
-                  this.sleep++;
-               }
-               push();
-               fill(0, 100);
-               rect(0, 0, width, height);
-               pop();
-            };
-
-            this.menu = function() {
-               if (this.night) this.nighty();
-            };
-
-            this.save = function() {
-               this.name = $nome.value;
-               save = JSON.stringify({
-                  'name': this.name,
-                  'birth': birth,
-                  'lastAccessDay': lastAccessDay,
-                  'lastAccessMinutes': lastAccessMinutes,
-                  'ver': ver,
-                  'hungry' : this.hungry,
-                  'clean': this.clean,
-                  'health': this.health,
-                  'happy': this.happy,
-                  'sleep': this.sleep,
-                  'lvl': this.lvl,
-                  'poop': this.poop,
-                  'night': this.night,
-                  'death': this.death
-               });
-               localStorage.setItem('tama_save', save);
-               $info.innerHTML = this.name + ' (' + this.life + 'g)';
-            };
-            
-            this.reset = function() {
-               localStorage.removeItem('tama_save');
-            };
-            
-            this.mouseOver = function() {
-               if (tama.isUnderMouse()) cursor(HAND);
-               else cursor(ARROW);
-            };
-
-            /*
-             * SHOW GAME
-             */
-            document.querySelector('.loading').style.display = 'none';
-            $game.style.visibility = 'visible';
-
-            var mmtop = document.querySelector('#canvas').getBoundingClientRect().top;
-            $submenu.style.marginTop = mmtop + 'px';
-            $submenu.style.width = $game.offsetWidth +'px';
-            
+      this.decrease = function() {
+         if (frameCount % 1800 == 0) {
+            if (this.hungry > 0) this.hungry--;
+            if (this.sleep > 0 && !this.night) this.sleep--;
+            if (this.clean > 0) this.clean--;
+            if (this.happy > 0 && game.scene != 'fun') this.happy--;
          }
 
+         this.update();
+      };
 
-         /*
-          * TAMA
-          */
-         function Tama() {
-            this.w = images.tamaTesta.width;
-            this.h = images.tamaTesta.height + images.tamaCorpo.height;
-            this.x = (width - this.w) / 2;
-            this.y = height - this.h * 2;
-            
-            var sad = false;
-            var happy = false;
-            
-            var mov = 0;
-            
-            this.display = function() {
-               if (!game.night) {
-                  if (mouseX > this.x + this.w) {
-                     this.x += this.x + this.w < width - 30 ? n : 0;
-                  } else if (mouseX < this.x ) {
-                     this.x -= this.x > 30 ? n : 0;
-                  }
-               }
-                  
-               if (game.night || game.death) {
-                  mov = n;
-                  
-               } else {
-                  if (frameCount % 40 == 0) {
-                     mov = mov == 0 ? n : 0;
-                  }
-                  if (game.scene == 'fun' || this.isUnderMouse()) {
-                     happy = true;
-                     sad = false;
-                  } else if ( game.hungry < 10 || game.sleep < 10 || game.health < 10 || game.clean < 10 || game.happy < 10 ) {
-                     happy = false;
-                     sad = true;
-                  } else {
-                     happy = false;
-                     sad = false;
-                  }
-               }
-               
-               if (game.poop) {
-                  image(images.poop, this.x - images.poop.width, this.y + this.h - images.poop.height);
-               }    
-               push();
-                  translate(this.x, this.y);
-                     image(images.tamaCorpo, 0, n*12);
-                     push();
-                        translate(0, mov);
-                           image(images.tamaTesta, 0, 0);
-                           if (game.death) image(images.tamaOcchiDeath, 0, n*4);
-                           else if (game.night) image(images.tamaOcchiSleep, 0, n*5);
-                           else if (happy) image(images.tamaOcchiFeli, 0, n*5);
-                           else if (sad) image(images.tamaOcchiTris, 0, n*5);
-                     pop();
-               pop();
-            }
-            
-            this.isUnderMouse = function() {
-               if (mouseX > this.x && mouseX < this.x + this.w && mouseY > this.y && mouseY < this.y + this.h) {
-                  return true;
-               }
-               return false;
-            }
+      this.food = function() {
+         food.display();
+      };
 
+      this.cleany = function() {
+         if (tama.isUnderMouse() && frameCount % 10 == 0) {
+            if (this.clean < 100) {
+               this.clean++;
+            } else {
+               this.poop = false;
+            }
+         }
+         wash.display();
+      };
+
+      this.healthy = function() {
+         medicine.display();
+      };
+
+      this.play = function() {
+         if (frameCount % 40 == 0 && this.happy < 100) {
+            this.happy++;
+         }
+         fun.funGame();
+      };
+
+      this.nighty = function() {
+         if (frameCount % 300 == 0 && this.sleep < 100) {
+            this.sleep++;
+         }
+         push();
+         fill(0, 100);
+         rect(0, 0, width, height);
+         pop();
+      };
+
+      this.menu = function() {
+         if (this.night) this.nighty();
+      };
+
+      this.save = function() {
+         this.name = $nome.value;
+         save = JSON.stringify({
+            'name': this.name,
+            'birth': birth,
+            'lastAccessDay': lastAccessDay,
+            'lastAccessMinutes': lastAccessMinutes,
+            'ver': ver,
+            'hungry': this.hungry,
+            'clean': this.clean,
+            'health': this.health,
+            'happy': this.happy,
+            'sleep': this.sleep,
+            'lvl': this.lvl,
+            'poop': this.poop,
+            'night': this.night,
+            'death': this.death
+         });
+         localStorage.setItem('tama_save', save);
+         $info.innerHTML = this.name + ' (' + this.life + 'g)';
+      };
+
+      this.reset = function() {
+         localStorage.removeItem('tama_save');
+      };
+
+      this.mouseOver = function() {
+         if (tama.isUnderMouse()) cursor(HAND);
+         else cursor(ARROW);
+      };
+
+      /*
+       * SHOW GAME
+       */
+      document.querySelector('.loading').style.display = 'none';
+      $game.style.visibility = 'visible';
+
+      var mmtop = document.querySelector('#canvas').getBoundingClientRect().top;
+      $submenu.style.marginTop = mmtop + 'px';
+      $submenu.style.width = $game.offsetWidth + 'px';
+
+   }
+
+
+   /*
+    * TAMA
+    */
+   function Tama() {
+      this.w = images.tamaTesta.width;
+      this.h = images.tamaTesta.height + images.tamaCorpo.height;
+      this.x = (width - this.w) / 2;
+      this.y = height - this.h * 2;
+
+      var sad = false;
+      var happy = false;
+
+      var mov = 0;
+
+      this.display = function() {
+         if (!game.night) {
+            if (mouseX > this.x + this.w) {
+               this.x += this.x + this.w < width - 30 ? n : 0;
+            } else if (mouseX < this.x) {
+               this.x -= this.x > 30 ? n : 0;
+            }
          }
 
-         /*
-          * FOOD
-          */
-         function Food() {
-            this.frameStart = 0;
-            this.currentFood = undefined;
-            this.value = 0;
-         }            
-         Food.prototype.display = function() {
-            if (this.currentFood == undefined) return;
-            
-            image(images[this.currentFood], tama.x - n*10, tama.y + n*5);
+         if (game.night || game.death) {
+            mov = n;
 
-            if (frameCount - this.frameStart > 120 ) {
-               game.hungry = game.hungry + this.value < 100 ? game.hungry + this.value : 100;
-               this.currentFood = undefined;
+         } else {
+            if (frameCount % 40 == 0) {
+               mov = mov == 0 ? n : 0;
             }
-         };
+            if (game.scene == 'fun' || this.isUnderMouse()) {
+               happy = true;
+               sad = false;
+            } else if (game.hungry < 10 || game.sleep < 10 || game.health < 10 || game.clean < 10 || game.happy < 10) {
+               happy = false;
+               sad = true;
+            } else {
+               happy = false;
+               sad = false;
+            }
+         }
+
+         if (game.poop) {
+            image(images.poop, this.x - images.poop.width, this.y + this.h - images.poop.height);
+         }
+         push();
+         translate(this.x, this.y);
+         image(images.tamaCorpo, 0, n * 12);
+         push();
+         translate(0, mov);
+         image(images.tamaTesta, 0, 0);
+         if (game.death) image(images.tamaOcchiDeath, 0, n * 4);
+         else if (game.night) image(images.tamaOcchiSleep, 0, n * 5);
+         else if (happy) image(images.tamaOcchiFeli, 0, n * 5);
+         else if (sad) image(images.tamaOcchiTris, 0, n * 5);
+         pop();
+         pop();
+      }
+
+      this.isUnderMouse = function() {
+         if (mouseX > this.x && mouseX < this.x + this.w && mouseY > this.y && mouseY < this.y + this.h) {
+            return true;
+         }
+         return false;
+      }
+
+   }
+
+   /*
+    * FOOD
+    */
+   function Food() {
+      this.frameStart = 0;
+      this.currentFood = undefined;
+      this.value = 0;
+   }
+   Food.prototype.display = function() {
+      if (this.currentFood == undefined) return;
+
+      image(images[this.currentFood], tama.x - n * 10, tama.y + n * 5);
+
+      if (frameCount - this.frameStart > 120) {
+         game.hungry = game.hungry + this.value < 100 ? game.hungry + this.value : 100;
+         this.currentFood = undefined;
+      }
+   };
 
 
-         /*
-          * MEDICINE
-          */
-         function Medicine() { 
-            this.frameStart = 0;
-         }            
-         Medicine.prototype.display = function() {
-            image(images.syringe, tama.x + tama.w + n*2, tama.y + n*5);
+   /*
+    * MEDICINE
+    */
+   function Medicine() {
+      this.frameStart = 0;
+   }
+   Medicine.prototype.display = function() {
+      image(images.syringe, tama.x + tama.w + n * 2, tama.y + n * 5);
 
-            if (frameCount - this.frameStart > 120 ) {
-               game.health = 100;
+      if (frameCount - this.frameStart > 120) {
+         game.health = 100;
+         game.scene = 'home';
+      }
+   };
+
+
+   /*
+    * WASH
+    */
+   function Wash() {
+      var bubbles = [];
+      while (bubbles.length < 6) {
+         bubbles.push(new Bubble());
+      }
+
+      this.display = function() {
+         if (tama.isUnderMouse()) {
+            for (var i = 0; i < bubbles.length; i++) {
+               bubbles[i].display();
+            }
+         }
+         image(images.sponge, mouseX - images.sponge.width / 2, mouseY - images.sponge.height / 2);
+      };
+   }
+
+   function Bubble() {
+      this.x = 0;
+      this.y = 0;
+   }
+   Bubble.prototype.display = function() {
+      if (frameCount % 10 == 0) {
+         this.x = cos(frameCount / 10) * random(-30, 30);
+         this.y = sin(frameCount / 10) * random(-30, 30);
+      }
+
+      push();
+      translate(mouseX + this.x - images.bubble.width / 2, mouseY + this.y - images.bubble.height / 2);
+      image(images.bubble, 0, 0);
+      pop();
+   };
+
+
+   /*
+    * FUN
+    */
+   function Fun() {
+      var frameStart = 0;
+      var totalStars = game.lvl * 5;
+      var totalHit = 0;
+      var currentStars = 0;
+      var star = [];
+
+      this.init = function() {
+         frameStart = frameCount;
+         totalStars = game.lvl * 5;
+         totalHit = 0;
+         currentStars = 0;
+         star.length = 0;
+      }
+
+      this.funGame = function() {
+         $info.innerHTML = totalHit + '/' + totalStars;
+
+         if (currentStars < totalStars) {
+            if (frameCount - frameStart > 50 + 80 * currentStars - game.lvl * 4) {
+               star.push(new Star());
+            }
+         } else {
+            if (star.length == 0) {
+               if (totalHit == totalStars) game.lvl++;
                game.scene = 'home';
+               $info.innerHTML = game.name + ' (' + game.life + 'g)';
             }
-         };
-
-
-         /*
-          * WASH
-          */
-         function Wash() {
-            var bubbles = [];
-            while (bubbles.length < 6) {
-               bubbles.push(new Bubble());
-            }
-         
-            this.display = function() {
-               if (tama.isUnderMouse()) {
-                  for (var i = 0; i < bubbles.length; i++) {
-                     bubbles[i].display();
-                  }
-               }
-               image(images.sponge, mouseX - images.sponge.width/2, mouseY - images.sponge.height/2);
-            };
-         }
-         function Bubble() {
-            this.x = 0;
-            this.y = 0;
-         }
-         Bubble.prototype.display = function() {
-            if (frameCount % 10 == 0) {
-               this.x = cos(frameCount/10)*random(-30, 30);
-               this.y = sin(frameCount/10)*random(-30, 30);
-            }
-            
-            push();
-            translate(mouseX + this.x - images.bubble.width/2, mouseY + this.y - images.bubble.height/2);
-               image(images.bubble, 0, 0);
-            pop();
-         };
-
-
-         /*
-          * FUN
-          */
-         function Fun() {
-            var frameStart = 0;
-            var totalStars = game.lvl*5;
-            var totalHit = 0;
-            var currentStars = 0;        
-            var star = [];
-
-            this.init = function() {
-               frameStart = frameCount;
-               totalStars = game.lvl*5;
-               totalHit = 0;
-               currentStars = 0;        
-               star.length = 0;
-            }
-            
-            this.funGame = function() {
-               $info.innerHTML = totalHit + '/' + totalStars;
-
-               if (currentStars < totalStars) {
-                  if (frameCount - frameStart > 50 + 80*currentStars - game.lvl*4) {
-                     star.push(new Star());
-                  }
-               } else {
-                  if (star.length == 0) {
-                     if (totalHit == totalStars) game.lvl++;
-                     game.scene = 'home';
-                     $info.innerHTML = game.name + ' (' + game.life + 'g)';
-                  }
-               }
-               
-               for (var i = 0; i < star.length; i++) {
-                  star[i].display();
-                  if (star[i].y > height) {
-                     star.splice(i, 1);
-                     i--;
-                  } else if (star[i].hit) {
-                     star.splice(i, 1);
-                     i--;
-                     totalHit++;
-                  }
-               }
-            }
-
-            function Star() {    
-               this.type = round(random(1));
-               this.w = this.type == 0 ? images.starSmall.width : images.starMedium.width;
-               this.h = this.type == 0 ? images.starSmall.height : images.starMedium.height;
-               this.x = round(random(this.w, width - this.w*2));
-               this.y = - this.h;
-               this.hit = false;
-               
-               currentStars++;
-            }               
-            Star.prototype.display = function() {
-               this.isHit();
-               
-               push();
-               translate(this.x, this.y);
-                  if (this.type == 0) image(images.starSmall, 0, 0);
-                  else image(images.starMedium, 0, 0);
-               pop();
-               
-               if (frameCount % 4 == 0) {
-                  this.y += n;
-                  this.x += round(noise(this.x*1000, this.y) * random(-n*3, n*3));
-                  this.x = constrain(this.x, this.w + 20, width - this.w*2 - 20);
-               }
-            };
-            Star.prototype.isHit = function() {
-               if (this.x + this.w + n   > tama.x && this.x + n   < tama.x + tama.w && this.y + this.h - n > tama.y && this.y < tama.y + tama.h) {
-                  this.hit = true;
-               }
-            };
-            
          }
 
-
-         /*
-          * IMAGES
-          */
-         function Images() {
-            this.tamaTesta = loadImage('resources/tamagotchi/tamaTesta.png');
-            this.tamaCorpo = loadImage('resources/tamagotchi/tamaCorpo.png');
-            this.tamaOcchiFeli = loadImage('resources/tamagotchi/tamaOcchiFeli.png');
-            this.tamaOcchiTris = loadImage('resources/tamagotchi/tamaOcchiTris.png');
-            this.tamaOcchiSleep = loadImage('resources/tamagotchi/tamaOcchiSleep.png');
-            this.tamaOcchiDeath = loadImage('resources/tamagotchi/tamaOcchiDeath.png');
-
-            this.health = loadImage('resources/tamagotchi/selector_medicine.png');
-            this.food = loadImage('resources/tamagotchi/selector_food.png');
-            this.play = loadImage('resources/tamagotchi/selector_fun.png');
-            this.shower = loadImage('resources/tamagotchi/selector_wash.png');
-            this.light = loadImage('resources/tamagotchi/selector_sleep.png');
-            this.menu = loadImage('resources/tamagotchi/selector_menu.png');
-            
-            this.bone = loadImage('resources/tamagotchi/food_bone.png');
-            this.fish = loadImage('resources/tamagotchi/food_fish.png');
-            this.water = loadImage('resources/tamagotchi/food_water.png');
-            
-            this.sponge = loadImage('resources/tamagotchi/spoonge.png');
-            this.bubble = loadImage('resources/tamagotchi/bubble.png');
-            this.syringe = loadImage('resources/tamagotchi/syringe.png');
-            
-            this.starSmall = loadImage('resources/tamagotchi/star_small.png');
-            this.starMedium = loadImage('resources/tamagotchi/star_big.png');
-            
-            this.poop = loadImage('resources/tamagotchi/poop.png');            
+         for (var i = 0; i < star.length; i++) {
+            star[i].display();
+            if (star[i].y > height) {
+               star.splice(i, 1);
+               i--;
+            } else if (star[i].hit) {
+               star.splice(i, 1);
+               i--;
+               totalHit++;
+            }
          }
-      </script>
-   </body>
+      }
+
+      function Star() {
+         this.type = round(random(1));
+         this.w = this.type == 0 ? images.starSmall.width : images.starMedium.width;
+         this.h = this.type == 0 ? images.starSmall.height : images.starMedium.height;
+         this.x = round(random(this.w, width - this.w * 2));
+         this.y = -this.h;
+         this.hit = false;
+
+         currentStars++;
+      }
+      Star.prototype.display = function() {
+         this.isHit();
+
+         push();
+         translate(this.x, this.y);
+         if (this.type == 0) image(images.starSmall, 0, 0);
+         else image(images.starMedium, 0, 0);
+         pop();
+
+         if (frameCount % 4 == 0) {
+            this.y += n;
+            this.x += round(noise(this.x * 1000, this.y) * random(-n * 3, n * 3));
+            this.x = constrain(this.x, this.w + 20, width - this.w * 2 - 20);
+         }
+      };
+      Star.prototype.isHit = function() {
+         if (this.x + this.w + n > tama.x &&
+             this.x + n < tama.x + tama.w &&
+             this.y + this.h - n > tama.y &&
+             this.y < tama.y + tama.h) {
+
+            this.hit = true;
+         }
+      };
+
+   }
+
+
+   /*
+    * IMAGES
+    */
+   function Images() {
+      this.tamaTesta = loadImage('resources/tamagotchi/tamaTesta.png');
+      this.tamaCorpo = loadImage('resources/tamagotchi/tamaCorpo.png');
+      this.tamaOcchiFeli = loadImage('resources/tamagotchi/tamaOcchiFeli.png');
+      this.tamaOcchiTris = loadImage('resources/tamagotchi/tamaOcchiTris.png');
+      this.tamaOcchiSleep = loadImage('resources/tamagotchi/tamaOcchiSleep.png');
+      this.tamaOcchiDeath = loadImage('resources/tamagotchi/tamaOcchiDeath.png');
+
+      this.health = loadImage('resources/tamagotchi/selector_medicine.png');
+      this.food = loadImage('resources/tamagotchi/selector_food.png');
+      this.play = loadImage('resources/tamagotchi/selector_fun.png');
+      this.shower = loadImage('resources/tamagotchi/selector_wash.png');
+      this.light = loadImage('resources/tamagotchi/selector_sleep.png');
+      this.menu = loadImage('resources/tamagotchi/selector_menu.png');
+
+      this.bone = loadImage('resources/tamagotchi/food_bone.png');
+      this.fish = loadImage('resources/tamagotchi/food_fish.png');
+      this.water = loadImage('resources/tamagotchi/food_water.png');
+
+      this.sponge = loadImage('resources/tamagotchi/spoonge.png');
+      this.bubble = loadImage('resources/tamagotchi/bubble.png');
+      this.syringe = loadImage('resources/tamagotchi/syringe.png');
+
+      this.starSmall = loadImage('resources/tamagotchi/star_small.png');
+      this.starMedium = loadImage('resources/tamagotchi/star_big.png');
+
+      this.poop = loadImage('resources/tamagotchi/poop.png');
+   }
+   </script>
+</body>
+
 </html>

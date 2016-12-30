@@ -1,425 +1,440 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="UTF-8">
-		<title>Prato Fiorito</title>
 
-		<style>
-			* {
-				margin: 0;
-				padding: 0;
-			}
+<head>
+   <meta charset="UTF-8">
+   <title>Prato Fiorito</title>
+   <style>
+   * {
+      margin: 0;
+      padding: 0;
+   }
 
-			::-moz-selection {
-				background: #BA4A6E;
-				color: #fff;
-			}
-			::selection {
-				background: #BA4A6E;
-				color: #fff;
-			}
-			:focus {
-				color: #BA4A6E;
-				outline: none;
-			}
+   ::-moz-selection {
+      background: #BA4A6E;
+      color: #fff;
+   }
 
-			body, html {
-				font-family: 'Verdana', 'Arial', sans-serif;
-				font-size: 1em;
-				line-height: 1em;
-				color: #703B69;
-				text-align: center;
-				background: #DFEAE4;
-				height: 100%;
-			}
+   ::selection {
+      background: #BA4A6E;
+      color: #fff;
+   }
 
-			body {
-				display: -ms-flexbox;
-				display: flex;
-				-ms-flex-flow: row wrap;
-				    flex-flow: row wrap;
-				-ms-flex-pack: center;
-				    justify-content: center;
-				-ms-flex-line-pack: start;
-				    align-content: flex-start;
-				-ms-flex-align: center;
-				    align-items: center;
-			}
+   :focus {
+      color: #BA4A6E;
+      outline: none;
+   }
 
-			header {
-				padding: .5em 0;
-				-ms-flex: 1 100%;
-				    flex: 1 100%;
-			}
-			h1 {
-				font-size: 2.8em;
-				color: #CD9691;
-				line-height: 1.3em;
-			}
+   body,
+   html {
+      font-family: 'Verdana', 'Arial', sans-serif;
+      font-size: 1em;
+      line-height: 1em;
+      color: #703B69;
+      text-align: center;
+      background: #DFEAE4;
+      height: 100%;
+   }
 
-			.menu {
-				-ms-flex: 1 100%;
-				    flex: 1 100%;
-			}
-			label {
-				font-size: .8em;
-			}
-			input {
-				color: #0CABAB;
-				background: transparent;
-				border: 1px solid #fff;
-				padding-left: .4em;
-				max-width: 4em;
-				font-size: 1em;
-			}
-			button {
-				color: inherit;
-				padding: 0 .4em;
-				background: transparent;
-				border: 1px solid #CD9691;
-				font-size: 1em;
-			}
+   body {
+      display: -ms-flexbox;
+      display: flex;
+      -ms-flex-flow: row wrap;
+      flex-flow: row wrap;
+      -ms-flex-pack: center;
+      justify-content: center;
+      -ms-flex-line-pack: start;
+      align-content: flex-start;
+      -ms-flex-align: center;
+      align-items: center;
+   }
 
-			#score {
-				font-family: 'Georgia', serif;
-				letter-spacing: .05em;
-				font-variant: small-caps;
-				padding: .5em;
-				-ms-flex: 1 100%;
-				    flex: 1 100%;
-			}
+   header {
+      padding: .5em 0;
+      -ms-flex: 1 100%;
+      flex: 1 100%;
+   }
 
-			@media only screen and (max-device-width: 600px), (max-width: 600px) {
-			    html, body {
-			        font-size: 1.3em;
-			    }
-			    h1 {
-					font-size: 2em;
-				}
-			}
-		</style>
-	</head>
+   h1 {
+      font-size: 2.8em;
+      color: #CD9691;
+      line-height: 1.3em;
+   }
 
-	<body>
-		<header><h1>Prato Fiorito</h1></header>
-		<div class="menu">
-			<label>n*n <input id="nValue" type="number" value="20" step="1" /></label>
-			<label>b <input id="bValue" type="number" value="30" step="1" /></label>
-			<button id="submit">New</button>
-		</div>
-		<div id="score">Start now!</div>
-		<div id="canvas"></div>
+   .menu {
+      -ms-flex: 1 100%;
+      flex: 1 100%;
+   }
 
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.4/p5.min.js"></script>
-		<script>
-			window.addEventListener("contextmenu", function(e) { e.preventDefault(); });
+   label {
+      font-size: .8em;
+   }
 
-			var submit = document.querySelector('#submit');
-			var score = document.querySelector('#score');
+   input {
+      color: #0CABAB;
+      background: transparent;
+      border: 1px solid #fff;
+      padding-left: .4em;
+      max-width: 4em;
+      font-size: 1em;
+   }
 
-			////////////////
-			var n = parseInt(document.querySelector('#nValue').value);
-			var nTotal = n*n;
-			var b = parseInt(document.querySelector('#bValue').value);
+   button {
+      color: inherit;
+      padding: 0 .4em;
+      background: transparent;
+      border: 1px solid #CD9691;
+      font-size: 1em;
+   }
 
-			var s;
-			var ww;
-			var hh;
-			var txtSize;
+   #score {
+      font-family: 'Georgia', serif;
+      letter-spacing: .05em;
+      font-variant: small-caps;
+      padding: .5em;
+      -ms-flex: 1 100%;
+      flex: 1 100%;
+   }
 
-			var firstCellPressed = -1;
-			var lost = false;
-			var won = false;
+   @media only screen and (max-device-width: 600px), (max-width: 600px) {
+      html,
+      body {
+         font-size: 1.3em;
+      }
+      h1 {
+         font-size: 2em;
+      }
+   }
+   </style>
+</head>
 
-			var cells = [];
+<body>
+   <header>
+      <h1>Prato Fiorito</h1></header>
+   <div class="menu">
+      <label>n*n
+         <input id="nValue" type="number" value="20" step="1" />
+      </label>
+      <label>b
+         <input id="bValue" type="number" value="30" step="1" />
+      </label>
+      <button id="submit">New</button>
+   </div>
+   <div id="score">Start now!</div>
+   <div id="canvas"></div>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.4/p5.min.js"></script>
+   <script>
+   window.addEventListener("contextmenu", function(e) {
+      e.preventDefault();
+   });
 
-			var grid;
-			////////////////
+   var submit = document.querySelector('#submit');
+   var score = document.querySelector('#score');
 
-			var BACK   = '#DFEAE4';
-			var GRID   = '#CD9691';
-			var GRID_d = '#dcb5b2';
-			var BOMB   = '#BA4A6E';
-			var FLAG   = '#0CABAB';
+   ////////////////
+   var n = parseInt(document.querySelector('#nValue').value);
+   var nTotal = n * n;
+   var b = parseInt(document.querySelector('#bValue').value);
 
-			var H = 'h';
-			var O = 'o';
-			var F = 'f';
-			////////////////
+   var s;
+   var ww;
+   var hh;
+   var txtSize;
 
-			function setup() {
-				s = windowWidth > windowHeight ? 20 : round(windowWidth*0.9/n);
-				ww = n*s+1;
-				hh = n*s+1;
+   var firstCellPressed = -1;
+   var lost = false;
+   var won = false;
 
-				var cc = createCanvas(ww, hh);
-				cc.parent('canvas');
+   var cells = [];
 
-				frameRate(60);
+   var grid;
+   ////////////////
 
-				grid = new Grid();
-				grid.init(n, b);
+   var BACK = '#DFEAE4';
+   var GRID = '#CD9691';
+   var GRID_d = '#dcb5b2';
+   var BOMB = '#BA4A6E';
+   var FLAG = '#0CABAB';
 
-				textFont('Arial');
-				textSize(txtSize);
-				textAlign(CENTER, CENTER);
-				stroke(BOMB);
+   var H = 'h';
+   var O = 'o';
+   var F = 'f';
+   ////////////////
 
-				noLoop();
-			}
+   function setup() {
+      s = windowWidth > windowHeight ? 20 : round(windowWidth * 0.9 / n);
+      ww = n * s + 1;
+      hh = n * s + 1;
 
-			function draw() {
-				background(BACK);
-				grid.display();
-			}
+      var cc = createCanvas(ww, hh);
+      cc.parent('canvas');
 
-			function mousePressed() {
-				grid.mousePress();
+      frameRate(60);
 
-				redraw();
-			}
-			////////////////
+      grid = new Grid();
+      grid.init(n, b);
 
-			function Grid() {
-			 	this.init = function(nn, bb) {
-			 		firstCellPressed = -1;
+      textFont('Arial');
+      textSize(txtSize);
+      textAlign(CENTER, CENTER);
+      stroke(BOMB);
 
-			 		lost = false;
-			 		won = false;
+      noLoop();
+   }
 
-			 		n = nn;
-			 		b = bb;
-			 		nTotal = n*n;
-					
-					s = windowWidth > windowHeight ? 20 : round(windowWidth*0.9/n);
+   function draw() {
+      background(BACK);
+      grid.display();
+   }
 
-					txtSize = floor(s*0.6);
+   function mousePressed() {
+      grid.mousePress();
 
-			 		ww = n*s+1;
-			 		hh = n*s+1;
+      redraw();
+   }
+   ////////////////
 
-					// reset and create cells
-					cells.length = 0;
-					for (var i = 0; i < nTotal; i++) {
-						cells.push(new this.Cell(i%n, floor(i/n), i));
-					}   
-				};
-				/*
-				*/
-				this.firstClick = function(first) {
-					firstCellPressed = first;
+   function Grid() {
+      this.init = function(nn, bb) {
+         firstCellPressed = -1;
 
-					// randomly choose the positions of the bombs    
-					var bbs = [];
-					for (var i = 0; i < nTotal; i++) {
-						bbs.push(i < b ? true : false);
-					}
-					shuffle(bbs, true);
+         lost = false;
+         won = false;
 
-					// exclude cell's index clicked and neighbours
-					var ix = [];
-					ix.push(first);
-					for (var z = 0; z < 8; z++) {
-						if (cells[first].vicini[z] > -1 ) {
-							ix.push(cells[first].vicini[z]);
-						}
-					}
-					ix.sort();
-					for (var i = 0; i < ix.length; i++) {
-						if (bbs[ix[i]] == true) {
-							bbs[ix[i]] = false;
+         n = nn;
+         b = bb;
+         nTotal = n * n;
 
-							var replacing = true;
-							while (replacing) {
-								var r = floor(random(0, nTotal));
-								if (bbs[r] == false && ix.indexOf(r) == -1) {
-									bbs[r] = true;
-									replacing = false;
-								}
-							}
-						}
-					}
+         s = windowWidth > windowHeight ? 20 : round(windowWidth * 0.9 / n);
 
-					// set bombs
-					for (var i = 0; i < nTotal; i++) {
-						cells[i].bomb = bbs[i];
-					}
+         txtSize = floor(s * 0.6);
 
-					// determine value of cells
-					for (var i = 0; i < nTotal; i++) {
-						if (cells[i].bomb) {
-							cells[i].value = -1;
-							continue;
-						}
-						for (var z = 0; z < 8; z++) {
-							if (cells[i].vicini[z] > -1 && cells[cells[i].vicini[z]].bomb) {
-								cells[i].value++;
-							}
-						}
-					}
-				};
-				/*
-				*/
-				this.checkEmpties = function(ii) {
-					for (var i = 0; i < 8; i++) {
-						if (cells[ii].vicini[i] > -1 &&
-							cells[cells[ii].vicini[i]].type == H) {
+         ww = n * s + 1;
+         hh = n * s + 1;
 
-							cells[cells[ii].vicini[i]].type = O;
+         // reset and create cells
+         cells.length = 0;
+         for (var i = 0; i < nTotal; i++) {
+            cells.push(new this.Cell(i % n, floor(i / n), i));
+         }
+      };
+      /*
+       */
+      this.firstClick = function(first) {
+         firstCellPressed = first;
 
-							if (cells[cells[ii].vicini[i]].value == 0) {
-								this.checkEmpties(cells[ii].vicini[i]);
-							}
-						}
-					}
-				};
-				/*
-				*/
-				this.mousePress = function() {
-					if (!won && !lost) {
+         // randomly choose the positions of the bombs
+         var bbs = [];
+         for (var i = 0; i < nTotal; i++) {
+            bbs.push(i < b ? true : false);
+         }
+         shuffle(bbs, true);
 
-						for (var i = 0; i < nTotal; i++) {
-							if (cells[i].isUnderMouse()) {
+         // exclude cell's index clicked and neighbours
+         var ix = [];
+         ix.push(first);
+         for (var z = 0; z < 8; z++) {
+            if (cells[first].vicini[z] > -1) {
+               ix.push(cells[first].vicini[z]);
+            }
+         }
+         ix.sort();
+         for (var i = 0; i < ix.length; i++) {
+            if (bbs[ix[i]] == true) {
+               bbs[ix[i]] = false;
 
-								if (firstCellPressed < 0) this.firstClick(i);
+               var replacing = true;
+               while (replacing) {
+                  var r = floor(random(0, nTotal));
+                  if (bbs[r] == false && ix.indexOf(r) == -1) {
+                     bbs[r] = true;
+                     replacing = false;
+                  }
+               }
+            }
+         }
 
-								if (cells[i].type == H) {
-									if (mouseButton == LEFT) {
-										cells[i].type = O;
-										if (cells[i].value == 0) {
-											// check all adjacent empty cells
-											this.checkEmpties(i);
-										} else if (cells[i].bomb) {
-											lost = true;
-										}
-									} else if (mouseButton == RIGHT) {
-										cells[i].type = F;
-									}
-								} else if (cells[i].type == F && mouseButton == LEFT) {
-									cells[i].type = H;
-								}
+         // set bombs
+         for (var i = 0; i < nTotal; i++) {
+            cells[i].bomb = bbs[i];
+         }
 
-								break;
-							}
-						}
+         // determine value of cells
+         for (var i = 0; i < nTotal; i++) {
+            if (cells[i].bomb) {
+               cells[i].value = -1;
+               continue;
+            }
+            for (var z = 0; z < 8; z++) {
+               if (cells[i].vicini[z] > -1 && cells[cells[i].vicini[z]].bomb) {
+                  cells[i].value++;
+               }
+            }
+         }
+      };
+      /*
+       */
+      this.checkEmpties = function(ii) {
+         for (var i = 0; i < 8; i++) {
+            if (cells[ii].vicini[i] > -1 &&
+               cells[cells[ii].vicini[i]].type == H) {
 
-						var n_revealed = 0;
-						var n_flag = 0;
+               cells[cells[ii].vicini[i]].type = O;
 
-						for (var i = 0; i < nTotal; i++) {
-							if (cells[i].type == O && !cells[i].bomb) {
-								n_revealed++;
-							}
+               if (cells[cells[ii].vicini[i]].value == 0) {
+                  this.checkEmpties(cells[ii].vicini[i]);
+               }
+            }
+         }
+      };
+      /*
+       */
+      this.mousePress = function() {
+         if (!won && !lost) {
 
-							if (cells[i].type == F) {
-								n_flag++;
-							}
-						}
+            for (var i = 0; i < nTotal; i++) {
+               if (cells[i].isUnderMouse()) {
 
-						if (n_revealed == nTotal - b) {
-							won = true;
-						}
+                  if (firstCellPressed < 0) this.firstClick(i);
 
-						if (lost) {
-							score.innerHTML = 'Lost :(';
-						} else if (won) {
-							score.innerHTML = 'Won :P';
-						} else {
-							score.innerHTML = 'Flags: ' + n_flag + '/' + b;      
-						}
+                  if (cells[i].type == H) {
+                     if (mouseButton == LEFT) {
+                        cells[i].type = O;
+                        if (cells[i].value == 0) {
+                           // check all adjacent empty cells
+                           this.checkEmpties(i);
+                        } else if (cells[i].bomb) {
+                           lost = true;
+                        }
+                     } else if (mouseButton == RIGHT) {
+                        cells[i].type = F;
+                     }
+                  } else if (cells[i].type == F && mouseButton == LEFT) {
+                     cells[i].type = H;
+                  }
 
-					}
-				};
-				/*
-				*/
-				this.display = function() {
-					for (var i = 0; i < nTotal; i++) {
-						cells[i].display();
-					}
-				};
-				/*
-				* INFO EACH SQUARE
-				*/
-				this.Cell = function(i, j, t) {
-					this.x = i*s;
-					this.y = j*s;
+                  break;
+               }
+            }
 
-					this.id = [i, j, t];
+            var n_revealed = 0;
+            var n_flag = 0;
 
-					this.value = 0;
-					this.type = H;
-					this.bomb = false;
+            for (var i = 0; i < nTotal; i++) {
+               if (cells[i].type == O && !cells[i].bomb) {
+                  n_revealed++;
+               }
 
-					this.vicini = [];
-					this.vicini.push(this.id[1] - 1 >= 0                        ? this.id[2] - n     : -1);
-					this.vicini.push(this.id[1] + 1 <  n                        ? this.id[2] + n     : -1);
-					this.vicini.push(this.id[0] - 1 >= 0                        ? this.id[2] - 1     : -1);
-					this.vicini.push(this.id[0] + 1 <  n                        ? this.id[2] + 1     : -1);
-					this.vicini.push(this.id[1] - 1 >= 0 && this.id[0] - 1 >= 0 ? this.id[2] - n - 1 : -1);
-					this.vicini.push(this.id[1] - 1 >= 0 && this.id[0] + 1 <  n ? this.id[2] - n + 1 : -1);
-					this.vicini.push(this.id[1] + 1 <  n && this.id[0] - 1 >= 0 ? this.id[2] + n - 1 : -1);
-					this.vicini.push(this.id[1] + 1 <  n && this.id[0] + 1 <  n ? this.id[2] + n + 1 : -1);
-				};
-				/*
-				 */
-				this.Cell.prototype.display = function() {
-					push();      
-					if (this.type == H) fill(GRID);
-					else if (this.type == F) fill(GRID_d);
-					else fill(BACK);
-					rect(this.x, this.y, s, s);
+               if (cells[i].type == F) {
+                  n_flag++;
+               }
+            }
 
-					noStroke();
-					if (this.type == O || lost) {
-						if (this.value > 0) {
-							if (!won) fill(0);
-							else fill(BOMB);
-							text(this.value, s/2 + this.x, s/2 + this.y);
-						} else if (this.bomb) {
-							fill(BOMB);
-							text('B', s/2 + this.x, s/2 + this.y);            
-						}
+            if (n_revealed == nTotal - b) {
+               won = true;
+            }
 
-					} else if (this.type == F || (won && this.bomb)) {
-						if (this.type == H) this.type = F;
-						fill(FLAG);
-						text('F', s/2 + this.x, s/2 + this.y);
-					}
-					pop();
-				};				
-				/*
-				 */
-				this.Cell.prototype.isUnderMouse = function() {
-					if (mouseX > this.x && mouseX < this.x + s && mouseY > this.y && mouseY < this.y + s) {
-						return true;
-					}
-					return false;      
-				};
+            if (lost) {
+               score.innerHTML = 'Lost :(';
+            } else if (won) {
+               score.innerHTML = 'Won :P';
+            } else {
+               score.innerHTML = 'Flags: ' + n_flag + '/' + b;
+            }
 
-			} // FINE Grid
+         }
+      };
+      /*
+       */
+      this.display = function() {
+         for (var i = 0; i < nTotal; i++) {
+            cells[i].display();
+         }
+      };
+      /*
+       * INFO EACH SQUARE
+       */
+      this.Cell = function(i, j, t) {
+         this.x = i * s;
+         this.y = j * s;
 
-			////////////////
+         this.id = [i, j, t];
 
-			submit.addEventListener('click', function() {
-				var nValue = parseInt(document.querySelector('#nValue').value);
-				var bValue = parseInt(document.querySelector('#bValue').value);
+         this.value = 0;
+         this.type = H;
+         this.bomb = false;
 
-				if (nValue > 50) nValue = 50;
-				else if (nValue < 5) nValue = 4;
-				if (bValue < 5) bValue = 4;
-				if (bValue > nValue*nValue - 9) bValue = nValue*nValue - 9;
+         this.vicini = [];
+         this.vicini.push(this.id[1] - 1 >= 0 ? this.id[2] - n : -1);
+         this.vicini.push(this.id[1] + 1 < n ? this.id[2] + n : -1);
+         this.vicini.push(this.id[0] - 1 >= 0 ? this.id[2] - 1 : -1);
+         this.vicini.push(this.id[0] + 1 < n ? this.id[2] + 1 : -1);
+         this.vicini.push(this.id[1] - 1 >= 0 && this.id[0] - 1 >= 0 ? this.id[2] - n - 1 : -1);
+         this.vicini.push(this.id[1] - 1 >= 0 && this.id[0] + 1 < n ? this.id[2] - n + 1 : -1);
+         this.vicini.push(this.id[1] + 1 < n && this.id[0] - 1 >= 0 ? this.id[2] + n - 1 : -1);
+         this.vicini.push(this.id[1] + 1 < n && this.id[0] + 1 < n ? this.id[2] + n + 1 : -1);
+      };
+      /*
+       */
+      this.Cell.prototype.display = function() {
+         push();
+         if (this.type == H) fill(GRID);
+         else if (this.type == F) fill(GRID_d);
+         else fill(BACK);
+         rect(this.x, this.y, s, s);
 
-				n = nValue;
-				nTotal = n*n;
-				b = bValue;
+         noStroke();
+         if (this.type == O || lost) {
+            if (this.value > 0) {
+               if (!won) fill(0);
+               else fill(BOMB);
+               text(this.value, s / 2 + this.x, s / 2 + this.y);
+            } else if (this.bomb) {
+               fill(BOMB);
+               text('B', s / 2 + this.x, s / 2 + this.y);
+            }
 
-				document.querySelector('#nValue').value = n;
-				document.querySelector('#bValue').value = b;
+         } else if (this.type == F || (won && this.bomb)) {
+            if (this.type == H) this.type = F;
+            fill(FLAG);
+            text('F', s / 2 + this.x, s / 2 + this.y);
+         }
+         pop();
+      };
+      /*
+       */
+      this.Cell.prototype.isUnderMouse = function() {
+         if (mouseX > this.x && mouseX < this.x + s && mouseY > this.y && mouseY < this.y + s) {
+            return true;
+         }
+         return false;
+      };
 
-				score.innerHTML = 'Flags: 0/' + b;
-				grid.init(n, b);
-				resizeCanvas(ww, hh);
-			});
-		</script>
-	</body>
+   } // FINE Grid
+
+   ////////////////
+
+   submit.addEventListener('click', function() {
+      var nValue = parseInt(document.querySelector('#nValue').value);
+      var bValue = parseInt(document.querySelector('#bValue').value);
+
+      if (nValue > 50) nValue = 50;
+      else if (nValue < 5) nValue = 4;
+      if (bValue < 5) bValue = 4;
+      if (bValue > nValue * nValue - 9) bValue = nValue * nValue - 9;
+
+      n = nValue;
+      nTotal = n * n;
+      b = bValue;
+
+      document.querySelector('#nValue').value = n;
+      document.querySelector('#bValue').value = b;
+
+      score.innerHTML = 'Flags: 0/' + b;
+      grid.init(n, b);
+      resizeCanvas(ww, hh);
+   });
+   </script>
+</body>
+
 </html>
