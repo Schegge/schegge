@@ -4,7 +4,7 @@
 <head>
    <title>Space</title>
    <meta charset="utf-8">
-   <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+   <meta name="viewport" content="width=device-width;  height=device-height; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
    <style>
    html,
    body {
@@ -48,7 +48,7 @@
 
    var ww = window.innerWidth;
    var hh = window.innerHeight;
-   var pDens, wDens;
+   var wDens;
 
    function preload() {
       var cc = createCanvas(ww, hh);
@@ -72,7 +72,6 @@
       textAlign(CENTER, CENTER);
       imageMode(CENTER);
 
-      pDens = displayDensity();
       wDens = min(hh / 2 / imgEarth.width, ww / 1.1 / imgEarth.width);
 
       textFont('Courier');
@@ -298,7 +297,7 @@
 
       this.update = function() {
          if ((frameCount - frameStart) % 4 == 0) {
-            this.y += this.inc * pDens;
+            this.y += this.inc;
             this.n++;
             if (this.n > this.max || this.n < -this.max) {
                this.inc = -this.inc;
@@ -366,7 +365,7 @@
          }
 
          if ((frameCount - frameStart) % 2 == 0) {
-            this.y += 1 + round(this.id / 2) * pDens;
+            this.y += 1 + round(this.id / 2);
          }
       }
 
@@ -390,8 +389,8 @@
       this.sen = sin(angle);
    }
    Bullets.prototype.update = function() {
-      this.x += 4 * this.cosen * pDens;
-      this.y += 4 * this.sen * pDens;
+      this.x += 4 * this.cosen;
+      this.y += 4 * this.sen;
 
       if (this.x - this.w / 2 > width || this.x + this.w / 2 < 0 ||
          this.y - this.h / 2 > height || this.y + this.h / 2 < 0) {
@@ -422,7 +421,7 @@
    };
    Stars.prototype.update = function() {
       if ((frameCount - frameStart) % 2 == 0) {
-         this.x += pDens;
+         this.x += 1;
          this.y += random(-0.4, 0.4);
       }
 
