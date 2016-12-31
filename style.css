@@ -139,8 +139,7 @@ code {
    display: none;
 }
 
-@media only screen and (max-device-width: 600px),
-(max-width: 600px) {
+@media only screen and (max-device-width: 600px), (max-width: 600px) {
    html,
    body {
       font-size: 1.2em;
@@ -148,7 +147,6 @@ code {
    #container {
       width: 90%;
       min-width: initial;
-      background-size: 50%;
    }
    #pjs .pj {
       font-size: 1em;
@@ -156,7 +154,7 @@ code {
       word-wrap: break-word;
       margin: 0;
       padding: .5em;
-      width: 50%;
+      width: 33%;
       box-sizing: border-box;
    }
 }
