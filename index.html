@@ -1,137 +1,30 @@
 <!DOCTYPE html>
 <html>
+   <head>
+      <meta charset="utf-8">
+      <title>schegge</title>
+      <link rel="stylesheet" href="style.css">
+   </head>
 
-<head>
-   <meta charset="utf-8">
-   <title>schegge</title>
-   <link rel="stylesheet" href="style.css">
-</head>
+   <body>
+      <div id="container">
+         <header>
+            <h1>schegge</h1>
+         </header>
 
-<body>
-   <div id="container">
-      <header>
-         <h1>schegge</h1>
-      </header>
-      <main>
          <section>
             <h2>About</h2>
-            <code>
-               <i>if</i> (Schegge &amp;&amp; Italy) {
-               <br>&nbsp;&nbsp;&nbsp;itsme();
-               <br>}
-            </code>
+            <p>I'm schegge and I code for fun ;)</p>
+            <code>Loading content from script...</code>
          </section>
+
          <section>
             <h2>Projects</h2>
             <div id="tags"><b>tags: </b></div>
             <div id="pjs"></div>
          </section>
-      </main>
-      <script>
-      var pjs = [{
-         title: 'Tamagotchi',
-         url: 'p5/Tamagotchi.html',
-         img: 'resources/tamagotchi.png',
-         type: 'game p5js'
-      }, {
-         title: 'Minesweeper',
-         url: 'p5/prato-fiorito.html"',
-         img: 'resources/minesweeper.png',
-         type: 'game p5js'
-      }, {
-         title: 'Rosetta\'s Adventure',
-         url: 'p5/Rosetta.html',
-         img: 'resources/rosetta.png',
-         type: 'animation p5js'
-      }, {
-         title: 'Space Game 2.0',
-         url: 'p5/space2.html',
-         img: 'resources/space2.png',
-         type: 'game p5js'
-      }, {
-         title: 'Space Game',
-         url: 'p5/space.html',
-         img: 'resources/space.png',
-         type: 'game p5js'
-      }, {
-         title: 'Week planner',
-         url: 'vanillajs/settimana.html',
-         img: 'resources/settimana.png',
-         type: 'wip vanillajs es6'
-      }, {
-         title: 'Block youtube\'s users',
-         url: 'https://greasyfork.org/en/scripts/11057-block-youtube-users',
-         img: 'resources/ytblock.png',
-         type: 'userscript jQuery'
-      }, {
-         title: 'AO3 Fic\'s style',
-         url: 'https://greasyfork.org/en/scripts/10944-ao3-fic-s-style-blacklist-bookmarks',
-         img: 'resources/ao3style.png',
-         type: 'userscript jQuery'
-      }, {
-         title: 'The X-Files',
-         url: 'p5/the-x-files.html',
-         img: 'resources/thexfiles.png',
-         type: 'animation p5js'
-      }, {
-         title: 'APH Germany',
-         url: 'p5/aph-germany.html',
-         img: 'resources/aphgermany.png',
-         type: 'animation p5js'
-      }, {
-         title: 'Snow over mountains',
-         url: 'p5/snow-over-mountains.html',
-         img: 'resources/snowovermountains.png',
-         type: 'animation p5js'
-      }, {
-         title: 'Clock',
-         url: 'p5/orologio.html',
-         img: 'resources/clock.png',
-         type: 'animation p5js'
-      }];
+      </div>
 
-      var tags = [];
-
-      for (var i = 0; i < pjs.length; i++) {
-         var _tags = pjs[i].type.split(' ');
-         for (var j = 0; j < _tags.length; j++) {
-            if (!tags.toString().match(_tags[j])) {
-               tags.push(_tags[j]);
-            }
-         }
-
-         document.getElementById('pjs').innerHTML +=
-            '<div class="pj ' + pjs[i].type + '">' +
-            '<a title="' + pjs[i].title + ' | ' + pjs[i].type + '" target="_blank" href="' + pjs[i].url + '">' +
-            '<img src="' + pjs[i].img + '">' +
-            '<p>' + pjs[i].title + '</p>' +
-            '</a></div>';
-      }
-
-      tags.sort();
-      tags = ['[x]'].concat(tags);
-      for (var i = 0; i < tags.length; i++) {
-         document.getElementById('tags').innerHTML += '<span class="tag">' + tags[i] + '</span> ';
-      }
-
-      var ts = document.querySelectorAll('.tag');
-      Array.prototype.forEach.call(ts, function(t) {
-         t.addEventListener('click', function() {
-            var tag = t.innerText;
-            var els = document.querySelectorAll('.pj');
-
-            Array.prototype.forEach.call(els, function(el) {
-               el.className = el.className.replace(' hidden', '');
-               if (tag === tags[0]) return;
-
-               if (!el.className.match(tag)) {
-                  el.className += ' hidden';
-               }
-            });
-         });
-      });
-      </script>
-   </div>
-</body>
-
+      <script src="script.js"></script>
+   </body>
 </html>
