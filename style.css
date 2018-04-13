@@ -72,7 +72,8 @@ p {
 
 code {
    display: block;
-   white-space: pre;
+   white-space: pre-wrap;
+   word-break: break-all;
    font-family: 'Consolas', monospace;
    font-size: .8em;
    font-weight: normal;
@@ -93,7 +94,7 @@ code {
    cursor: pointer;
    font-style: italic;
    padding: 0 .2em 0 .1em;
-   margin: 0 .1em;
+   margin: .1em;
    transition-duration: 0.5s;
 }
 
@@ -113,7 +114,7 @@ code {
    background: #ffa1a9;
 }
 
-.selected {
+.tag.selected {
    color: #fff;
    background: #aa7ba1;
 }
@@ -150,7 +151,7 @@ code {
    transform: scale(1.1);
 }
 
-.hidden {
+.pj.hidden {
    display: none;
 }
 
@@ -163,9 +164,12 @@ code {
 }
 
 @media (max-device-width: 600px) {
-   html,
-   body {
+   html, body, #tags {
       font-size: 1.5em;
+   }
+   code {
+      font-size: .35em;
+      line-height: 1em;
    }
    .pj {
       font-size: 1em;

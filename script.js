@@ -88,7 +88,7 @@ pjs.forEach(function(p) {
 tags.sort();
 tags = ['[x]'].concat(tags);
 tags.forEach(function(t) {
-   let tag = document.createElement('div');
+   let tag = document.createElement('span');
    tag.className = 'tag';
    tag.textContent = t;
    tagsParent.appendChild(tag);
