@@ -1,0 +1,168 @@
+{
+   "selectors": {
+      "universal": "*",
+      "type": "elementType",
+      "class": ".className",
+      "id": "#idName",
+      "attribute": [
+         ["[attr = \"value\"]", "element?[attr=value]"],
+         ["[attr = \"value\" i]", "case-insensitive"],
+         ["[attr ~= \"value\"]", "contains value, white-spaced words"],
+         ["[attr *= \"value\"]", "contains value"],
+         ["[attr |= \"value\"]", "starts with value-"],
+         ["[attr ^= \"value\"]", "starts with value"],
+         ["[attr $= \"value\"]", "ends with value"]
+      ],
+      "listing": ",",
+      "combinators": [
+         ["discendant", "space"],
+         ["direct child", ">"],
+         ["adjacent sibling", "+"],
+         ["general sibling", "~"]
+      ],
+      "priority": [
+         ["id", "100"],
+         ["class, attr., pseudoclass", "10"],
+         ["type, pseudoelement", "1"]
+      ],
+      "pseudoElements": [
+         ["::first-line"],
+         ["::first-letter"],
+         ["::after", "{content: \" \";}"],
+         ["::before", "{content: \" \";}"],
+         ["::cue", "webVTT subtitles"],
+         ["::selection", "", "Firefox: prefix"],
+         ["::backdrop", "", "no Opera/Safari, IE/Edge: prefix"]
+      ],
+      "pseudoClasses": [
+         [":link"],
+         [":visited"],
+         [":hover"],
+         [":focus"],
+         [":active"],
+         [":enabled"],
+         [":disabled"],
+         [":checked"],
+         [":valid"],
+         [":invalid"],
+         [":required"],
+         [":optional"],
+         [":indeterminate"],
+         [":in-range"],
+         [":out-of-range"],
+         [":empty", "empty element, no children - also text and white spaces"],
+         [":target", "element with id in URL"],
+         [":root", "html"],
+         [":first-child"],
+         [":first-of-type"],
+         [":nth-child()", "(An+B)"],
+         [":nth-last-child()", "(An+B)"],
+         [":nth-of-type()", "(An+B)"],
+         [":nth-last-of-type()", "(An+B)"],
+         [":last-child"],
+         [":last-of-type"],
+         [":only-child"],
+         [":only-of-type"],
+         [":not()", "(any selector)"],
+         [":only-link", "elements with href", "no IE/Edge"],
+         [":default", "", "no IE/Edge"],
+         [":read-only", "", "no IE, Firefox: prefix"],
+         [":read-write", "", "no IE, Firefox: prefix"],
+         [":fullscreen", "", "prefix"],
+         [":lang()"]
+      ]
+   },
+   "text" : {
+      "general": [
+         ["color", "any color"],
+         ["font", "[[font-style [normal | small-caps] font-weight font-stretch]? font-size [/line-height]? font-family] | caption | icon | menu | message-box | small-caption | status-bar"],
+         ["font-family", "'Font Name', serif | sans-serif | monospace | cursive | fantasy"],
+         ["font-size", "any length"],
+         ["font-style", "normal | italic | oblique"],
+         ["font-weight", "normal | bold | lighter | bolder | 100-900"],
+         ["font-variant", "normal | none | small-caps | all-small-caps | petite-caps | all-petite-caps..."],
+         ["line-height", "any length"],
+         ["text-transform", "none | uppercase | lowercase | capitalize | full-width"],
+         ["text-decoration", "text-decoration-line text-decoration-color?  text-decoration-style?"],
+         ["text-decoration-line", "none | underline | overline | line-through, (multiple)"],
+         ["text-decoration-color", "any color"],
+         ["text-decoration-style", "solid | wavy | dashed"],
+         ["text-shadow", "x y blur color, (multiple)"],
+         ["text-align", "left | right | center | justify"],
+         ["text-indent", "any length"],
+         ["text-overflow", "clip | ellipsis"],
+         ["letter-spacing", "any length"],
+         ["word-spacing", "any length"],
+         ["white-space", "normal | nowrap | pre | pre-wrap | pre-line"],
+         ["word-break", "normal | break-all | keep-all | break-word"],
+         ["overflow-wrap", "normal | break-word", "no IE: word-wrap"],
+         ["line-break", "auto | loose | normal | strict", "no Firefox"],
+         ["direction", "ltr | rtl"],
+         ["writing-mode", "horizontal-tb | vertical-rl | vertical-lr"],
+         ["text-orientation", "mixed | upright | use-glyph-orientation", "no IE/Safari"]
+      ],
+      "list": [
+         ["list-style", "list-style-type list-style-image list-style-position"],
+         ["list-style-type", "disc | circle | square | decimal | decimal-leading-zero | lower-roman | upper-roman | lower-greek | lower-latin | upper-latin "],
+         ["list-style-image", "none | url()"],
+         ["list-style-position", "inside | outside"]
+      ]
+   },
+   "box model": {
+      "general": [
+         ["width", "any length", "(also: min-width, max-width)"],
+         ["height", "any length", "(also: min-height, max-height)"],
+         ["padding", "padding-top [padding-right [padding-bottom [padding-left]?]?]?"],
+         ["margin", "margin-top margin-right margin-bottom margin-left"],
+         ["margin-top", "auto | any length", "(also: -bottom -left -right)"],
+         ["overflow", "overflow-x overflow-y?"],
+         ["overflow-x", "visible | hidden | clip | scroll | auto"],
+         ["overflow-y", "visible | hidden | clip | scroll | auto"],
+         ["box-sizing", "content-box | border-box"],
+         ["display", "[block | inline]? [table | flex | grid]? list-item? | [table-row-group | table-header-group | table-footer-group | table-row | table-cell | table-column-group | table-column | table-caption]? [contents | none]? | [inline-block | inline-list-item | inline-table | inline-flex | inline-grid]?"]
+      ],
+      "background": [
+         ["background", "background-color? background-image background-position [/ background-size]? background-repeat background-attachment background-origin background-clip, (multiple: bg-color only on the last)"],
+         ["background-color"],
+         ["background-image", "none | url() | linear-gradient() | repeating-linear-gradient() | radial-gradient() | repeating-radial-gradient()"],
+         ["background-position", "[center | left | right]? offset? [center | top | bottom]? offset?, (multiple images)"],
+         ["background-size", "contain | cover | [auto | any length]{1,2}"],
+         ["background-repeat", "repeat-x | repeat-y | [repeat | space | round | no-repeat]{1,2}"],
+         ["background-attachment", "scroll | fixed | local"],
+         ["background-origin", "border-box | padding-box | content-box"],
+         ["background-clip", "border-box | padding-box | content-box"]
+      ],
+      "border": [
+         ["border", "border-width border-style border-color"],
+         ["border-top", "border-top-width border-top-style border-top-color", "(also: -bottom -left -right)"],
+         ["border-width", "[any length | thin | medium | thick]{1,4}"],
+         ["border-style", "[none | hidden | solid | dotted | dashed | double | grrove | ridge | inset | outset]{1,4}"],
+         ["border-color"],
+         ["border-radius", "length{1,4} [/ length{1,4}]?"],
+         ["border-image", "border-image-source || border-image-slice [/border-image-width | / border-image-width / border-image-outset]? || border-image-repeat"]
+      ],
+      "table": [
+         ["table-layout", "auto | fixed"],
+         ["border-collapse", "collapse | separate"]
+      ]
+   },
+   "flex layout": {
+      "parent": [
+         ["display", "flex"],
+         ["flex-flow", "flex-direction? flex-wrap?"],
+         ["flex-direction", "row | row-reverse | column | column-reverse"],
+         ["flex-wrap", "nowrap | wrap | wrap-reverse"],
+         ["justify-content", "normal | space-between | space-around | space-evenly | stretch | center | start | end | flex-start | flex-end | left | right]", "(horizontal)"],
+         ["align-content", "normal | [first | last]? baseline | space-between | space-around | space-evenly | stretch | center | start | end | flex-start | flex-end]", "(vertical)"],
+         ["align-items", "[first | last]? baseline | center | start | end | self-start | self-end | flex-start | flex-end", "(vertical)"]
+      ],
+      "children": [
+         ["flex", "none | flex-grow flex-shrink? flex-basis?"],
+         ["flex-grow", "unitless number"],
+         ["flex-shrink", "unitless number"],
+         ["flex-basis", "any length"],
+         ["order", "unitless number"],
+         ["align-self", "[first | last]? baseline | center | start | end | self-start | self-end | flex-start | flex-end"]
+      ]
+   }
+}

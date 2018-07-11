@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <title>CSS Reference</title>
+      <style>
+         html {
+            font-size: 16px;
+         }
+         body {
+            font-size: .9em;
+            display: flex;
+            flex-wrap: wrap;
+            color: rgb(51, 51, 51);
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            margin: 0;
+         }
+
+         header {
+            width: 100%
+         }
+         h1 {
+            padding: .3em 0 .3em 3em;
+            margin: 0;
+            font-size: 3em;
+         }
+         aside {
+            width: 30%;
+            max-width: 200px;
+         }
+
+         a,
+         a:link,
+         a:visited {
+            color: rgb(63, 135, 166);
+            text-decoration: none;
+            font-variant: small-caps;
+         }
+         a:hover,
+         a:active,
+         a:focus {
+            color: rgb(51, 51, 51);
+         }
+
+         aside ol a,
+         h2, h3 {
+            text-transform: capitalize;
+         }
+
+         h2 {
+            padding: 0 2em 0 0;
+            margin: 0;
+            background: rgb(51, 51, 51);
+            color: #fff;
+            text-align: right;
+         }
+
+         section {
+            width: 70%;
+            flex: 1;
+         }
+         article {            
+            margin: 0 0 3em;
+            display: none;
+         }
+         article:target {
+            display: block;
+         }
+         article h3 {
+            border-bottom: 1px solid #000;
+            padding: 0 0 0 .5em;
+         }
+         article h3 + div {
+            font-family: 'Consolas', monospace;
+            padding: 0 1em;
+            color: rgb(63, 135, 166);
+         }
+         article h3 + div div {
+            display: flex;
+            flex-wrap: nowrap;
+            align-items: center;
+            border-bottom: 1px dotted rgb(51, 51, 51);
+            margin: .5em 0;
+            padding: .1em .2em;
+         }
+         article h3 + div div span {
+            box-sizing: border-box;
+         }
+         article h3 + div div span:only-child {
+            flex: 1;
+         }
+         article h3 + div div span:nth-child(n+2) {
+            padding: 0 0 0 1em;
+            color: rgb(51, 51, 51);
+            font-size: .8em;
+         }
+         article h3 + div div span:first-child {
+            width: 30%;
+         }
+         article h3 + div div span:nth-child(2)  {
+            width: 50%;
+            flex: 1;
+         }
+         article h3 + div div span:nth-child(3) {
+            width: 20%;
+            font-size: .6em;
+         }
+      </style>
+   </head>
+
+   <body>
+      <header>
+         <h1>CSS Reference</h1>
+      </header>
+
+      <aside>
+         <h2>Index</h2>
+         <ol></ol>
+      </aside>
+
+      <section></section>
+   </body>
+
+   <script>
+      var index = document.querySelector('aside ol');
+      var section = document.querySelector('body > section');
+
+      fetch('css_reference.json').then(function(response) {
+         return response.clone().json();
+      }).then(function(data) {
+         Object.keys(data).forEach(function(key) {
+            addElements(data[key], key);
+         });         
+      }).catch(function(error) {
+         console.log(error);
+      });
+
+      function addElements(ch, k) {
+         index.innerHTML += '<li><a href="#' + k + '">' + k + '</a></li>';
+
+         let article = document.createElement('article');
+         article.id = k;
+         article.innerHTML = '<h2>' + k + '</h2>';
+         section.appendChild(article);
+
+         Object.keys(ch).forEach(function(key) {
+            let h3 = document.createElement('h3');
+            h3.textContent = key;
+            let div = document.createElement('div');
+            let value = ch[key];            
+            if (typeof value === 'string') {
+               div.textContent = ch[key];
+            } else {
+               for (let i = 0; i < value.length; i++) {
+                  div.innerHTML += '<div><span>' + (Array.isArray(value[i]) ? value[i].join('</span> <span>') : value[i]) + '</span></div>';
+               }
+            }
+            article.appendChild(h3);
+            article.appendChild(div);
+         });
+      }
+
+   </script>
+</html>
