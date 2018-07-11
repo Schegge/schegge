@@ -163,7 +163,7 @@ code {
    }
 }
 
-@media (max-device-width: 600px) {
+@media (max-device-width: 600px), (hover: none) {
    html, body, #tags {
       font-size: 1.5em;
    }

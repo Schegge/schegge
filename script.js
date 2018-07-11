@@ -28,7 +28,12 @@ var pjs = [{
    title: 'Week planner',
    url: 'vanillajs/settimana.html',
    img: 'resources/settimana.png',
-   type: 'wip vanillajs es6'
+   type: 'wip vanillajs'
+}, {
+   title: 'CSS Reference',
+   url: 'vanillajs/css_reference.html',
+   img: 'resources/css_reference.png',
+   type: 'wip vanillajs'
 }, {
    title: 'Block youtube\'s users',
    url: 'https://greasyfork.org/en/scripts/11057-block-youtube-users',
@@ -79,7 +84,7 @@ pjs.forEach(function(p) {
    p.element.className = 'pj ' + p.type;
    p.element.title = p.title + ' > ' + p.type;
    p.element.href = p.url;
-   p.element.target = '_blank';   
+   p.element.target = '_blank';
    p.element.style.background = 'url(' + p.img + ') center center / cover no-repeat';
    p.element.innerHTML = '<p>' + p.title + '</p>';
    pjsParent.appendChild(p.element);
