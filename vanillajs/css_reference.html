@@ -119,46 +119,45 @@
       </aside>
 
       <section></section>
-   </body>
 
-   <script>
-      var index = document.querySelector('aside ol');
-      var section = document.querySelector('body > section');
+      <script>
+         var index = document.querySelector('aside ol');
+         var section = document.querySelector('body > section');
 
-      fetch('css_reference.json').then(function(response) {
-         return response.clone().json();
-      }).then(function(data) {
-         Object.keys(data).forEach(function(key) {
-            addElements(data[key], key);
-         });         
-      }).catch(function(error) {
-         console.log(error);
-      });
-
-      function addElements(ch, k) {
-         index.innerHTML += '<li><a href="#' + k + '">' + k + '</a></li>';
-
-         let article = document.createElement('article');
-         article.id = k;
-         article.innerHTML = '<h2>' + k + '</h2>';
-         section.appendChild(article);
-
-         Object.keys(ch).forEach(function(key) {
-            let h3 = document.createElement('h3');
-            h3.textContent = key;
-            let div = document.createElement('div');
-            let value = ch[key];            
-            if (typeof value === 'string') {
-               div.textContent = ch[key];
-            } else {
-               for (let i = 0; i < value.length; i++) {
-                  div.innerHTML += '<div><span>' + (Array.isArray(value[i]) ? value[i].join('</span> <span>') : value[i]) + '</span></div>';
-               }
-            }
-            article.appendChild(h3);
-            article.appendChild(div);
+         fetch('css_reference.json').then(function(response) {
+            return response.clone().json();
+         }).then(function(data) {
+            Object.keys(data).forEach(function(key) {
+               addElements(data[key], key);
+            });         
+         }).catch(function(error) {
+            console.log(error);
          });
-      }
 
-   </script>
+         function addElements(ch, k) {
+            index.innerHTML += '<li><a href="#' + k + '">' + k + '</a></li>';
+
+            let article = document.createElement('article');
+            article.id = k;
+            article.innerHTML = '<h2>' + k + '</h2>';
+            section.appendChild(article);
+
+            Object.keys(ch).forEach(function(key) {
+               let h3 = document.createElement('h3');
+               h3.textContent = key;
+               let div = document.createElement('div');
+               let value = ch[key];            
+               if (typeof value === 'string') {
+                  div.textContent = ch[key];
+               } else {
+                  for (let i = 0; i < value.length; i++) {
+                     div.innerHTML += '<div><span>' + (Array.isArray(value[i]) ? value[i].join('</span> <span>') : value[i]) + '</span></div>';
+                  }
+               }
+               article.appendChild(h3);
+               article.appendChild(div);
+            });
+         }
+      </script>
+   </body>
 </html>

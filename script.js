@@ -1,5 +1,10 @@
 // projects section
 var pjs = [{
+   title: 'My Book List',
+   url: 'scheggedistelle.altervista.org/libreria',
+   img: 'resources/libreria.png',
+   type: 'vanillajs'
+}, {
    title: 'Tamagotchi',
    url: 'p5/Tamagotchi.html',
    img: 'resources/tamagotchi.png',
