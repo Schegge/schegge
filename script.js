@@ -3,7 +3,7 @@ var pjs = [{
    title: 'My Book List',
    url: 'http://scheggedistelle.altervista.org/Libreria/',
    img: 'resources/libreria.png',
-   type: 'vanillajs'
+   type: 'php vanillajs'
 }, {
    title: 'Tamagotchi',
    url: 'p5/Tamagotchi.html',
