@@ -85,7 +85,7 @@
    }
 
    .day h2 {
-      order: 1;
+      order: -999;
       font-family: 'Arial', sans-serif;
       color: #DFEAE4;
       background: #0CABAB;
@@ -97,6 +97,7 @@
       font-variant: small-caps;
       margin: 0 0 1em 0;
       padding: 0;
+      width: 100%;
    }
 
    .task {
@@ -262,7 +263,7 @@
             <input class="what" type="text" maxLength="60">
          </label>
          <label>Frequenza*</label>
-         <textarea class="when" cols="50" rows="3" placeholder="(esempio) lunedì 09:00 12:30, martedì/giovedì/sabato 15:15 18:00"></textarea>
+         <textarea class="when" cols="50" rows="3" placeholder="(esempio) lunedì 9:00 12:30, martedì/giovedì/sabato 15:15 18:00, ven/dom 08:00 9:00"></textarea>
          <label>Appunti</label>
          <textarea cols="50" rows="4" class="more"></textarea>
          <button class="salva">Salva</button>
@@ -270,8 +271,25 @@
       <button class="esci">Esci</button>
    </div>
    <script>
+   const DAYS = {
+      'lun': 'lunedì',
+      'lunedì': 'lunedì',
+      'mar': 'martedì',
+      'martedì': 'martedì',
+      'mer': 'mercoledì',
+      'mercoledì': 'mercoledì',
+      'gio': 'giovedì',
+      'giovedì': 'giovedì',
+      'ven': 'venerdì',
+      'venerdì': 'venerdì',
+      'sab': 'sabato',
+      'sabato': 'sabato',
+      'dom': 'domenica',
+      'domenica': 'domenica',
+      
+   };
    const days = ['lunedì', 'martedì', 'mercoledì', 'giovedì', 'venerdì', 'sabato', 'domenica'];
-   const parse = /^\s*([a-zì\/]+)\s+(\d{2}\:\d{2})\s+(\d{2}\:\d{2})\s*$/;
+   const parse = /^\s*([a-zì\/]+)\s+(\d{1,2}\:\d{2})\s+(\d{1,2}\:\d{2})\s*$/;
 
    var tasks = JSON.parse(localStorage.getItem('settimana')) || {};
 
@@ -296,7 +314,7 @@
             article.innerHTML += '<p>' + t + '</p><p>' + tasks[t].what + '</p>';
             article.innerHTML += '<p class="more">' + tasks[t].more + '</p>';
 
-            document.querySelector('.' + ds[j].trim()).appendChild(article);
+            document.querySelector('.' + DAYS[ds[j].trim()]).appendChild(article);
          }
       }
    }
@@ -390,7 +408,7 @@
       organizeMenu.old.style.display = 'none';
       organizeMenu.nuovo.style.display = 'block';
 
-      document.querySelector('#organizeMenu .new .id').value = id;
+      document.querySelector('#organizeMenu .new .id').value = id.replace(/[.+?^${}()|[\]\\\s]/g, '');
       document.querySelector('#organizeMenu .new .what').value = '';
       document.querySelector('#organizeMenu .new .when').value = '';
       document.querySelector('#organizeMenu .new .more').value = '';
@@ -406,10 +424,11 @@
          }
 
          localStorage.setItem('settimana', JSON.stringify(tasks));
+			organizeMenu.info.innerHTML = organizeMenu.info.innerHTML.replace('<span>' + t + '</span>', '');
          return;
       }
 
-      organizeMenu.error.innerHTML = 'Attività "' + t + '" non esiste.'
+      organizeMenu.error.innerHTML = 'Attività "' + t + '" non esiste.';
    });
 
    organizeMenu.salva.addEventListener('click', function() {
@@ -439,7 +458,7 @@
          } else if (when[i][1]) {
             let ds = when[i][1].split('/');
             for (let j = 0; j < ds.length; j++) {
-               if (!days.includes(ds[j].trim())) {
+               if (!DAYS[ds[j].trim()]) {
 
                   error += 'Il giorno "' + ds[j] + '" non esiste.<br>';
                }
