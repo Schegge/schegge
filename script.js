@@ -1,5 +1,5 @@
 // projects section
-var pjs = [{
+const pjs = [{
    title: 'My Book List',
    url: 'http://scheggedistelle.altervista.org/Libreria/',
    img: 'resources/libreria.png',
@@ -50,11 +50,6 @@ var pjs = [{
    img: 'resources/ao3style.png',
    type: 'userscript jQuery'
 }, {
-   title: 'Viki: Subtitles Settings',
-   url: 'https://greasyfork.org/en/scripts/40162-viki-subtitles-settings',
-   img: 'resources/vikisub.png',
-   type: 'userscript vanillajs'
-}, {
    title: 'The X-Files',
    url: 'p5/the-x-files.html',
    img: 'resources/thexfiles.png',
@@ -76,28 +71,28 @@ var pjs = [{
    type: 'animation p5js'
 }];
 
-var pjsParent = document.getElementById('pjs');
-var tagsParent = document.getElementById('tags');
-var tags = [];
+let pjsParent = document.getElementById('pjs');
+let tagsParent = document.getElementById('tags');
+let tags = [];
 
-pjs.forEach(function(p) {
+pjs.forEach(p => {
    p.type.split(' ').forEach(function(t) {
-      if (tags.indexOf(t) === -1) tags.push(t);
+      if (!tags.includes(t)) tags.push(t);
    });
 
    p.element = document.createElement('a');
-   p.element.className = 'pj ' + p.type;
-   p.element.title = p.title + ' > ' + p.type;
+   p.element.className = `pj ${p.type}`;
+   p.element.title = `${p.title} > ${p.type}`;
    p.element.href = p.url;
    p.element.target = '_blank';
-   p.element.style.background = 'url(' + p.img + ') center center / cover no-repeat';
-   p.element.innerHTML = '<p>' + p.title + '</p>';
+   p.element.style.background = `url(${p.img}) center center / cover no-repeat`;
+   p.element.innerHTML = `<p>${p.title}</p>`;
    pjsParent.appendChild(p.element);
 });
 
 tags.sort();
 tags = ['[x]'].concat(tags);
-tags.forEach(function(t) {
+tags.forEach(t => {
    let tag = document.createElement('span');
    tag.className = 'tag';
    tag.textContent = t;
@@ -107,7 +102,7 @@ tags.forEach(function(t) {
 tagsParent.addEventListener('click', tagSelect, false);
 function tagSelect(e) {
    let tag = e.target.textContent;
-   if (tags.indexOf(tag) === -1) return;
+   if (!tags.includes(tag)) return;
 
    let prev = document.querySelector('.tag.selected');
    if (prev) prev.classList.remove('selected');
@@ -123,12 +118,4 @@ function tagSelect(e) {
 }
 
 // about section
-document.getElementsByTagName('code')[0].innerHTML = '' +
-   '<i>var</i> user = {<br>' +
-   '  name: \'schegge\',<br>' +
-   '  nationality: \'italian\',<br>' +
-   '  emanLaer: \'aras\'<br>' +
-   '};<br><br>' +
-   '<i>if</i> (user.emanLaer) {<br>' +
-   '  console.log(\'real name: \' + user.emanLaer.split(\'\').reverse().join(\'\'));<br>' +
-   '}';
+document.getElementsByTagName('code')[0].innerHTML = `<i>const</i> user = {<br>  name: 'schegge',<br>  nationality: 'italian',<br>  emanLaer: 'aras'<br>};<br><br><i>if</i> (user.emanLaer) {<br>  console.log(\`real name: \$\{user.emanLaer.split('').reverse().join('')}\`);<br>}`;

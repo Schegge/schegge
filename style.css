@@ -33,7 +33,7 @@ a:active {
    color: #aa7ba1;
 }
 
-#container {
+main {
    width: 40%;
    min-width: 500px;
    margin: auto;
@@ -157,7 +157,7 @@ code {
 
 
 @media (max-width: 600px), (max-device-width: 600px) {
-   #container {
+   main {
       width: 90%;
       min-width: initial;
    }
