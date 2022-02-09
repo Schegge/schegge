@@ -1,4 +1,4 @@
-@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,600);
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:300,400,600);
 
 * {
    margin: 0;
@@ -8,13 +8,13 @@
 html,
 body {
    font-family: 'Open Sans', sans-serif;
-   font-size: 14px;
+   font-size: 16px;
    color: #554686;
    background: #fff;
    line-height: 1em;
 }
 
-body {   
+html {   
    background-image: url(resources/theme2-bg.png);
    background-repeat: repeat;
    background-position: top center;
@@ -56,13 +56,14 @@ section {
 h2 {
    text-align: right;
    padding-right: 1em;
-   margin-bottom: 1em;
+   margin: 1em 0;
    font-size: 1.2em;
-   line-height: 1.6em;
-   font-weight: bold;
+   line-height: 1.2em;
+   font-weight: 300;
+   background-color: rgba(255, 161, 169, .2);
    background-image: url(resources/theme2-cuore.png);
    background-repeat: no-repeat;
-   background-position: right .5em;
+   background-position: right 50%;
 }
 
 p {
@@ -155,15 +156,12 @@ code {
    display: none;
 }
 
-
-@media (max-width: 600px), (max-device-width: 600px) {
+@media (max-device-width: 600px), (hover: none) {
    main {
       width: 90%;
       min-width: initial;
    }
-}
 
-@media (max-device-width: 600px), (hover: none) {
    html, body, #tags {
       font-size: 1.5em;
    }
