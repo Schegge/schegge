@@ -10,11 +10,10 @@ body {
    font-family: 'Open Sans', sans-serif;
    font-size: 16px;
    color: #554686;
-   background: #fff;
    line-height: 1em;
 }
 
-html {   
+html {
    background-image: url(resources/theme2-bg.png);
    background-repeat: repeat;
    background-position: top center;
