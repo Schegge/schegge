@@ -1,9 +1,15 @@
-// projects section
+let pjsParent = document.getElementById('pjs');
+let tagsParent = document.getElementById('tags');
+
+// list of tags
+let tags = [];
+
+// list of projects
 const pjs = [{
    title: 'My Book List',
    url: 'http://scheggedistelle.altervista.org/Libreria/',
    img: 'resources/libreria.png',
-   type: 'php vanillajs'
+   type: 'python vanillajs'
 }, {
    title: 'Tamagotchi',
    url: 'p5/Tamagotchi.html',
@@ -33,7 +39,7 @@ const pjs = [{
    title: 'Week planner',
    url: 'vanillajs/settimana.html',
    img: 'resources/settimana.png',
-   type: 'wip vanillajs'
+   type: 'vanillajs'
 }, {
    title: 'CSS Reference',
    url: 'vanillajs/css_reference.html',
@@ -71,15 +77,14 @@ const pjs = [{
    type: 'animation p5js'
 }];
 
-let pjsParent = document.getElementById('pjs');
-let tagsParent = document.getElementById('tags');
-let tags = [];
-
+// add html 'element' for each project, update tags and append to the parent
 pjs.forEach(p => {
-   p.type.split(' ').forEach(function(t) {
+   p.type.split(' ').forEach(t => {
+      // add tag if it not exist yet
       if (!tags.includes(t)) tags.push(t);
    });
 
+   // new key of object
    p.element = document.createElement('a');
    p.element.className = `pj ${p.type}`;
    p.element.title = `${p.title} > ${p.type}`;
@@ -90,24 +95,27 @@ pjs.forEach(p => {
    pjsParent.appendChild(p.element);
 });
 
+// sort tag, add reset [x], append tags to parent
 tags.sort();
 tags = ['[x]'].concat(tags);
 tags.forEach(t => {
    let tag = document.createElement('span');
    tag.className = 'tag';
    tag.textContent = t;
+   tag.addEventListener('click', tagSelect, false);
    tagsParent.appendChild(tag);
 });
 
-tagsParent.addEventListener('click', tagSelect, false);
-function tagSelect(e) {
-   let tag = e.target.textContent;
-   if (!tags.includes(tag)) return;
+function tagSelect() {
+   let tag = this.textContent;
 
+   // select current tag (if not reset) and remove the prev if already exist
    let prev = document.querySelector('.tag.selected');
    if (prev) prev.classList.remove('selected');
-   if (tag !== tags[0]) e.target.classList.add('selected');
 
+   if (tag !== tags[0]) this.classList.add('selected');
+
+   // change the 'element's stored in pjs
    pjs.forEach(function(p) {
       if (tag === tags[0] || p.element.classList.contains(tag)) {
          p.element.classList.remove('hidden');
@@ -116,6 +124,3 @@ function tagSelect(e) {
       }
    });
 }
-
-// about section
-document.getElementsByTagName('code')[0].innerHTML = `<i>const</i> user = {<br>  name: 'schegge',<br>  nationality: 'italian',<br>  emanLaer: 'aras'<br>};<br><br><i>if</i> (user.emanLaer) {<br>  console.log(\`real name: \$\{user.emanLaer.split('').reverse().join('')}\`);<br>}`;

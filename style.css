@@ -1,4 +1,4 @@
-@import url(https://fonts.googleapis.com/css?family=Open+Sans:300,400,600);
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap');
 
 * {
    margin: 0;
@@ -7,10 +7,11 @@
 
 html,
 body {
-   font-family: 'Open Sans', sans-serif;
+   font-family: 'Roboto', sans-serif;
    font-size: 16px;
    color: #554686;
    line-height: 1em;
+   font-weight: 300;
 }
 
 html {
@@ -58,11 +59,12 @@ h2 {
    margin: 1em 0;
    font-size: 1.2em;
    line-height: 1.2em;
-   font-weight: 300;
-   background-color: rgba(255, 161, 169, .2);
+   font-weight: 400;
+   background-color: rgba(255, 161, 169, .4);
    background-image: url(resources/theme2-cuore.png);
    background-repeat: no-repeat;
-   background-position: right 50%;
+   background-position: right .1em center;
+   border-radius: .2em;
 }
 
 p {
@@ -70,18 +72,6 @@ p {
    margin-bottom: .5em;
 }
 
-code {
-   display: block;
-   white-space: pre-wrap;
-   word-break: break-all;
-   font-family: 'Consolas', monospace;
-   font-size: .8em;
-   font-weight: normal;
-   padding-left: 1em;
-   margin: .5em 1em;
-   color: #c1b3d4;
-   border-left: 2px solid rgba(255, 161, 169, .3);
-}
 
 #tags {
    font-size: .9em;
@@ -156,22 +146,22 @@ code {
 }
 
 @media (max-device-width: 600px), (hover: none) {
-   main {
-      width: 90%;
-      min-width: initial;
-   }
+    main {
+        width: 90%;
+        min-width: initial;
+    }
 
-   html, body, #tags {
-      font-size: 1.5em;
-   }
-   code {
-      font-size: .35em;
-      line-height: 1em;
-   }
-   .pj {
-      font-size: 1em;
-      width: 8em;
-      height: 8em;
-      margin: .5em;
-   }
+    html, body, #tags {
+        font-size: 1.5em;
+    }
+    code {
+        font-size: .35em;
+        line-height: 1em;
+    }
+    .pj {
+        font-size: 1em;
+        width: 8em;
+        height: 8em;
+        margin: .5em;
+    }
 }
